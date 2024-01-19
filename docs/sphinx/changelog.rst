@@ -6,6 +6,15 @@ Changelog
 #########
 
 ******************
+1.3.2 (unreleased)
+******************
+
+Internal Changes
+================
+- Enabled github actions (:pull:`1`)
+- Added tardigrade_hydra as a build requirement (:pull:`2`)
+
+******************
 1.3.1 (2023-07-25)
 ******************
 
