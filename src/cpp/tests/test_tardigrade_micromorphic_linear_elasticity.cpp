@@ -3292,3 +3292,101 @@ BOOST_AUTO_TEST_CASE( testEvaluateModel ){
         }
     }
 }
+
+BOOST_AUTO_TEST_CASE( testEvaluateHydraModel ){
+    /*!
+     * Test the model evaluation interface for the stresses computed
+     * in the reference configuration.
+     *
+     */
+
+    const std::vector< double > time = { 10, 2.7 };
+
+    const std::vector< double > fparams = { 2, 1.7, 1.8,
+                                            5, 2.8, .76, .15, 9.8, 5.4,
+                                           11, 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.,
+                                            2, .76, 5.4 };
+
+    const double current_grad_u[ 3 ][ 3 ] = { { -1.07901185, -1.09656192, -0.04629144 },
+                                              { -0.77749189, -1.27877771, -0.82648234 },
+                                              {  0.66484637, -0.05552567, -1.65125738 } };
+
+    const double current_phi[ 9 ] = { -1.40391532, -0.42715691,  0.75393369,
+                                       0.2849511 , -2.06484257, -0.52190902,
+                                       1.07238446,  0.19155907, -0.39704566 };
+
+    const double current_grad_phi[ 9 ][ 3 ] = { { 0.14940184, 0.12460812, 0.31971128 },
+                                                { 0.67550862, 0.61095383, 0.87972732 },
+                                                { 0.30872424, 0.32158187, 0.25480281 },
+                                                { 0.45570006, 0.69090695, 0.72388584 },
+                                                { 0.14880964, 0.67520596, 0.15106516 },
+                                                { 0.77810545, 0.07641724, 0.09367471 },
+                                                { 0.15905979, 0.0651695 , 0.52150417 },
+                                                { 0.91873444, 0.5622355 , 0.50199447 },
+                                                { 0.26729942, 0.89858519, 0.09043229 } };
+
+    const double previous_grad_u[ 3 ][ 3 ] = { { 0, 0, 0},
+                                               { 0, 0, 0},
+                                               { 0, 0, 0} };
+
+    const double previous_phi[ 9 ] = { 0, 0, 0,
+                                       0, 0, 0,
+                                       0, 0, 0 };
+
+    const double previous_grad_phi[ 9 ][ 3 ] = { { 0, 0, 0},
+                                                 { 0, 0, 0},
+                                                 { 0, 0, 0},
+                                                 { 0, 0, 0},
+                                                 { 0, 0, 0},
+                                                 { 0, 0, 0},
+                                                 { 0, 0, 0},
+                                                 { 0, 0, 0},
+                                                 { 0, 0, 0} };
+
+    std::vector< double > SDVS;
+    const std::vector< double > current_ADD_DOF, previous_ADD_DOF;
+    const std::vector< std::vector< double > > current_ADD_grad_DOF, previous_ADD_grad_DOF;
+
+    std::vector< double > PK2_answer   = { -26.78976487,  91.99831835, 135.04096376,
+                                           -63.68792655, 149.68226149, 186.67587146,
+                                           -42.54105342, 125.2317492 , 150.55767059 };
+
+    std::vector< double > SIGMA_answer = { -47.59920949,  20.84881327,  93.02392773,
+                                            20.84881327, 302.43209139, 311.0104045 ,
+                                            93.02392773, 311.0104045 , 312.60512922 };
+
+    std::vector< double > M_answer     = { -50.37283054, -23.25778149, -37.92963077, -19.16962188,
+                                           -32.97279228, -14.89104497, -33.4026237 , -15.47947779,
+                                           -40.31460994, -16.29637436, -36.63942799, -18.22777296,
+                                           -39.33546661, -86.69472439, -59.29150146, -15.76480164,
+                                           -55.42039768, -35.09720118, -28.94394503, -17.96726082,
+                                           -45.09734176, -16.46568416, -50.79898863, -39.19129183,
+                                           -47.46372724, -42.98201472, -45.57864883 };
+
+    std::vector< double > PK2_result, SIGMA_result, M_result;
+    std::vector< std::vector< double > > ADD_TERMS;
+    std::string output_message;
+
+    int errorCode  = tardigradeMicromorphicLinearElasticity::evaluate_hydra_model( time, fparams, current_grad_u, current_phi, current_grad_phi,
+                                                                                   previous_grad_u, previous_phi, previous_grad_phi,
+                                                                                   SDVS, current_ADD_DOF, current_ADD_grad_DOF,
+                                                                                   previous_ADD_DOF, previous_ADD_grad_DOF,
+                                                                                   PK2_result, SIGMA_result, M_result,
+                                                                                   ADD_TERMS, output_message
+                                                                                 );
+
+    BOOST_CHECK( errorCode <= 0 );
+
+    BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( PK2_result, PK2_answer ) );
+
+    BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( SIGMA_result, SIGMA_answer ) );
+
+    BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( M_result, M_answer ) );
+
+    //Test of the Jacobians
+    PK2_result.clear();
+    SIGMA_result.clear();
+    M_result.clear();
+    ADD_TERMS.clear();
+
+}
