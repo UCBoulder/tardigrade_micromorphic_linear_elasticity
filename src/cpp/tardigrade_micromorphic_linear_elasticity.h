@@ -35,10 +35,9 @@ namespace tardigradeMicromorphicLinearElasticity{
     typedef tardigradeErrorTools::Node errorNode;
     typedef errorNode* errorOut;
 
+    //! Re-direct std::cout to catch error messages
     struct cout_redirect{
-        /*!
-         * Re-direct std::cout to catch error messages
-         */
+        //! Re-direct the output of std::cout to the buffer
         cout_redirect( std::streambuf * new_buffer)
             : old( std::cout.rdbuf( new_buffer ) )
         { }
@@ -48,13 +47,13 @@ namespace tardigradeMicromorphicLinearElasticity{
         }
 
         private:
+            //! A pointer to the buffer for std::cout
             std::streambuf * old;
     };
 
+    //! Re-direct std::cerr to catch error messages
     struct cerr_redirect{
-        /*!
-         * Re-direct std::cerr to catch error messages
-         */
+        //! Re-direct the output of std::cerr to the buffer
         cerr_redirect( std::streambuf * new_buffer)
             : old( std::cerr.rdbuf( new_buffer ) )
         { }
@@ -64,6 +63,7 @@ namespace tardigradeMicromorphicLinearElasticity{
         }
 
         private:
+            //! A pointer to the buffer for std::cerr
             std::streambuf * old;
     };
 

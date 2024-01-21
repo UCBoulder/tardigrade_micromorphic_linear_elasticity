@@ -8,6 +8,7 @@
  *              + \frac{1}{2} \Gamma_{IJK} C_{IJKLMN} \Gamma_{LMN} + E_{IJ} D_{IJKL} \mathcal{E}_{KL}\f$
  */
 
+#include<tardigrade_hydraMicromorphicLinearElasticity.h>
 #include<tardigrade_micromorphic_linear_elasticity.h>
 
 namespace tardigradeMicromorphicLinearElasticity{
@@ -2137,6 +2138,37 @@ namespace tardigradeMicromorphicLinearElasticity{
         return 0;
     }
 
+    //! Define the hydra version of the micromorphic linear elasticity model
+    class hydraMicromorphicLinearElasticity : public tardigradeHydra::hydraBaseMicromorphic{
+
+        public:
+
+            using tardigradeHydra::hydraBaseMicromorphic::hydraBaseMicromorphic;
+
+            //! The elasticity residual class
+            tardigradeHydra::micromorphicLinearElasticity::residual elasticity;
+
+        private:
+
+            using tardigradeHydra::hydraBaseMicromorphic::setResidualClasses;
+
+            virtual void setResidualClasses( ) override{
+                /*!
+                 * Set the vector of residual classes (in this case, only elasticity)
+                 */
+
+                std::vector< tardigradeHydra::residualBase* > residuals( 1 );
+
+                elasticity = tardigradeHydra::micromorphicLinearElasticity::residual( this, *getConfigurationUnknownCount( ), *getParameters( ) );
+
+                residuals[ 0 ] = &elasticity;
+
+                setResidualClasses( residuals );
+
+            }
+
+    };
+
     int evaluate_hydra_model( const std::vector< double > &time,            const std::vector< double > ( &fparams ), 
                               const double ( &current_grad_u )[ 3 ][ 3 ],   const double ( &current_phi )[ 9 ],
                               const double ( &current_grad_phi )[ 9 ][ 3 ], const double ( &previous_grad_u )[ 3 ][ 3 ],
@@ -2151,7 +2183,8 @@ namespace tardigradeMicromorphicLinearElasticity{
                               std::string &output_message
                             ){
         /*!
-         * Evaluate the elasto-plastic constitutive model. Note the format of the header changed to provide a 
+         * Evaluate the elasto-plastic constitutive model using the hydra computational framework.
+         * Note the format of the header changed to provide a 
          * consistant interface with the material model library.
          *
          * \param &time: The current time and the timestep
@@ -2206,65 +2239,59 @@ namespace tardigradeMicromorphicLinearElasticity{
         std::stringbuf buffer;
         cerr_redirect rd( &buffer );
 
-        /*=============================
-        | Extract the incoming values |
-        ==============================*/
+        variableType temperature         = 293.15; // Tardigrade doesn't have temperature for micromorphic currently so we're hardcoding these
+        variableType previousTemperature = 293.15;
 
-        //Extract the parameters
-        parameterVector Amatrix, Bmatrix, Cmatrix, Dmatrix;
+        variableVector currentDeformationGradient,  currentMicroDeformation,  currentGradientMicroDeformation;
+        variableVector previousDeformationGradient, previousMicroDeformation, previousGradientMicroDeformation;
 
-        errorOut error = extractMaterialParameters( fparams, Amatrix, Bmatrix, Cmatrix, Dmatrix );
+        try{
 
-        if ( error ){
-            errorOut result = new errorNode( "evaluate_model",
-                                             "Error in the extraction of the material parameters" );
-            result->addNext( error );
-            result->print();           //Print the error message
-            output_message = buffer.str(); //Save the output to enable message printing
-            return 2;
-        }
+            /*===============================================
+            | Assemble the fundamental deformation measures |
+            ================================================*/
 
-        /*===============================================
-        | Assemble the fundamental deformation measures |
-        ================================================*/
-
-        //Compute the fundamental deformation measures from the degrees of freedom
-
-        variableVector currentDeformationGradient, currentMicroDeformation, currentGradientMicroDeformation;
-
-        error = assembleFundamentalDeformationMeasures( current_grad_u, current_phi, current_grad_phi,
+            TARDIGRADE_ERROR_TOOLS_CATCH_NODE_POINTER(
+                assembleFundamentalDeformationMeasures( current_grad_u, current_phi, current_grad_phi,
                                                         currentDeformationGradient, currentMicroDeformation,
-                                                        currentGradientMicroDeformation );
+                                                        currentGradientMicroDeformation )
+            )
 
-        if ( error ){
-            errorOut result = new errorNode( "evaluate_model",
-                                             "Error in the computation of the current deformation measures" );
-            result->addNext( error );
-            result->print();           //Print the error message
-            output_message = buffer.str(); //Save the output to enable message printing
-            return 2;
+            TARDIGRADE_ERROR_TOOLS_CATCH_NODE_POINTER(
+                assembleFundamentalDeformationMeasures( previous_grad_u, previous_phi, previous_grad_phi,
+                                                        previousDeformationGradient, previousMicroDeformation,
+                                                        previousGradientMicroDeformation )
+            )
+
+            hydraMicromorphicLinearElasticity hydra( time[ 0 ], time[ 1 ],
+                                                     temperature,                     previousTemperature,
+                                                     currentDeformationGradient,      previousDeformationGradient,
+                                                     currentMicroDeformation,         previousMicroDeformation,
+                                                     currentGradientMicroDeformation, previousGradientMicroDeformation,
+                                                     SDVS, fparams, 1, 0 );
+
+            // Compute the stress
+            hydra.evaluate( );
+
+            PK2   = variableVector( hydra.getUnknownVector( )->begin( ) +  0,
+                                    hydra.getUnknownVector( )->begin( ) +  9 );
+
+            SIGMA = variableVector( hydra.getUnknownVector( )->begin( ) +  9,
+                                    hydra.getUnknownVector( )->begin( ) + 18 );
+
+            M     = variableVector( hydra.getUnknownVector( )->begin( ) + 18,
+                                    hydra.getUnknownVector( )->begin( ) + 45 );
+
         }
+        catch( std::exception &e ){
 
-        /*===============================
-        | Compute the new stress values |
-        ===============================*/
+            //Fatal error
+            tardigradeErrorTools::printNestedExceptions( e );
 
-        //Compute the new stress values
-        variableVector currentPK2Stress, currentReferenceMicroStress, currentReferenceHigherOrderStress;
+            output_message = buffer.str( );
 
-        error = tardigradeMicromorphicLinearElasticity::linearElasticityReference( currentDeformationGradient,
-                                                                         currentMicroDeformation,
-                                                                         currentGradientMicroDeformation,
-                                                                         Amatrix, Bmatrix, Cmatrix, Dmatrix,
-                                                                         PK2, SIGMA, M );
-
-        if ( error ){
-            errorOut result = new errorNode( "evaluate_model",
-                                             "Error in the computation of the current stress measures" );
-            result->addNext( error );
-            result->print();           //Print the error message
-            output_message = buffer.str(); //Save the output to enable message passing
             return 2;
+
         }
 
         //No errors in calculation.
