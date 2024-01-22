@@ -2410,95 +2410,151 @@ namespace tardigradeMicromorphicLinearElasticity{
         std::stringbuf buffer;
         cerr_redirect rd( &buffer );
 
-        /*=============================
-        | Extract the incoming values |
-        ==============================*/
+        variableType temperature         = 293.15; // Tardigrade doesn't have temperature for micromorphic currently so we're hardcoding these
+        variableType previousTemperature = 293.15;
 
-        //Extract the parameters
-        parameterVector Amatrix, Bmatrix, Cmatrix, Dmatrix;
+        variableVector currentDeformationGradient,  currentMicroDeformation,  currentGradientMicroDeformation;
+        variableMatrix dFdGradU, dChidPhi, dGradChidGradPhi;
 
-        errorOut error = extractMaterialParameters( fparams, Amatrix, Bmatrix, Cmatrix, Dmatrix );
+        variableVector previousDeformationGradient, previousMicroDeformation, previousGradientMicroDeformation;
+        variableMatrix previousdFdGradU, previousdChidPhi, previousdGradChidGradPhi;
 
-        if ( error ){
-            errorOut result = new errorNode( "evaluate_model",
-                                             "Error in the extraction of the material parameters" );
-            result->addNext( error );
-            result->print();           //Print the error message
-            output_message = buffer.str(); //Save the output to enable message printing
-            return 2;
-        }
+        try{
 
-        /*===============================================
-        | Assemble the fundamental deformation measures |
-        ================================================*/
+            /*===============================================
+            | Assemble the fundamental deformation measures |
+            ================================================*/
 
-        //Compute the fundamental deformation measures from the degrees of freedom
-
-        variableVector currentDeformationGradient, currentMicroDeformation, currentGradientMicroDeformation;
-        variableMatrix dDeformationGradientdGradU, dMicroDeformationdPhi, dGradientMicroDeformationdGradPhi;
-
-        error = assembleFundamentalDeformationMeasures( current_grad_u, current_phi, current_grad_phi,
+            TARDIGRADE_ERROR_TOOLS_CATCH_NODE_POINTER(
+                assembleFundamentalDeformationMeasures( current_grad_u, current_phi, current_grad_phi,
                                                         currentDeformationGradient, currentMicroDeformation,
-                                                        currentGradientMicroDeformation, dDeformationGradientdGradU,
-                                                        dMicroDeformationdPhi, dGradientMicroDeformationdGradPhi );
+                                                        currentGradientMicroDeformation,
+                                                        dFdGradU, dChidPhi, dGradChidGradPhi )
+            )
 
-        if ( error ){
-            errorOut result = new errorNode( "evaluate_model",
-                                             "Error in the computation of the current deformation measures" );
-            result->addNext( error );
-            result->print();           //Print the error message
-            output_message = buffer.str(); //Save the output to enable message printing
-            return 2;
+            TARDIGRADE_ERROR_TOOLS_CATCH_NODE_POINTER(
+                assembleFundamentalDeformationMeasures( previous_grad_u, previous_phi, previous_grad_phi,
+                                                        previousDeformationGradient, previousMicroDeformation,
+                                                        previousGradientMicroDeformation,
+                                                        previousdFdGradU, previousdChidPhi, previousdGradChidGradPhi )
+            )
+
+            hydraMicromorphicLinearElasticity hydra( time[ 0 ], time[ 1 ],
+                                                     temperature,                     previousTemperature,
+                                                     currentDeformationGradient,      previousDeformationGradient,
+                                                     currentMicroDeformation,         previousMicroDeformation,
+                                                     currentGradientMicroDeformation, previousGradientMicroDeformation,
+                                                     SDVS, fparams, 1, 0 );
+
+            // Compute the stress
+            hydra.evaluate( );
+
+            PK2   = variableVector( hydra.getUnknownVector( )->begin( ) +  0,
+                                    hydra.getUnknownVector( )->begin( ) +  9 );
+
+            SIGMA = variableVector( hydra.getUnknownVector( )->begin( ) +  9,
+                                    hydra.getUnknownVector( )->begin( ) + 18 );
+
+            M     = variableVector( hydra.getUnknownVector( )->begin( ) + 18,
+                                    hydra.getUnknownVector( )->begin( ) + 45 );
+
+            // Compute the consistent tangents
+            hydra.computeTangents( );
+            const variableVector *dXdD = hydra.getFlatdXdD( );
+
+            unsigned int numConfigurationUnknowns = *hydra.getConfigurationUnknownCount( );
+
+            DPK2Dgrad_u     = variableMatrix(  9, variableVector( 9, 0 ) );
+
+            DSIGMADgrad_u   = variableMatrix(  9, variableVector( 9, 0 ) );
+
+            DMDgrad_u       = variableMatrix( 27, variableVector( 9, 0 ) );
+
+            DPK2Dphi        = variableMatrix(  9, variableVector( 9, 0 ) );
+
+            DSIGMADphi      = variableMatrix(  9, variableVector( 9, 0 ) );
+
+            DMDphi          = variableMatrix( 27, variableVector( 9, 0 ) );
+
+            DPK2Dgrad_phi   = variableMatrix(  9, variableVector( 27, 0 ) );
+
+            DSIGMADgrad_phi = variableMatrix(  9, variableVector( 27, 0 ) );
+
+            DMDgrad_phi     = variableMatrix( 27, variableVector( 27, 0 ) );
+
+            for ( unsigned int i = 0; i < 9; i++ ){
+
+                for ( unsigned int j = 0; j < 9; j++ ){
+
+                    for ( unsigned int k = 0; k < 9; k++ ){
+
+                        DPK2Dgrad_u[ i ][ j ]   += ( *dXdD )[ numConfigurationUnknowns * ( i + 0 ) + 0 + k ] * dFdGradU[ k ][ j ];
+
+                        DPK2Dphi[ i ][ j ]      += ( *dXdD )[ numConfigurationUnknowns * ( i + 0 ) + 9 + k ] * dChidPhi[ k ][ j ];
+
+                        DSIGMADgrad_u[ i ][ j ] += ( *dXdD )[ numConfigurationUnknowns * ( i + 9 ) + 0 + k ] * dFdGradU[ k ][ j ];
+
+                        DSIGMADphi[ i ][ j ]    += ( *dXdD )[ numConfigurationUnknowns * ( i + 9 ) + 9 + k ] * dChidPhi[ k ][ j ];
+
+                    }
+
+                }
+
+                for ( unsigned int j = 0; j < 27; j++ ){
+
+                    for ( unsigned int k = 0; k < 27; k++ ){
+
+                        DPK2Dgrad_phi[ i ][ j ]   += ( *dXdD )[ numConfigurationUnknowns * ( i + 0 ) + 18 + k ] * dGradChidGradPhi[ k ][ j ];
+
+                        DSIGMADgrad_phi[ i ][ j ] += ( *dXdD )[ numConfigurationUnknowns * ( i + 9 ) + 18 + k ] * dGradChidGradPhi[ k ][ j ];
+
+                    }
+
+                }
+
+            }
+
+            for ( unsigned int i = 0; i < 27; i++ ){
+
+                for ( unsigned int j = 0; j < 9; j++ ){
+
+                    for ( unsigned int k = 0; k < 9; k++ ){
+
+                        DMDgrad_u[ i ][ j ]   += ( *dXdD )[ numConfigurationUnknowns * ( i + 18 ) + 0 + k ] * dFdGradU[ k ][ j ];
+
+                        DMDphi[ i ][ j ]      += ( *dXdD )[ numConfigurationUnknowns * ( i + 18 ) + 9 + k ] * dChidPhi[ k ][ j ];
+
+                    }
+
+                }
+
+                for ( unsigned int j = 0; j < 27; j++ ){
+
+                    for ( unsigned int k = 0; k < 27; k++ ){
+
+                        DMDgrad_phi[ i ][ j ]   += ( *dXdD )[ numConfigurationUnknowns * ( i + 18 ) + 18 + k ] * dGradChidGradPhi[ k ][ j ];
+
+                    }
+
+                }
+
+            }
+
         }
+        catch( std::exception &e ){
 
-        /*===============================
-        | Compute the new stress values |
-        ===============================*/
+            //Fatal error
+            tardigradeErrorTools::printNestedExceptions( e );
 
-        //Compute the new stress values
-        variableVector currentPK2Stress, currentReferenceMicroStress, currentReferenceHigherOrderStress;
+            output_message = buffer.str( );
 
-        variableMatrix dPK2dDeformationGradient, dPK2dMicroDeformation, dPK2dGradientMicroDeformation,
-                       dSIGMAdDeformationGradient, dSIGMAdMicroDeformation, dSIGMAdGradientMicroDeformation,
-                       dMdDeformationGradient, dMdGradientMicroDeformation;
-
-        error = tardigradeMicromorphicLinearElasticity::linearElasticityReference( currentDeformationGradient,
-                                                                         currentMicroDeformation,
-                                                                         currentGradientMicroDeformation,
-                                                                         Amatrix, Bmatrix, Cmatrix, Dmatrix,
-                                                                         PK2, SIGMA, M,
-                                                                         dPK2dDeformationGradient, dPK2dMicroDeformation,
-                                                                         dPK2dGradientMicroDeformation,
-                                                                         dSIGMAdDeformationGradient, dSIGMAdMicroDeformation,
-                                                                         dSIGMAdGradientMicroDeformation,
-                                                                         dMdDeformationGradient, dMdGradientMicroDeformation );
-
-        if ( error ){
-            errorOut result = new errorNode( "evaluate_model",
-                                             "Error in the computation of the current stress measures" );
-            result->addNext( error );
-            result->print();           //Print the error message
-            output_message = buffer.str(); //Save the output to enable message passing
             return 2;
+
         }
-
-        /*=======================
-        | Assemble the Jacobian |
-        =======================*/
-
-        DPK2Dgrad_u     = tardigradeVectorTools::dot( dPK2dDeformationGradient, dDeformationGradientdGradU );
-        DPK2Dphi        = tardigradeVectorTools::dot( dPK2dMicroDeformation, dMicroDeformationdPhi );
-        DPK2Dgrad_phi   = tardigradeVectorTools::dot( dPK2dGradientMicroDeformation, dGradientMicroDeformationdGradPhi );
-
-        DSIGMADgrad_u   = tardigradeVectorTools::dot( dSIGMAdDeformationGradient, dDeformationGradientdGradU );
-        DSIGMADphi      = tardigradeVectorTools::dot( dSIGMAdMicroDeformation, dMicroDeformationdPhi );
-        DSIGMADgrad_phi = tardigradeVectorTools::dot( dSIGMAdGradientMicroDeformation, dGradientMicroDeformationdGradPhi );
-
-        DMDgrad_u       = tardigradeVectorTools::dot( dMdDeformationGradient, dDeformationGradientdGradU );
-        DMDphi          = variableMatrix( 27, variableVector( 9, 0 ) );
-        DMDgrad_phi     = tardigradeVectorTools::dot( dMdGradientMicroDeformation, dGradientMicroDeformationdGradPhi );
 
         //No errors in calculation.
         return 0;
+
     }
+
 }
