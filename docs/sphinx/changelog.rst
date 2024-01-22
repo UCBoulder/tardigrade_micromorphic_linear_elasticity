@@ -9,6 +9,10 @@ Changelog
 1.3.2 (unreleased)
 ******************
 
+New Features
+============
+- Added a hydra-based micromorphic linear elasticity (:pull:`3`)
+
 Internal Changes
 ================
 - Enabled github actions (:pull:`1`)

@@ -4,10 +4,11 @@
  * An implimentation of linear elasticity in the micromorphic context.
  *
  * Based around a quadratic form of the Helmholtz free energy:
- * \rho \psi = \frac{1}{2} E_{IJ} A_{IJKL} E_{KL} + \frac{1}{2} \mathcal{E}_{IJ} B_{IJKL} \mathcal{E}_{KL} 
- *           + \frac{1}{2} \Gamma_{IJK} C_{IJKLMN} \Gamma_{LMN} + E_{IJ} D_{IJKL} \mathcal{E}_{KL}
+ * \f$\rho \psi = \frac{1}{2} E_{IJ} A_{IJKL} E_{KL} + \frac{1}{2} \mathcal{E}_{IJ} B_{IJKL} \mathcal{E}_{KL} 
+ *              + \frac{1}{2} \Gamma_{IJK} C_{IJKLMN} \Gamma_{LMN} + E_{IJ} D_{IJKL} \mathcal{E}_{KL}\f$
  */
 
+#include<tardigrade_hydraMicromorphicLinearElasticity.h>
 #include<tardigrade_micromorphic_linear_elasticity.h>
 
 namespace tardigradeMicromorphicLinearElasticity{
@@ -22,17 +23,17 @@ namespace tardigradeMicromorphicLinearElasticity{
          * Compute the stress measures in the reference configuration for micromorphic linear elasticity based off 
          * of a quadratic decomposition of the energy.
          *
-         * :param const variableVector &deformationGradient: The deformation gradient
-         * :param const variableVector &microDeformation: The micro-deformation
-         * :param const variableVector &gradientMicroDeformation: The spatial gradient of the micro-deformation
-         * :param const parameterVector &A: The A stiffness matrix.
-         * :param const parameterVector &B: The B stiffness matrix.
-         * :param const parameterVector &C: The C stiffness matrix.
-         * :param const parameterVector &D: The D stiffness matrix.
-         * :param variableVector &PK2Stress: The second Piola-Kirchoff stress.
-         * :param variableVector &referenceMicroStress: The symmetric micro-stress in the 
+         * \param &deformationGradient: The deformation gradient
+         * \param &microDeformation: The micro-deformation
+         * \param &gradientMicroDeformation: The spatial gradient of the micro-deformation
+         * \param &A: The A stiffness matrix.
+         * \param &B: The B stiffness matrix.
+         * \param &C: The C stiffness matrix.
+         * \param &D: The D stiffness matrix.
+         * \param &PK2Stress: The second Piola-Kirchoff stress.
+         * \param &referenceMicroStress: The symmetric micro-stress in the 
          *     reference configuration.
-         * :param variableVector &referenceHigherOrderStress: The higher-order stress in the 
+         * \param &referenceHigherOrderStress: The higher-order stress in the 
          *     reference configuration.
          */
 
@@ -72,17 +73,17 @@ namespace tardigradeMicromorphicLinearElasticity{
          * Compute the stress measures in the reference configuration for micromorphic linear elasticity based off
          * of a quadratic decomposition of the energy.
          *
-         * :param const variableVector &rightCauchyGreenDeformation: The right Cauchy-Green deformation metric
-         * :param const variableVector &Psi: The micro-deformation measure Psi
-         * :param const variableVector &Gamma: The higher order deformation measure Gamma
-         * :param const parameterVector &A: The A stiffness matrix.
-         * :param const parameterVector &B: The B stiffness matrix.
-         * :param const parameterVector &C: The C stiffness matrix.
-         * :param const parameterVector &D: The D stiffness matrix.
-         * :param variableVector &PK2Stress: The second Piola-Kirchoff stress.
-         * :param variableVector &referenceMicroStress: The symmetric micro-stress in the 
+         * \param &rightCauchyGreenDeformation: The right Cauchy-Green deformation metric
+         * \param &Psi: The micro-deformation measure Psi
+         * \param &Gamma: The higher order deformation measure Gamma
+         * \param &A: The A stiffness matrix.
+         * \param &B: The B stiffness matrix.
+         * \param &C: The C stiffness matrix.
+         * \param &D: The D stiffness matrix.
+         * \param &PK2Stress: The second Piola-Kirchoff stress.
+         * \param &referenceMicroStress: The symmetric micro-stress in the 
          *     reference configuration.
-         * :param variableVector &referenceHigherOrderStress: The higher-order stress in the 
+         * \param &referenceHigherOrderStress: The higher-order stress in the 
          *     reference configuration.
          */
 
@@ -186,26 +187,26 @@ namespace tardigradeMicromorphicLinearElasticity{
          *
          * Also computes the Jacobians
          *
-         * :param const variableVector &deformationGradient: The deformation gradient
-         * :param const variableVector &microDeformation: The micro-deformation
-         * :param const variableVector &gradientMicroDeformation: The spatial gradient of the micro-deformation
-         * :param const parameterVector &A: The A stiffness matrix.
-         * :param const parameterVector &B: The B stiffness matrix.
-         * :param const parameterVector &C: The C stiffness matrix.
-         * :param const parameterVector &D: The D stiffness matrix.
-         * :param variableVector &PK2Stress: The second Piola-Kirchoff stress.
-         * :param variableVector &referenceMicroStress: The symmetric micro-stress in the 
+         * \param &deformationGradient: The deformation gradient
+         * \param &microDeformation: The micro-deformation
+         * \param &gradientMicroDeformation: The spatial gradient of the micro-deformation
+         * \param &A: The A stiffness matrix.
+         * \param &B: The B stiffness matrix.
+         * \param &C: The C stiffness matrix.
+         * \param &D: The D stiffness matrix.
+         * \param &PK2Stress: The second Piola-Kirchoff stress.
+         * \param &referenceMicroStress: The symmetric micro-stress in the 
          *     reference configuration.
-         * :param variableVector &referenceHigherOrderStress: The higher-order stress in the 
+         * \param &referenceHigherOrderStress: The higher-order stress in the 
          *     reference configuration.
-         * :param variableMatrix &dPK2StressdF: The Jacobian of the PK2 stress w.r.t. the deformation gradient.
-         * :param variableMatrix &dPK2StressdChi: The Jacobian of the PK2 stress w.r.t. the micro deformation.
-         * :param variableMatrix &dPK2StressdGradChi: The Jacobian of the PK2 stress w.r.t. the gradient of the micro deformation.
-         * :param variableMatrix &dReferenceMicroStressdF: The Jacobian of the Micro stress w.r.t. the deformation gradient.
-         * :param variableMatrix &dReferenceMicroStressdChi: The Jacobian of the Micro stress w.r.t. the micro deformation.
-         * :param variableMatrix &dReferenceStressdGradChi: The Jacobian of the Micro stress w.r.t. the gradient of the micro deformation.
-         * :param variableMatrix &dMdF: The Jacobian of the higher order stress w.r.t. the deformation gradient.
-         * :param variableMatrix &dMdGradChi: The Jacobian of the higher order stress w.r.t. the gradient of the micro deformation.
+         * \param &dPK2StressdF: The Jacobian of the PK2 stress w.r.t. the deformation gradient.
+         * \param &dPK2StressdChi: The Jacobian of the PK2 stress w.r.t. the micro deformation.
+         * \param &dPK2StressdGradChi: The Jacobian of the PK2 stress w.r.t. the gradient of the micro deformation.
+         * \param &dReferenceMicroStressdF: The Jacobian of the Micro stress w.r.t. the deformation gradient.
+         * \param &dReferenceMicroStressdChi: The Jacobian of the Micro stress w.r.t. the micro deformation.
+         * \param &dReferenceMicroStressdGradChi: The Jacobian of the Micro stress w.r.t. the gradient of the micro deformation.
+         * \param &dMdF: The Jacobian of the higher order stress w.r.t. the deformation gradient.
+         * \param &dMdGradChi: The Jacobian of the higher order stress w.r.t. the gradient of the micro deformation.
          */
 
         //Assume 3d
@@ -282,31 +283,31 @@ namespace tardigradeMicromorphicLinearElasticity{
          * Compute the stress measures in the reference configuration for micromorphic linear elasticity based off
          * of a quadratic decomposition of the energy.
          *
-         * :param const variableVector &rightCauchyGreenDeformation: The right Cauchy-Green deformation metric
-         * :param const variableVector &Psi: The micro-deformation measure Psi
-         * :param const variableVector &Gamma: The higher order deformation measure Gamma
-         * :param const parameterVector &A: The A stiffness matrix.
-         * :param const parameterVector &B: The B stiffness matrix.
-         * :param const parameterVector &C: The C stiffness matrix.
-         * :param const parameterVector &D: The D stiffness matrix.
-         * :param variableVector &PK2Stress: The second Piola-Kirchoff stress.
-         * :param variableVector &referenceMicroStress: The symmetric micro-stress in the 
+         * \param &rightCauchyGreenDeformation: The right Cauchy-Green deformation metric
+         * \param &Psi: The micro-deformation measure Psi
+         * \param &Gamma: The higher order deformation measure Gamma
+         * \param &A: The A stiffness matrix.
+         * \param &B: The B stiffness matrix.
+         * \param &C: The C stiffness matrix.
+         * \param &D: The D stiffness matrix.
+         * \param &PK2Stress: The second Piola-Kirchoff stress.
+         * \param &referenceMicroStress: The symmetric micro-stress in the 
          *     reference configuration.
-         * :param variableVector &referenceHigherOrderStress: The higher-order stress in the 
+         * \param &referenceHigherOrderStress: The higher-order stress in the 
          *     reference configuration.
-         * :param variableMatrix &dPK2StressdRCG: The Jacobian of the PK2 stress w.r.t. the right Cauchy-Green
+         * \param &dPK2StressdRCG: The Jacobian of the PK2 stress w.r.t. the right Cauchy-Green
          *     deformation metric.
-         * :param variableMatrix &dPK2StressdPsi: The Jacobian of the PK2 stress w.r.t. the micro deformation 
+         * \param &dPK2StressdPsi: The Jacobian of the PK2 stress w.r.t. the micro deformation 
          *     metric.
-         * :param variableMatrix &dPK2StressdGamma: The Jacobian of the PK2 stress w.r.t. the higher order 
+         * \param &dPK2StressdGamma: The Jacobian of the PK2 stress w.r.t. the higher order 
          *     deformation measure.
-         * :param variableMatrix &dReferenceMicroStressdRCG: The Jacobian of the reference micro stress w.r.t. the 
+         * \param &dReferenceMicroStressdRCG: The Jacobian of the reference micro stress w.r.t. the 
          *     right Cacuhy-Green deformation metric.
-         * :param variableMatrix &dReferenceMicroStressdPsi: The Jacobian of the reference micro stress w.r.t. the 
+         * \param &dReferenceMicroStressdPsi: The Jacobian of the reference micro stress w.r.t. the 
          *     micro deformation measure.
-         * :param variableMatrix &dReferenceMicroStrssdGamma: The Jacobian of the reference micro stress w.r.t. the 
+         * \param &dReferenceMicroStressdGamma: The Jacobian of the reference micro stress w.r.t. the 
          *     higher order deformation measure.
-         * :param variableMatrix &dMdGamma: The Jacobian of the reference higher order stress w.r.t. 
+         * \param &dMdGamma: The Jacobian of the reference higher order stress w.r.t. 
          *     the higher order deformation measure.
          */
 
@@ -433,16 +434,16 @@ namespace tardigradeMicromorphicLinearElasticity{
                                          variableVector &rightCauchyGreen, variableVector &Psi, variableVector &Gamma ){
         /*!
          * Compute the deformation measures
-         * C_{IJ} = F_{iI} F_{iJ}
-         * Psi_{IJ} = F_{iI} \Chi_{iJ}
-         * \Gamma_{IJK} = F_{iI} \Chi_{iJ, K}
+         * \f$C_{IJ} = F_{iI} F_{iJ}\f$
+         * \f$\Psi_{IJ} = F_{iI} \Chi_{iJ}\f$
+         * \f$\Gamma_{IJK} = F_{iI} \Chi_{iJ, K}\f$
          *
-         * :param const variableVector &deformationGradient: The deformation gradient
-         * :param const variableVector &microDeformation: The micro-deformation
-         * :param const variableVector &gradientMicroDeformation: The spatial gradient of the micro-deformation
-         * :param variableVector &rightCauchyGreen: The Right Cauchy-Green deformation tensor
-         * :param variableVector &Psi: The micro-deformation measure
-         * :param variableVector &Gamma: The gradient micro-deformation measure
+         * \param &deformationGradient: The deformation gradient
+         * \param &microDeformation: The micro-deformation
+         * \param &gradientMicroDeformation: The spatial gradient of the micro-deformation
+         * \param &rightCauchyGreen: The Right Cauchy-Green deformation tensor
+         * \param &Psi: The micro-deformation measure
+         * \param &Gamma: The gradient micro-deformation measure
          */
 
         errorOut error = tardigradeConstitutiveTools::computeRightCauchyGreen( deformationGradient, rightCauchyGreen );
@@ -483,22 +484,22 @@ namespace tardigradeMicromorphicLinearElasticity{
                                          variableMatrix &dGammadF, variableMatrix &dGammadGradChi ){
         /*!
          * Compute the deformation measures
-         * C_{IJ} = F_{iI} F_{iJ}
-         * Psi_{IJ} = F_{iI} \Chi_{iJ}
-         * \Gamma_{IJK} = F_{iI} \Chi_{iJ, K}
+         * \f$C_{IJ} = F_{iI} F_{iJ}\f$
+         * \f$\Psi_{IJ} = F_{iI} \Chi_{iJ}\f$
+         * \f$\Gamma_{IJK} = F_{iI} \Chi_{iJ, K}\f$
          *
-         * :param const variableVector &deformationGradient: The deformation gradient
-         * :param const variableVector &microDeformation: The micro-deformation
-         * :param const variableVector &gradientMicroDeformation: The spatial gradient of the micro-deformation
-         * :param variableVector &rightCauchyGreen: The Right Cauchy-Green deformation tensor
-         * :param variableVector &Psi: The micro-deformation measure
-         * :param variableVector &Gamma: The gradient micro-deformation measure
-         * :param variableMatrix &dCdF: The gradient of the right Cauchy green deformation tensor w.r.t. 
+         * \param &deformationGradient: The deformation gradient
+         * \param &microDeformation: The micro-deformation
+         * \param &gradientMicroDeformation: The spatial gradient of the micro-deformation
+         * \param &rightCauchyGreen: The Right Cauchy-Green deformation tensor
+         * \param &Psi: The micro-deformation measure
+         * \param &Gamma: The gradient micro-deformation measure
+         * \param &dCdF: The gradient of the right Cauchy green deformation tensor w.r.t. 
          *     the deformation gradient.
-         * :param variableMatrix &dPsidF: The gradient of Psi w.r.t. the deformation gradient.
-         * :param variableMatrix &dPsidChi: The gradient of Psi w.r.t. the microDeformation.
-         * :param variableMatrix &dGammadF: The gradient of Gamma w.r.t. the deformation gradient.
-         * :param variableMatrix &dGammadGradChi: The gradient of Gamma w.r.t. the spatial gradient of Chi
+         * \param &dPsidF: The gradient of Psi w.r.t. the deformation gradient.
+         * \param &dPsidChi: The gradient of Psi w.r.t. the microDeformation.
+         * \param &dGammadF: The gradient of Gamma w.r.t. the deformation gradient.
+         * \param &dGammadGradChi: The gradient of Gamma w.r.t. the spatial gradient of Chi
          */
 
         errorOut error = tardigradeConstitutiveTools::computeRightCauchyGreen( deformationGradient, rightCauchyGreen, dCdF );
@@ -535,13 +536,13 @@ namespace tardigradeMicromorphicLinearElasticity{
                                         const parameterVector &A, const parameterVector &D, variableVector &term1 ){
         /*!
          * Compute the first term for the linear elastic model
-         * term1_{IJ} = A_{IJKL} E_{KL} + D_{IJKL} * \mathcal{E}_{KL}
+         * \f$term1_{IJ} = A_{IJKL} E_{KL} + D_{IJKL} * \mathcal{E}_{KL}\f$
          *
-         * :param const variableVector &greenLagrangeStrain: The Green-Lagrange strain.
-         * :param const variableVector &microStrain: The micro-strain
-         * :param const parameterVector &A: The A stiffness matrix
-         * :param const parameterVEctor &D: The D stiffness matrix
-         * :param variableVector &term1: The first term.
+         * \param &greenLagrangeStrain: The Green-Lagrange strain.
+         * \param &microStrain: The micro-strain
+         * \param &A: The A stiffness matrix
+         * \param &D: The D stiffness matrix
+         * \param &term1: The first term.
          */
 
         //Assume 3D
@@ -588,17 +589,19 @@ namespace tardigradeMicromorphicLinearElasticity{
                                         variableMatrix &dTerm1dGreenLagrangeStrain, variableMatrix &dTerm1dMicroStrain ){
         /*!
          * Compute the first term for the linear elastic model
-         * term1_{IJ} = A_{IJKL} E_{KL} + D_{IJKL} * \mathcal{E}_{KL}
+         * \f$term1_{IJ} = A_{IJKL} E_{KL} + D_{IJKL} * \mathcal{E}_{KL}\f$
          *
          * Also return the Jacobian
-         * \frac{\partial term^1_{IJ} }{ E_{MN} } = A_{IJMN}
-         * \frac{\partial term^1_{IJ} }{ \mathcal{E}_{MN} } = D_{IJMN}
+         * \f$\frac{\partial term^1_{IJ} }{ E_{MN} } = A_{IJMN}\f$
+         * \f$\frac{\partial term^1_{IJ} }{ \mathcal{E}_{MN} } = D_{IJMN}\f$
          *
-         * :param const variableVector &greenLagrangeStrain: The Green-Lagrange strain.
-         * :param const variableVector &microStrain: The micro-strain
-         * :param const parameterVector &A: The A stiffness matrix
-         * :param const parameterVEctor &D: The D stiffness matrix
-         * :param variableVector &term1: The first term.
+         * \param &greenLagrangeStrain: The Green-Lagrange strain.
+         * \param &microStrain: The micro-strain
+         * \param &A: The A stiffness matrix
+         * \param &D: The D stiffness matrix
+         * \param &term1: The first term.
+         * \param &dTerm1dGreenLagrangeStrain: The derivative of term1 w.r.t. the Green-Lagrange strain
+         * \param &dTerm1dMicroStrain: The derivative of term1 w.r.t. the micro strain
          */
 
         //Assume 3D
@@ -637,14 +640,14 @@ namespace tardigradeMicromorphicLinearElasticity{
         /*!
          * Compute the second term from the linear elastic constitutive model
          *
-         * term^2_{IJ} = \left( B_{IQKL} \mathcal{E}_{KL} + E_{KL} D_{KLIQ} \right) C_{JR}^{-1} \Psi_{RQ}
+         * \f$term^2_{IJ} = \left( B_{IQKL} \mathcal{E}_{KL} + E_{KL} D_{KLIQ} \right) C_{JR}^{-1} \Psi_{RQ}\f$
          *
-         * :param const variableVector &greenLagrangeStrain: The Green-Lagrange strain E_{IJ} = \frac{1}{2} \left( C_{IJ} - \delta_{IJ} \right)
-         * :param const variableVector &microStrain: The micro-strain \mathcal{E}_{IJ} = \Psi_{IJ} - \delta_{IJ}
-         * :param const variableVector &invCPsi: The product C_{JR}^{-1} \Psi_{RQ}
-         * :param const variableVector &B: The B stiffness matrix
-         * :param const variableVector &D: The D stiffness matrix
-         * :param variableVector &term2: The second term.
+         * \param &greenLagrangeStrain: The Green-Lagrange strain \f$E_{IJ} = \frac{1}{2} \left( C_{IJ} - \delta_{IJ} \right)\f$
+         * \param &microStrain: The micro-strain \f$\mathcal{E}_{IJ} = \Psi_{IJ} - \delta_{IJ}\f$
+         * \param &invCPsi: The product \f$C_{JR}^{-1} \Psi_{RQ}\f$
+         * \param &B: The B stiffness matrix
+         * \param &D: The D stiffness matrix
+         * \param &term2: The second term.
          */
 
         //Assume 3D
@@ -701,22 +704,22 @@ namespace tardigradeMicromorphicLinearElasticity{
         /*!
          * Compute the second term from the linear elastic constitutive model
          *
-         * term^2_{IJ} = \left( B_{IQKL} \mathcal{E}_{KL} + E_{KL} D_{KLIQ} \right) C_{JR}^{-1} \Psi_{RQ}
+         * \f$term^2_{IJ} = \left( B_{IQKL} \mathcal{E}_{KL} + E_{KL} D_{KLIQ} \right) C_{JR}^{-1} \Psi_{RQ}\f$
          *
          * Also return the Jacobians
-         * \frac{ \partial term^2_{IJ} }{ \partial E_{MN} } = D_{MNIK} C_{JR}^{-1} \Psi_{RK}
-         * \frac{ \partial term^2_{IJ} }{ \partial \mathcal{E}_{MN} } = B_{IKMN} C_{JR}^{-1} \Psi_{RK}
-         * \frac{ \partial term^2_{IJ} }{ \partial C_{MO}^{-1} \Psi_{ON} } = \left( B_{INKL} \mathcal{E}_{KL} + E_{KL} D_{KLIN} \right) \delta_{JM} 
+         * \f$\frac{ \partial term^2_{IJ} }{ \partial E_{MN} } = D_{MNIK} C_{JR}^{-1} \Psi_{RK}\f$
+         * \f$\frac{ \partial term^2_{IJ} }{ \partial \mathcal{E}_{MN} } = B_{IKMN} C_{JR}^{-1} \Psi_{RK}\f$
+         * \f$\frac{ \partial term^2_{IJ} }{ \partial C_{MO}^{-1} \Psi_{ON} } = \left( B_{INKL} \mathcal{E}_{KL} + E_{KL} D_{KLIN} \right) \delta_{JM}\f$
          *
-         * :param const variableVector &greenLagrangeStrain: The Green-Lagrange strain E_{IJ} = \frac{1}{2} \left( C_{IJ} - \delta_{IJ} \right)
-         * :param const variableVector &microStrain: The micro-strain \mathcal{E}_{IJ} = \Psi_{IJ} - \delta_{IJ}
-         * :param const variableVector &invCPsi: The product C_{JR}^{-1} \Psi_{RQ}
-         * :param const variableVector &B: The B stiffness matrix
-         * :param const variableVector &D: The D stiffness matrix
-         * :param variableVector &term2: The second term.
-         * :param variableMatrix &dTerm2dGreenLagrangeStrain: The jacobian of term 2 w.r.t. the Green-Lagrange strain.
-         * :param variableMatrix &dTerm2dMicroStrain: The jacobian of term 2 w.r.t. the microStrain.
-         * :param variableMatrix &dTerm2dInvCPsi: The jacobian of term 2 w.r.t. C_{JR}^{-1} \Psi_{RQ}
+         * \param &greenLagrangeStrain: The Green-Lagrange strain \f$E_{IJ} = \frac{1}{2} \left( C_{IJ} - \delta_{IJ} \right)\f$
+         * \param &microStrain: The micro-strain \f$\mathcal{E}_{IJ} = \Psi_{IJ} - \delta_{IJ}\f$
+         * \param &invCPsi: The product \f$C_{JR}^{-1} \Psi_{RQ}\f$
+         * \param &B: The B stiffness matrix
+         * \param &D: The D stiffness matrix
+         * \param &term2: The second term.
+         * \param &dTerm2dGreenLagrangeStrain: The jacobian of term 2 w.r.t. the Green-Lagrange strain.
+         * \param &dTerm2dMicroStrain: The jacobian of term 2 w.r.t. the microStrain.
+         * \param &dTerm2dInvCPsi: The jacobian of term 2 w.r.t. \f$C_{JR}^{-1} \Psi_{RQ}\f$
          */
 
         //Assume 3D
@@ -761,11 +764,11 @@ namespace tardigradeMicromorphicLinearElasticity{
                                                 variableVector &referenceHigherOrderStress ){
         /*!
          * Compute the higher order stress in the reference configuration.
-         * M_{IJK} = C_{JKILMN} Gamma_{LMN}
+         * \f$M_{IJK} = C_{JKILMN} \Gamma_{LMN}\f$
          *
-         * :param const variableVector &Gamma: The micro-gradient deformation measure.
-         * :param const parameterVector &C: The C stiffness tensor.
-         * :param variableVector &referenceHigherOrderStress: The higher order stress in the reference 
+         * \param &Gamma: The micro-gradient deformation measure.
+         * \param &C: The C stiffness tensor.
+         * \param &referenceHigherOrderStress: The higher order stress in the reference 
          *     configuration.
          */
 
@@ -805,15 +808,17 @@ namespace tardigradeMicromorphicLinearElasticity{
                                                 variableMatrix &dReferenceHigherOrderStressdGamma ){
         /*!
          * Compute the higher order stress in the reference configuration.
-         * M_{IJK} = C_{JKILMN} Gamma_{LMN}
+         * \f$M_{IJK} = C_{JKILMN} Gamma_{LMN}\f$
          *
          * Also compute the Jacobian
-         * \frac{ \partial M_{IJK} }{\partial \Gamma_{OPQ} } = C_{JKIOPQ}
+         * \f$\frac{ \partial M_{IJK} }{\partial \Gamma_{OPQ} } = C_{JKIOPQ}\f$
          *
-         * :param const variableVector &Gamma: The micro-gradient deformation measure.
-         * :param const parameterVector &C: The C stiffness tensor.
-         * :param variableVector &referenceHigherOrderStress: The higher order stress in the reference 
+         * \param &Gamma: The micro-gradient deformation measure.
+         * \param &C: The C stiffness tensor.
+         * \param &referenceHigherOrderStress: The higher order stress in the reference 
          *     configuration.
+         * \param &dReferenceHigherOrderStressdGamma: The derivative of the higher order stress
+         *     in the reference configuration w.r.t. Gamma
          */
 
         //Assume 3D
@@ -853,11 +858,11 @@ namespace tardigradeMicromorphicLinearElasticity{
                                         const variableVector &referenceHigherOrderStress, variableVector &term3 ){
         /*!
          * Compute the value of the third term in the micromorphic linear elasticity formulation.
-         * term3_{IJ} = M_{IQR} C_{JS}^{-1} \Gamma_{SQR}
+         * \f$term3_{IJ} = M_{IQR} C_{JS}^{-1} \Gamma_{SQR}\f$
          *
-         * :param const variableVector &invCGamma: C_{JS}^{-1} \Gamma_{SQR}
-         * :param const variableVector &referenceHigherOrderStress: The higher order stress in the reference configuration.
-         * :param variableVector &term3: The third term in the linear elastic equation.
+         * \param &invCGamma: \f$C_{JS}^{-1} \Gamma_{SQR}\f$
+         * \param &referenceHigherOrderStress: The higher order stress in the reference configuration.
+         * \param &term3: The third term in the linear elastic equation.
          */
 
         //Assume 3D
@@ -893,15 +898,17 @@ namespace tardigradeMicromorphicLinearElasticity{
                                         variableMatrix &dTerm3dInvCGamma, variableMatrix &dTerm3dReferenceHigherOrderStress ){
         /*!
          * Compute the value of the third term in the micromorphic linear elasticity formulation.
-         * term3_{IJ} = M_{IQR} C_{JS}^{-1} \Gamma_{SQR}
+         * \f$term3_{IJ} = M_{IQR} C_{JS}^{-1} \Gamma_{SQR}\f$
          *
          * Also returns the Jacobians
-         * \frac{ \partial term3_{IJ} }{ \partial M_{TUV} } = \delta_{IT} C_{JS}^{-1} \Gamma_{SUV}
-         * \frac{ \partial term3_{IJ} }{ \partial C_{TW}^{-1} \Gamma_{WUV} = M_{IUV} \delta_{JT}
+         * \f$\frac{ \partial term3_{IJ} }{ \partial M_{TUV} } = \delta_{IT} C_{JS}^{-1} \Gamma_{SUV}\f$
+         * \f$\frac{ \partial term3_{IJ} }{ \partial C_{TW}^{-1} \Gamma_{WUV} = M_{IUV} \delta_{JT}\f$
          *
-         * :param const variableVector &invCGamma: C_{JS}^{-1} \Gamma_{SQR}
-         * :param const variableVector &referenceHigherOrderStress: The higher order stress in the reference configuration.
-         * :param variableVector &term3: The third term in the linear elastic equation.
+         * \param &invCGamma: \f$C_{JS}^{-1} \Gamma_{SQR}\f$
+         * \param &referenceHigherOrderStress: The higher order stress in the reference configuration.
+         * \param &term3: The third term in the linear elastic equation.
+         * \param &dTerm3dInvCGamma: The derivative of the third term w.r.t. the product of the inverse RCG tensor and Gamma
+         * \param &dTerm3dReferenceHigherOrderStress: The derivative of the third term w.r.t. the higher order stress
          */
 
         //Assume 3D
@@ -939,11 +946,11 @@ namespace tardigradeMicromorphicLinearElasticity{
 
     errorOut computeInvRCGPsi( const variableVector &invRCG, const variableVector &Psi, variableVector &invRCGPsi ){
         /*!
-         * Compute the product C_{IK}^{-1} \Psi_{KJ}
+         * Compute the product \f$C_{IK}^{-1} \Psi_{KJ}\f$
          *
-         * :param const variableVector &invRCG: The inverse of the right cauchy green deformation tensor.
-         * :param const variableVector &Psi: The micro-deformation measure.
-         * :param variableVector &invRCGPsi: the product.
+         * \param &invRCG: The inverse of the right cauchy green deformation tensor.
+         * \param &Psi: The micro-deformation measure.
+         * \param &invRCGPsi: the product.
          */
 
         //Assume 3d
@@ -965,18 +972,18 @@ namespace tardigradeMicromorphicLinearElasticity{
     errorOut computeInvRCGPsi( const variableVector &invRCG, const variableVector &Psi, variableVector &invRCGPsi,
                                variableMatrix &dInvRCGPsidRCG, variableMatrix &dInvRCGPsidPsi ){
         /*!
-         * Compute the product C_{IK}^{-1} \Psi_{KJ}
+         * Compute the product \f$C_{IK}^{-1} \Psi_{KJ}\f$
          *
          * Also compute the Jacobians
-         * \frac{ \partial C_{IO}^{-1} \Psi_{OJ} } { \partial C_{KL} } = -C_{IK}^{-1} C_{LO}^{-1} \Psi_{OJ}
-         * \frac{ \partial C_{IO}^{-1} \Psi_{OJ} } { \partial \Psi_{KL} } = C_{IK}^{-1} \delta_{JL}
+         * \f$\frac{ \partial C_{IO}^{-1} \Psi_{OJ} } { \partial C_{KL} } = -C_{IK}^{-1} C_{LO}^{-1} \Psi_{OJ}\f$
+         * \f$\frac{ \partial C_{IO}^{-1} \Psi_{OJ} } { \partial \Psi_{KL} } = C_{IK}^{-1} \delta_{JL}\f$
          *
-         * :param const variableVector &invRCG: The inverse of the right cauchy green deformation tensor.
-         * :param const variableVector &Psi: The micro-deformation measure.
-         * :param variableVector &invRCGPsi: the product.
-         * :param variableMatrix &dInvRCGPsidRCG: The Jacobian of the product w.r.t. the right cauchy green
+         * \param &invRCG: The inverse of the right cauchy green deformation tensor.
+         * \param &Psi: The micro-deformation measure.
+         * \param &invRCGPsi: the product.
+         * \param &dInvRCGPsidRCG: The Jacobian of the product w.r.t. the right cauchy green
          *     deformation tensor.
-         * :param variableMatrix &dInvRCGPsidPsi: The Jacobian of the product w.r.t. the micro-deformation measure.
+         * \param &dInvRCGPsidPsi: The Jacobian of the product w.r.t. the micro-deformation measure.
          */
 
         //Assume 3D
@@ -1013,11 +1020,11 @@ namespace tardigradeMicromorphicLinearElasticity{
 
     errorOut computeInvRCGGamma( const variableVector &invRCG, const variableVector &Gamma, variableVector &invRCGGamma ){
         /*!
-         * Compute the product C_{IS}^{-1} \Gamma_{SQR}
+         * Compute the product \f$C_{IS}^{-1} \Gamma_{SQR}\f$
          *
-         * :param const variableVector &invRCG: The inverse of the right Cauchy Green deformation tensor.
-         * :param const variableVector &Gamma: The gradient of the micro-deformation deformation tensor.
-         * :param variableVector &invRCGGamma: The product.
+         * \param &invRCG: The inverse of the right Cauchy Green deformation tensor.
+         * \param &Gamma: The gradient of the micro-deformation deformation tensor.
+         * \param &invRCGGamma: The product.
          */
 
         //Assume 3d
@@ -1048,15 +1055,17 @@ namespace tardigradeMicromorphicLinearElasticity{
     errorOut computeInvRCGGamma( const variableVector &invRCG, const variableVector &Gamma, variableVector &invRCGGamma,
                                  variableMatrix &dInvRCGGammadRCG, variableMatrix &dInvRCGGammadGamma ){
         /*!
-         * Compute the product C_{IS}^{-1} \Gamma_{SQR}
+         * Compute the product \f$C_{IS}^{-1} \Gamma_{SQR}\f$
          *
          * Also compute the Jacobians
-         * \frac{\partial C_{JS}^{-1} \Gamma_{SQR} }{ \partial C_{TU} } = -C_{JT}^{-1} C_{US}^{-1} \Gamma_{SQR}
-          \frac{\partial C_{JS}^{-1} \Gamma_{SQR} }{ \partial \Gamma_{TUV} } = C_{JT}^{-1} \delta_{QU} \delta_{RV}
+         * \f$\frac{\partial C_{JS}^{-1} \Gamma_{SQR} }{ \partial C_{TU} } = -C_{JT}^{-1} C_{US}^{-1} \Gamma_{SQR}\f$
+         * \f$\frac{\partial C_{JS}^{-1} \Gamma_{SQR} }{ \partial \Gamma_{TUV} } = C_{JT}^{-1} \delta_{QU} \delta_{RV}\f$
          *
-         * :param const variableVector &invRCG: The inverse of the right Cauchy Green deformation tensor.
-         * :param const variableVector &Gamma: The gradient of the micro-deformation deformation tensor.
-         * :param variableVector &invRCGGamma: The product.
+         * \param &invRCG: The inverse of the right Cauchy Green deformation tensor.
+         * \param &Gamma: The gradient of the micro-deformation deformation tensor.
+         * \param &invRCGGamma: The product.
+         * \param &dInvRCGGammadRCG: The derivative of the inverse RCG gamma product w.r.t. the RCG tensor
+         * \param &dInvRCGGammadGamma: The derivative of the inverse RCG gamma product w.r.t. Gamma
          */
 
         //Assume 3d
@@ -1105,18 +1114,18 @@ namespace tardigradeMicromorphicLinearElasticity{
         /*!
          * Map the stress measures in the reference configuration to the current configuration.
          *
-         * :param const variableVector &deformationGradient: The deformation gradient between the 
+         * \param &deformationGradient: The deformation gradient between the 
          *     reference configuration and the current configuration.
-         * :param const variableVector &microDeformation: The micro-deformation map between the 
+         * \param &microDeformation: The micro-deformation map between the 
          *     reference configuration and the current configuration.
-         * :param const variableVector &PK2Stress: The Second Piola-Kirchoff stress.
-         * :param const variableVector &referenceMicroStress: The symmetric micro-stress in the 
+         * \param &PK2Stress: The Second Piola-Kirchoff stress.
+         * \param &referenceMicroStress: The symmetric micro-stress in the 
          *     reference configuration.
-         * :param const variableVector &referenceHigherOrderStress: The higher order stress in 
+         * \param &referenceHigherOrderStress: The higher order stress in 
          *     the reference configuration.
-         * :param variableVector &cauchyStress: The Cauchy stress (PK2 stress in the current configuration).
-         * :param variableVector &microStress: The symmetric micro-stress in the current configuration.
-         * :param variableVector &higherOrderStress: The higher order stress in the current configuration.
+         * \param &cauchyStress: The Cauchy stress (PK2 stress in the current configuration).
+         * \param &microStress: The symmetric micro-stress in the current configuration.
+         * \param &higherOrderStress: The higher order stress in the current configuration.
          */
 
         //Map the PK2 stress to the Cauchy stress
@@ -1167,31 +1176,31 @@ namespace tardigradeMicromorphicLinearElasticity{
          *
          * Also computes the Jacobians
          *
-         * :param const variableVector &deformationGradient: The deformation gradient between the 
+         * \param &deformationGradient: The deformation gradient between the 
          *     reference configuration and the current configuration.
-         * :param const variableVector &microDeformation: The micro-deformation map between the 
+         * \param &microDeformation: The micro-deformation map between the 
          *     reference configuration and the current configuration.
-         * :param const variableVector &PK2Stress: The Second Piola-Kirchoff stress.
-         * :param const variableVector &referenceMicroStress: The symmetric micro-stress in the 
+         * \param &PK2Stress: The Second Piola-Kirchoff stress.
+         * \param &referenceMicroStress: The symmetric micro-stress in the 
          *     reference configuration.
-         * :param const variableVector &referenceHigherOrderStress: The higher order stress in 
+         * \param &referenceHigherOrderStress: The higher order stress in 
          *     the reference configuration.
-         * :param variableVector &cauchyStress: The Cauchy stress (PK2 stress in the current configuration).
-         * :param variableVector &microStress: The symmetric micro-stress in the current configuration.
-         * :param variableVector &higherOrderStress: The higher order stress in the current configuration.
-         * :param variableMatrix &dCauchyStressdF: The Jacobian of the Cauchy stress w.r.t. the 
+         * \param &cauchyStress: The Cauchy stress (PK2 stress in the current configuration).
+         * \param &microStress: The symmetric micro-stress in the current configuration.
+         * \param &higherOrderStress: The higher order stress in the current configuration.
+         * \param &dCauchyStressdF: The Jacobian of the Cauchy stress w.r.t. the 
          *     deformation gradient.
-         * :param variableMatrix &dCauchyStressdPK2Stress: The Jacobian of the Cauchy stress w.r.t. the 
+         * \param &dCauchyStressdPK2Stress: The Jacobian of the Cauchy stress w.r.t. the 
          *     PK2 stress.
-         * :param variableMatrix &dMicroStressdF: The Jacobian of the micro stress w.r.t. the 
+         * \param &dMicroStressdF: The Jacobian of the micro stress w.r.t. the 
          *     deformation gradient.
-         * :param variableMatrix &dMicroStressdReferenceMicroStress: The Jacobian of the micro-stress 
+         * \param &dMicroStressdReferenceMicroStress: The Jacobian of the micro-stress 
          *     in the current configuration w.r.t. the micro-stress in the reference configuration.
-         * :param variableMatrix &dHigherOrderStressdF: The Jacobian of the higher-order stress w.r.t.
+         * \param &dHigherOrderStressdF: The Jacobian of the higher-order stress w.r.t.
          *     the deformation gradient.
-         * :param variableMatrix &dHigherOrderStressdChi: The Jacobian of the higher-order stress 
+         * \param &dHigherOrderStressdChi: The Jacobian of the higher-order stress 
          *     w.r.t. the micro-deformation.
-         * :param variableMatrix &dHigherOrderStressdReferenceHigherOrderStress: The Jacobian of the 
+         * \param &dHigherOrderStressdReferenceHigherOrderStress: The Jacobian of the 
          *     higher-order stress w.r.t. the higher order stress in the reference configuration.
          */
 
@@ -1244,16 +1253,16 @@ namespace tardigradeMicromorphicLinearElasticity{
          * Compute the stress measures in the current configuration for micromorphic linear elasticity based off 
          * of a quadratic decomposition of the energy.
          *
-         * :param const variableVector &deformationGradient: The deformation gradient
-         * :param const variableVector &microDeformation: The micro-deformation
-         * :param const variableVector &gradientMicroDeformation: The spatial gradient of the micro-deformation
-         * :param const parameterVector &A: The A stiffness matrix.
-         * :param const parameterVector &B: The B stiffness matrix.
-         * :param const parameterVector &C: The C stiffness matrix.
-         * :param const parameterVector &D: The D stiffness matrix.
-         * :param variableVector &CauchyStress: The Cauchy stress.
-         * :param variableVector &microStress: The symmetric micro-stress.
-         * :param variableVector &higherOrderStress: The higher-order stress.
+         * \param &deformationGradient: The deformation gradient
+         * \param &microDeformation: The micro-deformation
+         * \param &gradientMicroDeformation: The spatial gradient of the micro-deformation
+         * \param &A: The A stiffness matrix.
+         * \param &B: The B stiffness matrix.
+         * \param &C: The C stiffness matrix.
+         * \param &D: The D stiffness matrix.
+         * \param &cauchyStress: The Cauchy stress.
+         * \param &microStress: The symmetric micro-stress.
+         * \param &higherOrderStress: The higher-order stress.
          */
 
         variableVector PK2Stress, referenceMicroStress, referenceHigherOrderStress;
@@ -1298,27 +1307,27 @@ namespace tardigradeMicromorphicLinearElasticity{
          *
          * Also compute the Jacobians
          *
-         * :param const variableVector &deformationGradient: The deformation gradient
-         * :param const variableVector &microDeformation: The micro-deformation
-         * :param const variableVector &gradientMicroDeformation: The spatial gradient of the micro-deformation
-         * :param const parameterVector &A: The A stiffness matrix.
-         * :param const parameterVector &B: The B stiffness matrix.
-         * :param const parameterVector &C: The C stiffness matrix.
-         * :param const parameterVector &D: The D stiffness matrix.
-         * :param variableVector &CauchyStress: The Cauchy stress.
-         * :param variableVector &microStress: The symmetric micro-stress.
-         * :param variableVector &higherOrderStress: The higher-order stress.
-         * :param variableMatrix &dCauchyStressdF: The Jacobian of the Cauchy stress w.r.t. the deformation gradient
-         * :param variableMatrix &dCauchyStressdChi: The Jacobian of the Cauchy stress w.r.t. the micro deformation.
-         * :param variableMatrix &dCauchyStressdGradChi: The Jacobian of the Cauchy stress w.r.t. the gradient of the 
+         * \param &deformationGradient: The deformation gradient
+         * \param &microDeformation: The micro-deformation
+         * \param &gradientMicroDeformation: The spatial gradient of the micro-deformation
+         * \param &A: The A stiffness matrix.
+         * \param &B: The B stiffness matrix.
+         * \param &C: The C stiffness matrix.
+         * \param &D: The D stiffness matrix.
+         * \param &cauchyStress: The Cauchy stress.
+         * \param &microStress: The symmetric micro-stress.
+         * \param &higherOrderStress: The higher-order stress.
+         * \param &dCauchyStressdF: The Jacobian of the Cauchy stress w.r.t. the deformation gradient
+         * \param &dCauchyStressdChi: The Jacobian of the Cauchy stress w.r.t. the micro deformation.
+         * \param &dCauchyStressdGradChi: The Jacobian of the Cauchy stress w.r.t. the gradient of the 
          *     micro-deformation.
-         * :param variableMatrix &dMicroStressdF: The Jacobian of the Micro stress w.r.t. the deformation gradient
-         * :param variableMatrix &dMicroStressdChi: The Jacobian of the Micro stress w.r.t. the micro deformation.
-         * :param variableMatrix &dMicroStressdGradChi: The Jacobian of the Micro stress w.r.t. the gradient of the 
+         * \param &dMicroStressdF: The Jacobian of the Micro stress w.r.t. the deformation gradient
+         * \param &dMicroStressdChi: The Jacobian of the Micro stress w.r.t. the micro deformation.
+         * \param &dMicroStressdGradChi: The Jacobian of the Micro stress w.r.t. the gradient of the 
          *     micro-deformation.
-         * :param variableMatrix &dHigherOrderStressdF: The Jacobian of the Higher Order stress w.r.t. the deformation gradient
-         * :param variableMatrix &dHigherOrderStressdChi: The Jacobian of the Higher Order stress w.r.t. the micro deformation.
-         * :param variableMatrix &dHigherOrderStressdGradChi: The Jacobian of the Higher Order stress w.r.t. the gradient of the 
+         * \param &dHigherOrderStressdF: The Jacobian of the Higher Order stress w.r.t. the deformation gradient
+         * \param &dHigherOrderStressdChi: The Jacobian of the Higher Order stress w.r.t. the micro deformation.
+         * \param &dHigherOrderStressdGradChi: The Jacobian of the Higher Order stress w.r.t. the gradient of the 
          *     micro-deformation.
          */
 
@@ -1381,11 +1390,11 @@ namespace tardigradeMicromorphicLinearElasticity{
     errorOut formIsotropicA( const parameterType &lambda, const parameterType &mu, parameterVector &A ){
         /*!
          * Form the isotropic A stiffness tensor.
-         * A_{KLMN} = \lambda \delta_{KL} \delta_{MN} + \mu \left( \delta_{KM} \delta_{LN} + \delta_{KN} \delta_{LM} )
+         * \f$A_{KLMN} = \lambda \delta_{KL} \delta_{MN} + \mu \left( \delta_{KM} \delta_{LN} + \delta_{KN} \delta_{LM} )\f$
          *
-         * :param const parameterType &lambda: The micromorphic lambda parameter.
-         * :param const parameterType &mu: The micromorphic mu parameter.
-         * :param parameterVector &A: The isotropic A stiffness tensor.
+         * \param &lambda: The micromorphic lambda parameter.
+         * \param &mu: The micromorphic mu parameter.
+         * \param &A: The isotropic A stiffness tensor.
          */
 
         //Assume 3D
@@ -1415,15 +1424,15 @@ namespace tardigradeMicromorphicLinearElasticity{
                              const parameterType &nu,  const parameterType &sigma, parameterVector &B ){
         /*!
          * Form the isotropic B stiffness tensor.
-         * B_{KLMN} = ( eta - tau ) \delta_{KL} \delta_{MN} + \kappa \delta_{KM} \delta_{LN} + \nu \delta_{KN} \delta_{LM}
-         *          - \sigma \left( \delta_{KM} \delta_{LN} + \delta_{KN} \delta_{LM} \right)
+         * \f$B_{KLMN} = ( eta - tau ) \delta_{KL} \delta_{MN} + \kappa \delta_{KM} \delta_{LN} + \nu \delta_{KN} \delta_{LM}
+         *             - \sigma \left( \delta_{KM} \delta_{LN} + \delta_{KN} \delta_{LM} \right)\f$
          *
-         * :param const parameterType &eta: The micromorphic eta parameter.
-         * :param const parameterType &tau: The micromorphic tau parameter.
-         * :param const parameterType &kappa: The micromorphic kappa parameter.
-         * :param const parameterType &nu: The micromorphic nu parameter.
-         * :param const parameterType &sigma: The micromorphic sigma parameter
-         * :param parameterVector &B: The isotropic B stiffnes tensor.
+         * \param &eta: The micromorphic eta parameter.
+         * \param &tau: The micromorphic tau parameter.
+         * \param &kappa: The micromorphic kappa parameter.
+         * \param &nu: The micromorphic nu parameter.
+         * \param &sigma: The micromorphic sigma parameter
+         * \param &B: The isotropic B stiffnes tensor.
          */
 
         //Assume 3D
@@ -1454,20 +1463,22 @@ namespace tardigradeMicromorphicLinearElasticity{
     errorOut formIsotropicC( const parameterVector &taus, parameterVector &C ){
         /*!
          * Form the isotropic C stiffness tensor.
-         * C_{KLMNPQ} = \tau_1 \left( \delta_{KL} \delta_{MN} \delta_{PQ} + \delta_{KQ} \delta_{LM} \delta_{NP} \right) 
-         *            + \tau_2 \left( \delta_{KL} \delta_{MP} \delta_{NQ} + \delta_{KM} \delta_{LQ} \delta_{NP} \right)
-         *            + \tau_3 \delta_{KL} \delta_{MQ} \delta_{NP}
-         *            + \tau_4 \delta_{KN} \delta_{LM} \delta_{PQ}
-         *            + \tau_5 \left( \delta_{KM} \delta_{LN} \delta_{PQ} + \delta_{KP} \delta_{LM} \delta_{NQ} )
-         *            + \tau_6 \delta_{KM} \delta_{LP} \delta_{NQ}
-         *            + \tau_7 \delta_{KN} \delta_{LP} \delta_{MQ}
-         *            + \tau_8 \left( \delta_{KP} \delta_{LQ} \delta_{MN} + \delta_{KQ} \delta_{LN} \delta_{MP} )
-         *            + \tau_9 \delta_{KN} \delta_{LQ} \delta_{MP}
-         *            + \tau_{10} \delta_{KP} \delta_{LN} \delta_{MQ}
-         *            + \tau_{11} \delta_{KQ} \delta_{LP} \delta_{MN}
+         * \f$\begin{align}
+         * C_{KLMNPQ} &= \tau_1 \left( \delta_{KL} \delta_{MN} \delta_{PQ} + \delta_{KQ} \delta_{LM} \delta_{NP} \right)\\
+         *            &+ \tau_2 \left( \delta_{KL} \delta_{MP} \delta_{NQ} + \delta_{KM} \delta_{LQ} \delta_{NP} \right)\\
+         *            &+ \tau_3 \delta_{KL} \delta_{MQ} \delta_{NP}\\
+         *            &+ \tau_4 \delta_{KN} \delta_{LM} \delta_{PQ}\\
+         *            &+ \tau_5 \left( \delta_{KM} \delta_{LN} \delta_{PQ} + \delta_{KP} \delta_{LM} \delta_{NQ} )\\
+         *            &+ \tau_6 \delta_{KM} \delta_{LP} \delta_{NQ}\\
+         *            &+ \tau_7 \delta_{KN} \delta_{LP} \delta_{MQ}\\
+         *            &+ \tau_8 \left( \delta_{KP} \delta_{LQ} \delta_{MN} + \delta_{KQ} \delta_{LN} \delta_{MP} )\\
+         *            &+ \tau_9 \delta_{KN} \delta_{LQ} \delta_{MP}\\
+         *            &+ \tau_{10} \delta_{KP} \delta_{LN} \delta_{MQ}\\
+         *            &+ \tau_{11} \delta_{KQ} \delta_{LP} \delta_{MN}
+         * \end{align}\f$
          *
-         * :param const parameterVector &taus: The moduli (11 independent terms)
-         * :param parameterVector &C: The isotropic C stiffness tensor.
+         * \param &taus: The moduli (11 independent terms)
+         * \param &C: The isotropic C stiffness tensor.
          */
 
         //Assume 3D
@@ -1517,11 +1528,11 @@ namespace tardigradeMicromorphicLinearElasticity{
     errorOut formIsotropicD( const parameterType &tau, const parameterType &sigma, parameterVector &D ) {
         /*!
          * Form the isotropic tensor D.
-         * D_{KLMN} = \tau \delta_{KL} \delta_{MN} + \sigma \left( \delta_{KM} \delta_{LN} + \delta_{KN} \delta_{LM} )
+         * \f$D_{KLMN} = \tau \delta_{KL} \delta_{MN} + \sigma \left( \delta_{KM} \delta_{LN} + \delta_{KN} \delta_{LM} )\f$
          *
-         * :param const parameterType &tau: The micromorphic tau parameter.
-         * :param const parameterType &sigma: The micromorphic sigma parameter.
-         * :param parameterVector &D: The D stiffness tensor.
+         * \param &tau: The micromorphic tau parameter.
+         * \param &sigma: The micromorphic sigma parameter.
+         * \param &D: The D stiffness tensor.
          */
 
         //Assume 3D
@@ -1552,12 +1563,12 @@ namespace tardigradeMicromorphicLinearElasticity{
         /*!
          * Assemble the fundamental deformation meaures from the degrees of freedom.
          *
-         * :param const double ( &grad_u )[ 3 ][ 3 ]: The macro displacement gradient w.r.t. the reference configuration.
-         * :param const double ( &phi )[ 9 ]: The micro displacement.
-         * :param const double ( &grad_phi )[ 9 ][ 3 ]: The gradient of the micro displacement w.r.t. the reference configuration.
-         * :param variableVector &deformationGradient: The deformation gradient
-         * :param variableVector &microDeformation: The micro deformation
-         * :param variableVector &gradientMicroDeformation: The gradient of the micro deformation.
+         * \param &grad_u: The macro displacement gradient w.r.t. the reference configuration.
+         * \param &phi: The micro displacement.
+         * \param &grad_phi: The gradient of the micro displacement w.r.t. the reference configuration.
+         * \param &deformationGradient: The deformation gradient
+         * \param &microDeformation: The micro deformation
+         * \param &gradientMicroDeformation: The gradient of the micro deformation.
          */
 
 
@@ -1618,15 +1629,15 @@ namespace tardigradeMicromorphicLinearElasticity{
         /*!
          * Assemble the fundamental deformation meaures from the degrees of freedom.
          *
-         * :param const double ( &grad_u )[ 3 ][ 3 ]: The macro displacement gradient w.r.t. the reference configuration.
-         * :param const double ( &phi )[ 9 ]: The micro displacement.
-         * :param const double ( &grad_phi )[ 9 ][ 3 ]: The gradient of the micro displacement w.r.t. the reference configuration.
-         * :param variableVector &deformationGradient: The deformation gradient
-         * :param variableVector &microDeformation: The micro deformation
-         * :param variableVector &gradientMicroDeformation: The gradient of the micro deformation.
-         * :param variableMatrix &dFdGradU: The Jacobian of the deformation gradient w.r.t. the gradient of the displacement
-         * :param variableMatrix &dChidPhi: The Jacobian of the micro deformation w.r.t. the micro displacement
-         * :param variableMatrix &dGradChidGradPhi: The Jacobian of the gradient of the micro deformation w.r.t.
+         * \param &grad_u: The macro displacement gradient w.r.t. the reference configuration.
+         * \param &phi: The micro displacement.
+         * \param &grad_phi: The gradient of the micro displacement w.r.t. the reference configuration.
+         * \param &deformationGradient: The deformation gradient
+         * \param &microDeformation: The micro deformation
+         * \param &gradientMicroDeformation: The gradient of the micro deformation.
+         * \param &dFdGradU: The Jacobian of the deformation gradient w.r.t. the gradient of the displacement
+         * \param &dChidPhi: The Jacobian of the micro deformation w.r.t. the micro displacement
+         * \param &dGradChidGradPhi: The Jacobian of the gradient of the micro deformation w.r.t.
          *      the gradient of the micro displacement
          */
 
@@ -1687,11 +1698,11 @@ namespace tardigradeMicromorphicLinearElasticity{
         /*!
          * Extract the parameters from the parameter vector
          *
-         * :param const std::vector< double > &fparams: The incoming parameter vector
-         * :param parameterVector &Amatrix: The A stiffness matrix.
-         * :param parameterVector &Bmatrix: The B stiffness matrix.
-         * :param parameterVector &Cmatrix: The C stiffness matrix.
-         * :param parameterVector &Dmatrix: The D stiffness matrix.
+         * \param &fparams: The incoming parameter vector
+         * \param &Amatrix: The A stiffness matrix.
+         * \param &Bmatrix: The B stiffness matrix.
+         * \param &Cmatrix: The C stiffness matrix.
+         * \param &Dmatrix: The D stiffness matrix.
          */
 
         if ( fparams.size() == 0 ){
@@ -1807,45 +1818,47 @@ namespace tardigradeMicromorphicLinearElasticity{
          * Evaluate the elasto-plastic constitutive model. Note the format of the header changed to provide a 
          * consistant interface with the material model library.
          *
-         * :param const std::vector< double > &time: The current time and the timestep
+         * \param &time: The current time and the timestep
          *     [ current_t, dt ]
-         * :param const std::vector< double > ( &fparams ): The parameters for the constitutive model
+         * \param &fparams: The parameters for the constitutive model
          *     [ num_Amatrix_parameters, Amatrix_parameters, num_Bmatrix_parameters, Bmatrix_parameters,
          *       num_Cmatrix_parameters, Cmatrix_parameters, num_Dmatrix_parameters, Dmatrix_parameters ]
          *
-         * :param const double ( &current_grad_u )[ 3 ][ 3 ]: The current displacement gradient
-         *     Assumed to be of the form [ [ u_{1,1}, u_{1,2}, u_{1,3} ],
-         *                                 [ u_{2,1}, u_{2,2}, u_{2,3} ],
-         *                                 [ u_{3,1}, u_{3,2}, u_{3,3} ] ]
-         * :param const double ( &current_phi )[ 9 ]: The current micro displacment values.
-         *     Assumed to be of the form [ \phi_{11}, \phi_{12}, \phi_{13}, \phi_{21}, \phi_{22}, \phi_{23}, \phi_{31}, \phi_{32}, \phi_{33} ]
-         * :param const double ( &current_grad_phi )[ 9 ][ 3 ]: The current micro displacement gradient
-         *     Assumed to be of the form [ [ \phi_{11,1}, \phi_{11,2}, \phi_{11,3} ],
-         *                                 [ \phi_{12,1}, \phi_{12,2}, \phi_{12,3} ],
-         *                                 [ \phi_{13,1}, \phi_{13,2}, \phi_{13,3} ],
-         *                                 [ \phi_{21,1}, \phi_{21,2}, \phi_{21,3} ],
-         *                                 [ \phi_{22,1}, \phi_{22,2}, \phi_{22,3} ],
-         *                                 [ \phi_{23,1}, \phi_{23,2}, \phi_{23,3} ],
-         *                                 [ \phi_{31,1}, \phi_{31,2}, \phi_{31,3} ],
-         *                                 [ \phi_{32,1}, \phi_{32,2}, \phi_{32,3} ],
-         *                                 [ \phi_{33,1}, \phi_{33,2}, \phi_{33,3} ] ]
-         * :param const double ( &previous_grad_u )[ 3 ][ 3 ]: The previous displacement gradient.
-         * :param const double ( &previous_phi )[ 9 ]: The previous micro displacement.
-         * :param const double ( &previous_grad_phi )[ 9 ][ 3 ]: The previous micro displacement gradient.
-         * :param std::vector< double > &SDVS: The previously converged values of the state variables ( unused )
-         * :param std::vector< double > &current_ADD_DOF: The current values of the additional degrees of freedom ( unused )
-         * :param std::vector< std::vector< double > > &current_ADD_grad_DOF: The current values of the gradients of the 
+         * \param &current_grad_u: The current displacement gradient
+         *     Assumed to be of the form [ [ \f$u_{1,1}\f$, \f$u_{1,2}\f$, \f$u_{1,3}\f$ ],
+         *                                 [ \f$u_{2,1}\f$, \f$u_{2,2}\f$, \f$u_{2,3}\f$ ],
+         *                                 [ \f$u_{3,1}\f$, \f$u_{3,2}\f$, \f$u_{3,3}\f$ ] ]
+         * \param &current_phi: The current micro displacement values.
+         *     Assumed to be of the form [ \f$\phi_{11}\f$, \f$\phi_{12}\f$, \f$\phi_{13}\f$, \f$\phi_{21}\f$, \f$\phi_{22}\f$, \f$\phi_{23}\f$, \f$\phi_{31}\f$, \f$\phi_{32}\f$, \f$\phi_{33}\f$ ]
+         * \param &current_grad_phi: The current micro displacement gradient
+         *     Assumed to be of the form [ [ \f$\phi_{11,1}\f$, \f$\phi_{11,2}\f$, \f$\phi_{11,3}\f$ ],
+         *                                 [ \f$\phi_{12,1}\f$, \f$\phi_{12,2}\f$, \f$\phi_{12,3}\f$ ],
+         *                                 [ \f$\phi_{13,1}\f$, \f$\phi_{13,2}\f$, \f$\phi_{13,3}\f$ ],
+         *                                 [ \f$\phi_{21,1}\f$, \f$\phi_{21,2}\f$, \f$\phi_{21,3}\f$ ],
+         *                                 [ \f$\phi_{22,1}\f$, \f$\phi_{22,2}\f$, \f$\phi_{22,3}\f$ ],
+         *                                 [ \f$\phi_{23,1}\f$, \f$\phi_{23,2}\f$, \f$\phi_{23,3}\f$ ],
+         *                                 [ \f$\phi_{31,1}\f$, \f$\phi_{31,2}\f$, \f$\phi_{31,3}\f$ ],
+         *                                 [ \f$\phi_{32,1}\f$, \f$\phi_{32,2}\f$, \f$\phi_{32,3}\f$ ],
+         *                                 [ \f$\phi_{33,1}\f$, \f$\phi_{33,2}\f$, \f$\phi_{33,3}\f$ ] ]
+         * \param &previous_grad_u: The previous displacement gradient.
+         * \param &previous_phi: The previous micro displacement.
+         * \param &previous_grad_phi: The previous micro displacement gradient.
+         * \param &SDVS: The previously converged values of the state variables ( unused )
+         * \param &current_ADD_DOF: The current values of the additional degrees of freedom ( unused )
+         * \param &current_ADD_grad_DOF: The current values of the gradients of the 
+         * \param &previous_ADD_DOF: The previous values of the additional degrees of freedom ( unused )
+         * \param &previous_ADD_grad_DOF: The previous values of the gradients of the 
          *     additional degrees of freedom ( unused )
-         * :param std::vector< double > &current_PK2: The current value of the second Piola Kirchhoff stress tensor. The format is
-         *     [ S_{11}, S_{12}, S_{13}, S_{21}, S_{22}, S_{23}, S_{31}, S_{32}, S_{33} ]
-         * :param std::vector< double > &current_SIGMA: The current value of the reference micro stress. The format is
-         *     [ S_{11}, S_{12}, S_{13}, S_{21}, S_{22}, S_{23}, S_{31}, S_{32}, S_{33} ]
-         * :param std::vector< double > &current_M: The current value of the reference higher order stress. The format is
-         *     [ M_{111}, M_{112}, M_{113}, M_{121}, M_{122}, M_{123}, M_{131}, M_{132}, M_{133},
-         *       M_{211}, M_{212}, M_{213}, M_{221}, M_{222}, M_{223}, M_{231}, M_{232}, M_{233},
-         *       M_{311}, M_{312}, M_{313}, M_{321}, M_{322}, M_{323}, M_{331}, M_{332}, M_{333} ]
-         * :param std::vector< std::vector< double > > &ADD_TERMS: Additional terms ( unused )
-         * :param std::string &output_message: The output message string.
+         * \param &PK2: The current value of the second Piola Kirchhoff stress tensor. The format is
+         *     [ \f$S_{11}\f$, \f$S_{12}\f$, \f$S_{13}\f$, \f$S_{21}\f$, \f$S_{22}\f$, \f$S_{23}\f$, \f$S_{31}\f$, \f$S_{32}\f$, \f$S_{33}\f$ ]
+         * \param &SIGMA: The current value of the reference micro stress. The format is
+         *     [ \f$S_{11}\f$, \f$S_{12}\f$, \f$S_{13}\f$, \f$S_{21}\f$, \f$S_{22}\f$, \f$S_{23}\f$, \f$S_{31}\f$, \f$S_{32}\f$, \f$S_{33}\f$ ]
+         * \param &M: The current value of the reference higher order stress. The format is
+         *     [ \f$M_{111}\f$, \f$M_{112}\f$, \f$M_{113}\f$, \f$M_{121}\f$, \f$M_{122}\f$, \f$M_{123}\f$, \f$M_{131}\f$, \f$M_{132}\f$, \f$M_{133}\f$,
+         *       \f$M_{211}\f$, \f$M_{212}\f$, \f$M_{213}\f$, \f$M_{221}\f$, \f$M_{222}\f$, \f$M_{223}\f$, \f$M_{231}\f$, \f$M_{232}\f$, \f$M_{233}\f$,
+         *       \f$M_{311}\f$, \f$M_{312}\f$, \f$M_{313}\f$, \f$M_{321}\f$, \f$M_{322}\f$, \f$M_{323}\f$, \f$M_{331}\f$, \f$M_{332}\f$, \f$M_{333}\f$ ]
+         * \param &ADD_TERMS: Additional terms ( unused )
+         * \param &output_message: The output message string.
          *
          * Returns:
          *     0: No errors. Solution converged.
@@ -1946,9 +1959,9 @@ namespace tardigradeMicromorphicLinearElasticity{
          * Evaluate the elasto-plastic constitutive model. Note the format of the header changed to provide a 
          * consistant interface with the material model library.
          *
-         * :param const std::vector< double > &time: The current time and the timestep
+         * \param &time: The current time and the timestep
          *     [ current_t, dt ]
-         * :param const std::vector< double > ( &fparams ): The parameters for the constitutive model
+         * \param &fparams: The parameters for the constitutive model
          *     [ num_Amatrix_parameters, Amatrix_parameters, num_Bmatrix_parameters, Bmatrix_parameters,
          *       num_Cmatrix_parameters, Cmatrix_parameters, num_Dmatrix_parameters, Dmatrix_parameters,
          *       num_macroHardeningParameters, macroHardeningParameters,
@@ -1963,63 +1976,65 @@ namespace tardigradeMicromorphicLinearElasticity{
          *       alphaMacro, alphaMicro, alphaMicroGradient,
          *       relativeTolerance, absoluteTolerance ]
          *
-         * :param const double ( &current_grad_u )[ 3 ][ 3 ]: The current displacement gradient
-         *     Assumed to be of the form [ [ u_{1,1}, u_{1,2}, u_{1,3} ],
-         *                                 [ u_{2,1}, u_{2,2}, u_{2,3} ],
-         *                                 [ u_{3,1}, u_{3,2}, u_{3,3} ] ]
-         * :param const double ( &current_phi )[ 9 ]: The current micro displacment values.
-         *     Assumed to be of the form [ \phi_{11}, \phi_{12}, \phi_{13}, \phi_{21}, \phi_{22}, \phi_{23}, \phi_{31}, \phi_{32}, \phi_{33} ]
-         * :param const double ( &current_grad_phi )[ 9 ][ 3 ]: The current micro displacement gradient
-         *     Assumed to be of the form [ [ \phi_{11,1}, \phi_{11,2}, \phi_{11,3} ],
-         *                                 [ \phi_{12,1}, \phi_{12,2}, \phi_{12,3} ],
-         *                                 [ \phi_{13,1}, \phi_{13,2}, \phi_{13,3} ],
-         *                                 [ \phi_{21,1}, \phi_{21,2}, \phi_{21,3} ],
-         *                                 [ \phi_{22,1}, \phi_{22,2}, \phi_{22,3} ],
-         *                                 [ \phi_{23,1}, \phi_{23,2}, \phi_{23,3} ],
-         *                                 [ \phi_{31,1}, \phi_{31,2}, \phi_{31,3} ],
-         *                                 [ \phi_{32,1}, \phi_{32,2}, \phi_{32,3} ],
-         *                                 [ \phi_{33,1}, \phi_{33,2}, \phi_{33,3} ] ]
-         * :param const double ( &previous_grad_u )[ 3 ][ 3 ]: The previous displacement gradient.
-         * :param const double ( &previous_phi )[ 9 ]: The previous micro displacement.
-         * :param const double ( &previous_grad_phi )[ 9 ][ 3 ]: The previous micro displacement gradient.
-         * :param std::vector< double > &SDVS: The previously converged values of the state variables
+         * \param &current_grad_u: The current displacement gradient
+         *     Assumed to be of the form [ [ \f$u_{1,1}\f$, \f$u_{1,2}\f$, \f$u_{1,3}\f$ ],
+         *                                 [ \f$u_{2,1}\f$, \f$u_{2,2}\f$, \f$u_{2,3}\f$ ],
+         *                                 [ \f$u_{3,1}\f$, \f$u_{3,2}\f$, \f$u_{3,3}\f$ ] ]
+         * \param &current_phi: The current micro displacement values.
+         *     Assumed to be of the form [ \f$\phi_{11}\f$, \f$\phi_{12}\f$, \f$\phi_{13}\f$, \f$\phi_{21}\f$, \f$\phi_{22}\f$, \f$\phi_{23}\f$, \f$\phi_{31}\f$, \f$\phi_{32}\f$, \f$\phi_{33}\f$ ]
+         * \param &current_grad_phi: The current micro displacement gradient
+         *     Assumed to be of the form [ [ \f$\phi_{11,1}\f$, \f$\phi_{11,2}\f$, \f$\phi_{11,3}\f$ ],
+         *                                 [ \f$\phi_{12,1}\f$, \f$\phi_{12,2}\f$, \f$\phi_{12,3}\f$ ],
+         *                                 [ \f$\phi_{13,1}\f$, \f$\phi_{13,2}\f$, \f$\phi_{13,3}\f$ ],
+         *                                 [ \f$\phi_{21,1}\f$, \f$\phi_{21,2}\f$, \f$\phi_{21,3}\f$ ],
+         *                                 [ \f$\phi_{22,1}\f$, \f$\phi_{22,2}\f$, \f$\phi_{22,3}\f$ ],
+         *                                 [ \f$\phi_{23,1}\f$, \f$\phi_{23,2}\f$, \f$\phi_{23,3}\f$ ],
+         *                                 [ \f$\phi_{31,1}\f$, \f$\phi_{31,2}\f$, \f$\phi_{31,3}\f$ ],
+         *                                 [ \f$\phi_{32,1}\f$, \f$\phi_{32,2}\f$, \f$\phi_{32,3}\f$ ],
+         *                                 [ \f$\phi_{33,1}\f$, \f$\phi_{33,2}\f$, \f$\phi_{33,3}\f$ ] ]
+         * \param &previous_grad_u: The previous displacement gradient.
+         * \param &previous_phi: The previous micro displacement.
+         * \param &previous_grad_phi: The previous micro displacement gradient.
+         * \param &SDVS: The previously converged values of the state variables
          *     [ previousMacroStrainISV, previousMicroStrainISV, previousMicroGradientStrainISV,
          *       previousMacroGamma, previousMicroGamma, previousMicroGradientGamma,
          *       previousPlasticDeformationGradient - eye, previousPlasticMicroDeformation - eye,
          *       previousPlasticMicroGradient ]
-         * :param std::vector< double > &current_ADD_DOF: The current values of the additional degrees of freedom ( unused )
-         * :param std::vector< std::vector< double > > &current_ADD_grad_DOF: The current values of the gradients of the 
+         * \param &current_ADD_DOF: The current values of the additional degrees of freedom ( unused )
+         * \param &current_ADD_grad_DOF: The current values of the gradients of the 
          *     additional degrees of freedom ( unused )
-         * :param std::vector< double > &current_PK2: The current value of the second Piola Kirchhoff stress tensor. The format is
-         *     [ S_{11}, S_{12}, S_{13}, S_{21}, S_{22}, S_{23}, S_{31}, S_{32}, S_{33} ]
-         * :param std::vector< double > &current_SIGMA: The current value of the reference micro stress. The format is
-         *     [ S_{11}, S_{12}, S_{13}, S_{21}, S_{22}, S_{23}, S_{31}, S_{32}, S_{33} ]
-         * :param std::vector< double > &current_M: The current value of the reference higher order stress. The format is
-         *     [ M_{111}, M_{112}, M_{113}, M_{121}, M_{122}, M_{123}, M_{131}, M_{132}, M_{133},
-         *       M_{211}, M_{212}, M_{213}, M_{221}, M_{222}, M_{223}, M_{231}, M_{232}, M_{233},
-         *       M_{311}, M_{312}, M_{313}, M_{321}, M_{322}, M_{323}, M_{331}, M_{332}, M_{333} ]
-         * :param std::vector< std::vector< double > > &DPK2Dgrad_u: The Jacobian of the PK2 stress w.r.t. the 
+         * \param &previous_ADD_DOF: The previous values of the additional degrees of freedom ( unused )
+         * \param &previous_ADD_grad_DOF: The previous values of the gradients of the 
+         * \param &PK2: The current value of the second Piola Kirchhoff stress tensor. The format is
+         *     [ \f$S_{11}\f$, \f$S_{12}\f$, \f$S_{13}\f$, \f$S_{21}\f$, \f$S_{22}\f$, \f$S_{23}\f$, \f$S_{31}\f$, \f$S_{32}\f$, \f$S_{33}\f$ ]
+         * \param &SIGMA: The current value of the reference micro stress. The format is
+         *     [ \f$S_{11}\f$, \f$S_{12}\f$, \f$S_{13}\f$, \f$S_{21}\f$, \f$S_{22}\f$, \f$S_{23}\f$, \f$S_{31}\f$, \f$S_{32}\f$, \f$S_{33}\f$ ]
+         * \param &M: The current value of the reference higher order stress. The format is
+         *     [ \f$M_{111}\f$, \f$M_{112}\f$, \f$M_{113}\f$, \f$M_{121}\f$, \f$M_{122}\f$, \f$M_{123}\f$, \f$M_{131}\f$, \f$M_{132}\f$, \f$M_{133}\f$,
+         *       \f$M_{211}\f$, \f$M_{212}\f$, \f$M_{213}\f$, \f$M_{221}\f$, \f$M_{222}\f$, \f$M_{223}\f$, \f$M_{231}\f$, \f$M_{232}\f$, \f$M_{233}\f$,
+         *       \f$M_{311}\f$, \f$M_{312}\f$, \f$M_{313}\f$, \f$M_{321}\f$, \f$M_{322}\f$, \f$M_{323}\f$, \f$M_{331}\f$, \f$M_{332}\f$, \f$M_{333}\f$ ]
+         * \param &DPK2Dgrad_u: The Jacobian of the PK2 stress w.r.t. the 
          *     gradient of macro displacement.
-         * :param std::vector< std::vector< double > > &DPK2Dphi: The Jacobian of the PK2 stress w.r.t. the
+         * \param &DPK2Dphi: The Jacobian of the PK2 stress w.r.t. the
          *     micro displacement.
-         * :param std::vector< std::vector< double > > &DPK2Dgrad_phi: The Jacobian of the PK2 stress w.r.t.
+         * \param &DPK2Dgrad_phi: The Jacobian of the PK2 stress w.r.t.
          *     the gradient of the micro displacement.
-         * :param std::vector< std::vector< double > > &DSIGMAdgrad_u: The Jacobian of the reference symmetric
+         * \param &DSIGMADgrad_u: The Jacobian of the reference symmetric
          *     micro stress w.r.t. the gradient of the macro displacement.
-         * :param std::vector< std::vector< double > > &DSIGMAdphi: The Jacobian of the reference symmetric micro
+         * \param &DSIGMADphi: The Jacobian of the reference symmetric micro
          *     stress w.r.t. the micro displacement.
-         * :param std::vector< std::vector< double > > &DSIGMAdgrad_phi: The Jacobian of the reference symmetric
+         * \param &DSIGMADgrad_phi: The Jacobian of the reference symmetric
          *     micro stress w.r.t. the gradient of the micro displacement.
-         * :param std::vector< std::vector< double > > &DMDgrad_u: The Jacobian of the reference higher order
+         * \param &DMDgrad_u: The Jacobian of the reference higher order
          *     stress w.r.t. the gradient of the macro displacement.
-         * :param std::vector< std::vector< double > > &DMDphi: The Jacobian of the reference higher order stress
+         * \param &DMDphi: The Jacobian of the reference higher order stress
          *     w.r.t. the micro displacement.
-         * :param std::vector< std::vector< double > > &DMDgrad_phi: The Jacobian of the reference higher order stress
+         * \param &DMDgrad_phi: The Jacobian of the reference higher order stress
          *     w.r.t. the gradient of the micro displacement.
-         * :param std::vector< std::vector< double > > &ADD_TERMS: Additional terms ( unused )
-         * :param std::vector< std::vector< std::vector< double > > > &ADD_JACOBIANS: The jacobians of the additional
+         * \param &ADD_TERMS: Additional terms ( unused )
+         * \param &ADD_JACOBIANS: The jacobians of the additional
          *     terms w.r.t. the deformation ( unused )
-         * :param std::string &output_message: The output message string.
+         * \param &output_message: The output message string.
          *
          * Returns:
          *     0: No errors. Solution converged.
@@ -2122,4 +2137,424 @@ namespace tardigradeMicromorphicLinearElasticity{
         //No errors in calculation.
         return 0;
     }
+
+    //! Define the hydra version of the micromorphic linear elasticity model
+    class hydraMicromorphicLinearElasticity : public tardigradeHydra::hydraBaseMicromorphic{
+
+        public:
+
+            using tardigradeHydra::hydraBaseMicromorphic::hydraBaseMicromorphic;
+
+            //! The elasticity residual class
+            tardigradeHydra::micromorphicLinearElasticity::residual elasticity;
+
+        private:
+
+            using tardigradeHydra::hydraBaseMicromorphic::setResidualClasses;
+
+            virtual void setResidualClasses( ) override{
+                /*!
+                 * Set the vector of residual classes (in this case, only elasticity)
+                 */
+
+                std::vector< tardigradeHydra::residualBase* > residuals( 1 );
+
+                elasticity = tardigradeHydra::micromorphicLinearElasticity::residual( this, *getConfigurationUnknownCount( ), *getParameters( ) );
+
+                residuals[ 0 ] = &elasticity;
+
+                setResidualClasses( residuals );
+
+            }
+
+    };
+
+    int evaluate_hydra_model( const std::vector< double > &time,            const std::vector< double > ( &fparams ), 
+                              const double ( &current_grad_u )[ 3 ][ 3 ],   const double ( &current_phi )[ 9 ],
+                              const double ( &current_grad_phi )[ 9 ][ 3 ], const double ( &previous_grad_u )[ 3 ][ 3 ],
+                              const double ( &previous_phi )[ 9 ],          const double ( &previous_grad_phi )[ 9 ][ 3 ],
+                              std::vector< double > &SDVS,
+                              const std::vector< double > &current_ADD_DOF,
+                              const std::vector< std::vector< double > > &current_ADD_grad_DOF,
+                              const std::vector< double > &previous_ADD_DOF,
+                              const std::vector< std::vector< double > > &previous_ADD_grad_DOF,
+                              std::vector< double > &PK2, std::vector< double > &SIGMA, std::vector< double > &M,
+                              std::vector< std::vector< double > > &ADD_TERMS,
+                              std::string &output_message
+                            ){
+        /*!
+         * Evaluate the elasto-plastic constitutive model using the hydra computational framework.
+         * Note the format of the header changed to provide a 
+         * consistant interface with the material model library.
+         *
+         * \param &time: The current time and the timestep
+         *     [ current_t, dt ]
+         * \param &fparams: The parameters for the constitutive model
+         *     [ num_Amatrix_parameters, Amatrix_parameters, num_Bmatrix_parameters, Bmatrix_parameters,
+         *       num_Cmatrix_parameters, Cmatrix_parameters, num_Dmatrix_parameters, Dmatrix_parameters ]
+         *
+         * \param &current_grad_u: The current displacement gradient
+         *     Assumed to be of the form [ [ \f$u_{1,1}\f$, \f$u_{1,2}\f$, \f$u_{1,3}\f$ ],
+         *                                 [ \f$u_{2,1}\f$, \f$u_{2,2}\f$, \f$u_{2,3}\f$ ],
+         *                                 [ \f$u_{3,1}\f$, \f$u_{3,2}\f$, \f$u_{3,3}\f$ ] ]
+         * \param &current_phi: The current micro displacement values.
+         *     Assumed to be of the form [ \f$\phi_{11}\f$, \f$\phi_{12}\f$, \f$\phi_{13}\f$, \f$\phi_{21}\f$, \f$\phi_{22}\f$, \f$\phi_{23}\f$, \f$\phi_{31}\f$, \f$\phi_{32}\f$, \f$\phi_{33}\f$ ]
+         * \param &current_grad_phi: The current micro displacement gradient
+         *     Assumed to be of the form [ [ \f$\phi_{11,1}\f$, \f$\phi_{11,2}\f$, \f$\phi_{11,3}\f$ ],
+         *                                 [ \f$\phi_{12,1}\f$, \f$\phi_{12,2}\f$, \f$\phi_{12,3}\f$ ],
+         *                                 [ \f$\phi_{13,1}\f$, \f$\phi_{13,2}\f$, \f$\phi_{13,3}\f$ ],
+         *                                 [ \f$\phi_{21,1}\f$, \f$\phi_{21,2}\f$, \f$\phi_{21,3}\f$ ],
+         *                                 [ \f$\phi_{22,1}\f$, \f$\phi_{22,2}\f$, \f$\phi_{22,3}\f$ ],
+         *                                 [ \f$\phi_{23,1}\f$, \f$\phi_{23,2}\f$, \f$\phi_{23,3}\f$ ],
+         *                                 [ \f$\phi_{31,1}\f$, \f$\phi_{31,2}\f$, \f$\phi_{31,3}\f$ ],
+         *                                 [ \f$\phi_{32,1}\f$, \f$\phi_{32,2}\f$, \f$\phi_{32,3}\f$ ],
+         *                                 [ \f$\phi_{33,1}\f$, \f$\phi_{33,2}\f$, \f$\phi_{33,3}\f$ ] ]
+         * \param &previous_grad_u: The previous displacement gradient.
+         * \param &previous_phi: The previous micro displacement.
+         * \param &previous_grad_phi: The previous micro displacement gradient.
+         * \param &SDVS: The previously converged values of the state variables ( unused )
+         * \param &current_ADD_DOF: The current values of the additional degrees of freedom ( unused )
+         * \param &current_ADD_grad_DOF: The current values of the gradients of the 
+         *     additional degrees of freedom ( unused )
+         * \param &previous_ADD_DOF: The previous values of the additional degrees of freedom ( unused )
+         * \param &previous_ADD_grad_DOF: The previous values of the gradients of the 
+         * \param &PK2: The current value of the second Piola Kirchhoff stress tensor. The format is
+         *     [ \f$S_{11}\f$, \f$S_{12}\f$, \f$S_{13}\f$, \f$S_{21}\f$, \f$S_{22}\f$, \f$S_{23}\f$, \f$S_{31}\f$, \f$S_{32}\f$, \f$S_{33}\f$ ]
+         * \param &SIGMA: The current value of the reference micro stress. The format is
+         *     [ \f$S_{11}\f$, \f$S_{12}\f$, \f$S_{13}\f$, \f$S_{21}\f$, \f$S_{22}\f$, \f$S_{23}\f$, \f$S_{31}\f$, \f$S_{32}\f$, \f$S_{33}\f$ ]
+         * \param &M: The current value of the reference higher order stress. The format is
+         *     [ \f$M_{111}\f$, \f$M_{112}\f$, \f$M_{113}\f$, \f$M_{121}\f$, \f$M_{122}\f$, \f$M_{123}\f$, \f$M_{131}\f$, \f$M_{132}\f$, \f$M_{133}\f$,
+         *       \f$M_{211}\f$, \f$M_{212}\f$, \f$M_{213}\f$, \f$M_{221}\f$, \f$M_{222}\f$, \f$M_{223}\f$, \f$M_{231}\f$, \f$M_{232}\f$, \f$M_{233}\f$,
+         *       \f$M_{311}\f$, \f$M_{312}\f$, \f$M_{313}\f$, \f$M_{321}\f$, \f$M_{322}\f$, \f$M_{323}\f$, \f$M_{331}\f$, \f$M_{332}\f$, \f$M_{333}\f$ ]
+         * \param &ADD_TERMS: Additional terms ( unused )
+         * \param &output_message: The output message string.
+         *
+         * Returns:
+         *     0: No errors. Solution converged.
+         *     1: Convergence Error. Request timestep cutback. ( unused )
+         *     2: Fatal Errors encountered. Terminate the simulation.
+         */
+
+        //Re-direct the output to a buffer
+        std::stringbuf buffer;
+        cerr_redirect rd( &buffer );
+
+        variableType temperature         = 293.15; // Tardigrade doesn't have temperature for micromorphic currently so we're hardcoding these
+        variableType previousTemperature = 293.15;
+
+        variableVector currentDeformationGradient,  currentMicroDeformation,  currentGradientMicroDeformation;
+        variableVector previousDeformationGradient, previousMicroDeformation, previousGradientMicroDeformation;
+
+        try{
+
+            /*===============================================
+            | Assemble the fundamental deformation measures |
+            ================================================*/
+
+            TARDIGRADE_ERROR_TOOLS_CATCH_NODE_POINTER(
+                assembleFundamentalDeformationMeasures( current_grad_u, current_phi, current_grad_phi,
+                                                        currentDeformationGradient, currentMicroDeformation,
+                                                        currentGradientMicroDeformation )
+            )
+
+            TARDIGRADE_ERROR_TOOLS_CATCH_NODE_POINTER(
+                assembleFundamentalDeformationMeasures( previous_grad_u, previous_phi, previous_grad_phi,
+                                                        previousDeformationGradient, previousMicroDeformation,
+                                                        previousGradientMicroDeformation )
+            )
+
+            hydraMicromorphicLinearElasticity hydra( time[ 0 ], time[ 1 ],
+                                                     temperature,                     previousTemperature,
+                                                     currentDeformationGradient,      previousDeformationGradient,
+                                                     currentMicroDeformation,         previousMicroDeformation,
+                                                     currentGradientMicroDeformation, previousGradientMicroDeformation,
+                                                     SDVS, fparams, 1, 0 );
+
+            // Compute the stress
+            hydra.evaluate( );
+
+            PK2   = variableVector( hydra.getUnknownVector( )->begin( ) +  0,
+                                    hydra.getUnknownVector( )->begin( ) +  9 );
+
+            SIGMA = variableVector( hydra.getUnknownVector( )->begin( ) +  9,
+                                    hydra.getUnknownVector( )->begin( ) + 18 );
+
+            M     = variableVector( hydra.getUnknownVector( )->begin( ) + 18,
+                                    hydra.getUnknownVector( )->begin( ) + 45 );
+
+        }
+        catch( std::exception &e ){
+
+            //Fatal error
+            tardigradeErrorTools::printNestedExceptions( e );
+
+            output_message = buffer.str( );
+
+            return 2;
+
+        }
+
+        //No errors in calculation.
+        return 0;
+    }
+
+    int evaluate_hydra_model( const std::vector< double > &time,            const std::vector< double > ( &fparams ), 
+                              const double ( &current_grad_u )[ 3 ][ 3 ],   const double ( &current_phi )[ 9 ],
+                              const double ( &current_grad_phi )[ 9 ][ 3 ], const double ( &previous_grad_u )[ 3 ][ 3 ],
+                              const double ( &previous_phi )[ 9 ],          const double ( &previous_grad_phi )[ 9 ][ 3 ],
+                              std::vector< double > &SDVS,
+                              const std::vector< double > &current_ADD_DOF,
+                              const std::vector< std::vector< double > > &current_ADD_grad_DOF,
+                              const std::vector< double > &previous_ADD_DOF,
+                              const std::vector< std::vector< double > > &previous_ADD_grad_DOF,
+                              std::vector< double > &PK2, std::vector< double > &SIGMA, std::vector< double > &M,
+                              std::vector< std::vector< double > > &DPK2Dgrad_u,   std::vector< std::vector< double > > &DPK2Dphi,
+                              std::vector< std::vector< double > > &DPK2Dgrad_phi, 
+                              std::vector< std::vector< double > > &DSIGMADgrad_u, std::vector< std::vector< double > > &DSIGMADphi,
+                              std::vector< std::vector< double > > &DSIGMADgrad_phi,
+                              std::vector< std::vector< double > > &DMDgrad_u,     std::vector< std::vector< double > > &DMDphi,
+                              std::vector< std::vector< double > > &DMDgrad_phi,
+                              std::vector< std::vector< double > > &ADD_TERMS,
+                              std::vector< std::vector< std::vector< double > > > &ADD_JACOBIANS,
+                              std::string &output_message
+                            ){
+        /*!
+         * Evaluate the elasto-plastic constitutive model. Note the format of the header changed to provide a 
+         * consistant interface with the material model library.
+         *
+         * \param &time: The current time and the timestep
+         *     [ current_t, dt ]
+         * \param &fparams: The parameters for the constitutive model
+         *     [ num_Amatrix_parameters, Amatrix_parameters, num_Bmatrix_parameters, Bmatrix_parameters,
+         *       num_Cmatrix_parameters, Cmatrix_parameters, num_Dmatrix_parameters, Dmatrix_parameters,
+         *       num_macroHardeningParameters, macroHardeningParameters,
+         *       num_microHardeningParameters, microHardeningParameters,
+         *       num_microGradientHardeningParameters, microGradientHardeningParameters,
+         *       num_macroFlowParameters, macroFlowParameters,
+         *       num_microFlowParameters, microFlowParameters,
+         *       num_microGradientFlowParameters, microGradientFlowParameters,
+         *       num_macroYieldParameters, macroYieldParameters,
+         *       num_microYieldParameters, microYieldParameters,
+         *       num_microGradientYieldParameters, microGradientYieldParameters,
+         *       alphaMacro, alphaMicro, alphaMicroGradient,
+         *       relativeTolerance, absoluteTolerance ]
+         *
+         * \param &current_grad_u: The current displacement gradient
+         *     Assumed to be of the form [ [ \f$u_{1,1}\f$, \f$u_{1,2}\f$, \f$u_{1,3}\f$ ],
+         *                                 [ \f$u_{2,1}\f$, \f$u_{2,2}\f$, \f$u_{2,3}\f$ ],
+         *                                 [ \f$u_{3,1}\f$, \f$u_{3,2}\f$, \f$u_{3,3}\f$ ] ]
+         * \param &current_phi: The current micro displacement values.
+         *     Assumed to be of the form [ \f$\phi_{11}\f$, \f$\phi_{12}\f$, \f$\phi_{13}\f$, \f$\phi_{21}\f$, \f$\phi_{22}\f$, \f$\phi_{23}\f$, \f$\phi_{31}\f$, \f$\phi_{32}\f$, \f$\phi_{33}\f$ ]
+         * \param &current_grad_phi: The current micro displacement gradient
+         *     Assumed to be of the form [ [ \f$\phi_{11,1}\f$, \f$\phi_{11,2}\f$, \f$\phi_{11,3}\f$ ],
+         *                                 [ \f$\phi_{12,1}\f$, \f$\phi_{12,2}\f$, \f$\phi_{12,3}\f$ ],
+         *                                 [ \f$\phi_{13,1}\f$, \f$\phi_{13,2}\f$, \f$\phi_{13,3}\f$ ],
+         *                                 [ \f$\phi_{21,1}\f$, \f$\phi_{21,2}\f$, \f$\phi_{21,3}\f$ ],
+         *                                 [ \f$\phi_{22,1}\f$, \f$\phi_{22,2}\f$, \f$\phi_{22,3}\f$ ],
+         *                                 [ \f$\phi_{23,1}\f$, \f$\phi_{23,2}\f$, \f$\phi_{23,3}\f$ ],
+         *                                 [ \f$\phi_{31,1}\f$, \f$\phi_{31,2}\f$, \f$\phi_{31,3}\f$ ],
+         *                                 [ \f$\phi_{32,1}\f$, \f$\phi_{32,2}\f$, \f$\phi_{32,3}\f$ ],
+         *                                 [ \f$\phi_{33,1}\f$, \f$\phi_{33,2}\f$, \f$\phi_{33,3}\f$ ] ]
+         * \param &previous_grad_u: The previous displacement gradient.
+         * \param &previous_phi: The previous micro displacement.
+         * \param &previous_grad_phi: The previous micro displacement gradient.
+         * \param &SDVS: The previously converged values of the state variables
+         *     [ previousMacroStrainISV, previousMicroStrainISV, previousMicroGradientStrainISV,
+         *       previousMacroGamma, previousMicroGamma, previousMicroGradientGamma,
+         *       previousPlasticDeformationGradient - eye, previousPlasticMicroDeformation - eye,
+         *       previousPlasticMicroGradient ]
+         * \param &current_ADD_DOF: The current values of the additional degrees of freedom ( unused )
+         * \param &current_ADD_grad_DOF: The current values of the gradients of the 
+         *     additional degrees of freedom ( unused )
+         * \param &previous_ADD_DOF: The previous values of the additional degrees of freedom ( unused )
+         * \param &previous_ADD_grad_DOF: The previous values of the gradients of the 
+         *     additional degrees of freedom ( unused )
+         * \param &PK2: The current value of the second Piola Kirchhoff stress tensor. The format is
+         *     [ \f$S_{11}\f$, \f$S_{12}\f$, \f$S_{13}\f$, \f$S_{21}\f$, \f$S_{22}\f$, \f$S_{23}\f$, \f$S_{31}\f$, \f$S_{32}\f$, \f$S_{33}\f$ ]
+         * \param &SIGMA: The current value of the reference micro stress. The format is
+         *     [ \f$S_{11}\f$, \f$S_{12}\f$, \f$S_{13}\f$, \f$S_{21}\f$, \f$S_{22}\f$, \f$S_{23}\f$, \f$S_{31}\f$, \f$S_{32}\f$, \f$S_{33}\f$ ]
+         * \param &M: The current value of the reference higher order stress. The format is
+         *     [ \f$M_{111}\f$, \f$M_{112}\f$, \f$M_{113}\f$, \f$M_{121}\f$, \f$M_{122}\f$, \f$M_{123}\f$, \f$M_{131}\f$, \f$M_{132}\f$, \f$M_{133}\f$,
+         *       \f$M_{211}\f$, \f$M_{212}\f$, \f$M_{213}\f$, \f$M_{221}\f$, \f$M_{222}\f$, \f$M_{223}\f$, \f$M_{231}\f$, \f$M_{232}\f$, \f$M_{233}\f$,
+         *       \f$M_{311}\f$, \f$M_{312}\f$, \f$M_{313}\f$, \f$M_{321}\f$, \f$M_{322}\f$, \f$M_{323}\f$, \f$M_{331}\f$, \f$M_{332}\f$, \f$M_{333}\f$ ]
+         * \param &DPK2Dgrad_u: The Jacobian of the PK2 stress w.r.t. the 
+         *     gradient of macro displacement.
+         * \param &DPK2Dphi: The Jacobian of the PK2 stress w.r.t. the
+         *     micro displacement.
+         * \param &DPK2Dgrad_phi: The Jacobian of the PK2 stress w.r.t.
+         *     the gradient of the micro displacement.
+         * \param &DSIGMADgrad_u: The Jacobian of the reference symmetric
+         *     micro stress w.r.t. the gradient of the macro displacement.
+         * \param &DSIGMADphi: The Jacobian of the reference symmetric micro
+         *     stress w.r.t. the micro displacement.
+         * \param &DSIGMADgrad_phi: The Jacobian of the reference symmetric
+         *     micro stress w.r.t. the gradient of the micro displacement.
+         * \param &DMDgrad_u: The Jacobian of the reference higher order
+         *     stress w.r.t. the gradient of the macro displacement.
+         * \param &DMDphi: The Jacobian of the reference higher order stress
+         *     w.r.t. the micro displacement.
+         * \param &DMDgrad_phi: The Jacobian of the reference higher order stress
+         *     w.r.t. the gradient of the micro displacement.
+         * \param &ADD_TERMS: Additional terms ( unused )
+         * \param &ADD_JACOBIANS: The jacobians of the additional
+         *     terms w.r.t. the deformation ( unused )
+         * \param &output_message: The output message string.
+         *
+         * Returns:
+         *     0: No errors. Solution converged.
+         *     1: Convergence Error. Request timestep cutback.
+         *     2: Fatal Errors encountered. Terminate the simulation.
+         */
+
+        //Re-direct the output to a buffer
+        std::stringbuf buffer;
+        cerr_redirect rd( &buffer );
+
+        variableType temperature         = 293.15; // Tardigrade doesn't have temperature for micromorphic currently so we're hardcoding these
+        variableType previousTemperature = 293.15;
+
+        variableVector currentDeformationGradient,  currentMicroDeformation,  currentGradientMicroDeformation;
+        variableMatrix dFdGradU, dChidPhi, dGradChidGradPhi;
+
+        variableVector previousDeformationGradient, previousMicroDeformation, previousGradientMicroDeformation;
+        variableMatrix previousdFdGradU, previousdChidPhi, previousdGradChidGradPhi;
+
+        try{
+
+            /*===============================================
+            | Assemble the fundamental deformation measures |
+            ================================================*/
+
+            TARDIGRADE_ERROR_TOOLS_CATCH_NODE_POINTER(
+                assembleFundamentalDeformationMeasures( current_grad_u, current_phi, current_grad_phi,
+                                                        currentDeformationGradient, currentMicroDeformation,
+                                                        currentGradientMicroDeformation,
+                                                        dFdGradU, dChidPhi, dGradChidGradPhi )
+            )
+
+            TARDIGRADE_ERROR_TOOLS_CATCH_NODE_POINTER(
+                assembleFundamentalDeformationMeasures( previous_grad_u, previous_phi, previous_grad_phi,
+                                                        previousDeformationGradient, previousMicroDeformation,
+                                                        previousGradientMicroDeformation,
+                                                        previousdFdGradU, previousdChidPhi, previousdGradChidGradPhi )
+            )
+
+            hydraMicromorphicLinearElasticity hydra( time[ 0 ], time[ 1 ],
+                                                     temperature,                     previousTemperature,
+                                                     currentDeformationGradient,      previousDeformationGradient,
+                                                     currentMicroDeformation,         previousMicroDeformation,
+                                                     currentGradientMicroDeformation, previousGradientMicroDeformation,
+                                                     SDVS, fparams, 1, 0 );
+
+            // Compute the stress
+            hydra.evaluate( );
+
+            PK2   = variableVector( hydra.getUnknownVector( )->begin( ) +  0,
+                                    hydra.getUnknownVector( )->begin( ) +  9 );
+
+            SIGMA = variableVector( hydra.getUnknownVector( )->begin( ) +  9,
+                                    hydra.getUnknownVector( )->begin( ) + 18 );
+
+            M     = variableVector( hydra.getUnknownVector( )->begin( ) + 18,
+                                    hydra.getUnknownVector( )->begin( ) + 45 );
+
+            // Compute the consistent tangents
+            hydra.computeTangents( );
+            const variableVector *dXdD = hydra.getFlatdXdD( );
+
+            unsigned int numConfigurationUnknowns = *hydra.getConfigurationUnknownCount( );
+
+            DPK2Dgrad_u     = variableMatrix(  9, variableVector( 9, 0 ) );
+
+            DSIGMADgrad_u   = variableMatrix(  9, variableVector( 9, 0 ) );
+
+            DMDgrad_u       = variableMatrix( 27, variableVector( 9, 0 ) );
+
+            DPK2Dphi        = variableMatrix(  9, variableVector( 9, 0 ) );
+
+            DSIGMADphi      = variableMatrix(  9, variableVector( 9, 0 ) );
+
+            DMDphi          = variableMatrix( 27, variableVector( 9, 0 ) );
+
+            DPK2Dgrad_phi   = variableMatrix(  9, variableVector( 27, 0 ) );
+
+            DSIGMADgrad_phi = variableMatrix(  9, variableVector( 27, 0 ) );
+
+            DMDgrad_phi     = variableMatrix( 27, variableVector( 27, 0 ) );
+
+            for ( unsigned int i = 0; i < 9; i++ ){
+
+                for ( unsigned int j = 0; j < 9; j++ ){
+
+                    for ( unsigned int k = 0; k < 9; k++ ){
+
+                        DPK2Dgrad_u[ i ][ j ]   += ( *dXdD )[ numConfigurationUnknowns * ( i + 0 ) + 0 + k ] * dFdGradU[ k ][ j ];
+
+                        DPK2Dphi[ i ][ j ]      += ( *dXdD )[ numConfigurationUnknowns * ( i + 0 ) + 9 + k ] * dChidPhi[ k ][ j ];
+
+                        DSIGMADgrad_u[ i ][ j ] += ( *dXdD )[ numConfigurationUnknowns * ( i + 9 ) + 0 + k ] * dFdGradU[ k ][ j ];
+
+                        DSIGMADphi[ i ][ j ]    += ( *dXdD )[ numConfigurationUnknowns * ( i + 9 ) + 9 + k ] * dChidPhi[ k ][ j ];
+
+                    }
+
+                }
+
+                for ( unsigned int j = 0; j < 27; j++ ){
+
+                    for ( unsigned int k = 0; k < 27; k++ ){
+
+                        DPK2Dgrad_phi[ i ][ j ]   += ( *dXdD )[ numConfigurationUnknowns * ( i + 0 ) + 18 + k ] * dGradChidGradPhi[ k ][ j ];
+
+                        DSIGMADgrad_phi[ i ][ j ] += ( *dXdD )[ numConfigurationUnknowns * ( i + 9 ) + 18 + k ] * dGradChidGradPhi[ k ][ j ];
+
+                    }
+
+                }
+
+            }
+
+            for ( unsigned int i = 0; i < 27; i++ ){
+
+                for ( unsigned int j = 0; j < 9; j++ ){
+
+                    for ( unsigned int k = 0; k < 9; k++ ){
+
+                        DMDgrad_u[ i ][ j ]   += ( *dXdD )[ numConfigurationUnknowns * ( i + 18 ) + 0 + k ] * dFdGradU[ k ][ j ];
+
+                        DMDphi[ i ][ j ]      += ( *dXdD )[ numConfigurationUnknowns * ( i + 18 ) + 9 + k ] * dChidPhi[ k ][ j ];
+
+                    }
+
+                }
+
+                for ( unsigned int j = 0; j < 27; j++ ){
+
+                    for ( unsigned int k = 0; k < 27; k++ ){
+
+                        DMDgrad_phi[ i ][ j ]   += ( *dXdD )[ numConfigurationUnknowns * ( i + 18 ) + 18 + k ] * dGradChidGradPhi[ k ][ j ];
+
+                    }
+
+                }
+
+            }
+
+        }
+        catch( std::exception &e ){
+
+            //Fatal error
+            tardigradeErrorTools::printNestedExceptions( e );
+
+            output_message = buffer.str( );
+
+            return 2;
+
+        }
+
+        //No errors in calculation.
+        return 0;
+
+    }
+
 }
