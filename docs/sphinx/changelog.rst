@@ -11,12 +11,13 @@ Changelog
 
 New Features
 ============
-- Added a hydra-based micromorphic linear elasticity (:pull:`3`)
+- Added a hydra-based micromorphic linear elasticity (:pull:`3`). By `Nathan Miller`_.
 
 Internal Changes
 ================
-- Enabled github actions (:pull:`1`)
-- Added tardigrade_hydra as a build requirement (:pull:`2`)
+- Enabled github actions (:pull:`1`). By `Nathan Miller`_.
+- Added tardigrade_hydra as a build requirement (:pull:`2`). By `Nathan Miller`_.
+- Minor update to documentation (:pull:`4`). By `Nathan Miller`_.
 
 ******************
 1.3.1 (2023-07-25)
