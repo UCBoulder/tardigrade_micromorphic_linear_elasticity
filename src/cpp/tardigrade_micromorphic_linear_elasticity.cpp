@@ -1815,7 +1815,7 @@ namespace tardigradeMicromorphicLinearElasticity{
                         std::string &output_message
                       ){
         /*!
-         * Evaluate the elasto-plastic constitutive model. Note the format of the header changed to provide a 
+         * Evaluate the linear-elastic constitutive model. Note the format of the header changed to provide a 
          * consistant interface with the material model library.
          *
          * \param &time: The current time and the timestep
@@ -1956,7 +1956,7 @@ namespace tardigradeMicromorphicLinearElasticity{
                         std::string &output_message
                       ){
         /*!
-         * Evaluate the elasto-plastic constitutive model. Note the format of the header changed to provide a 
+         * Evaluate the linear-elastic constitutive model. Note the format of the header changed to provide a 
          * consistant interface with the material model library.
          *
          * \param &time: The current time and the timestep
@@ -2183,7 +2183,7 @@ namespace tardigradeMicromorphicLinearElasticity{
                               std::string &output_message
                             ){
         /*!
-         * Evaluate the elasto-plastic constitutive model using the hydra computational framework.
+         * Evaluate the linear-elastic constitutive model using the hydra computational framework.
          * Note the format of the header changed to provide a 
          * consistant interface with the material model library.
          *
@@ -2319,7 +2319,7 @@ namespace tardigradeMicromorphicLinearElasticity{
                               std::string &output_message
                             ){
         /*!
-         * Evaluate the elasto-plastic constitutive model. Note the format of the header changed to provide a 
+         * Evaluate the linear-elastic constitutive model. Note the format of the header changed to provide a 
          * consistant interface with the material model library.
          *
          * \param &time: The current time and the timestep
