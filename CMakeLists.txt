@@ -74,14 +74,14 @@ endif()
 
 # Find related, but external, projects in installed environment
 include(FetchContent)
-set(upstream_packages "tardigrade_error_tools" "tardigrade_vector_tools" "tardigrade_constitutive_tools" "tardigrade_micromorphic_tools")
+set(upstream_packages "tardigrade_error_tools" "tardigrade_vector_tools" "tardigrade_constitutive_tools" "tardigrade_micromorphic_tools" "tardigrade_hydra")
 if(${not_conda_test} STREQUAL "false")
     # During conda-build testing, we must find the installed project files as if they were an external project
     set(upstream_packages ${upstream_packages} ${PROJECT_NAME})
 endif()
 foreach(package ${upstream_packages})
     string(TOUPPER "${package}" package_upper)
-    set(${package_upper}_BUILD_PYTHON_BINDINGS ${TARDIGRADE_MICROMORPHIC_LINEAR_ELASTICITY_BUILD_PYTHON_BINDINGS})
+    set(${package_upper}_BUILD_PYTHON_BINDINGS ${TARDIGRADE_MICROMORPHIC_LINEAR_ELASTICITY_BUILD_PYTHON_BINDINGS} CACHE INTERNAL "Setting ${package}'s python binding flag to the global value")
     find_package(${package} ${upstream_required} CONFIG)
     if(${package}_FOUND)
         message(STATUS "Found ${package}: ${${package}_DIR}")
@@ -91,7 +91,7 @@ foreach(package ${upstream_packages})
         # TODO: Decide how to handle main/dev build differences. bash env variables for GIT TAG?
         FetchContent_Declare(
             ${package}
-            GIT_REPOSITORY ssh://git@re-git.lanl.gov:10022/aea/material-models/${package}.git
+            GIT_REPOSITORY http://github.com/UCBoulder/${package}.git
             GIT_TAG        origin/dev
         )
         FetchContent_MakeAvailable(${package})

@@ -6,6 +6,29 @@ Changelog
 #########
 
 ******************
+1.3.3 (unreleased)
+******************
+
+******************
+1.3.2 (2024-01-24)
+******************
+
+Release
+=======
+- Released version (:pull:`6`). By `Nathan Miller`_.
+
+New Features
+============
+- Added a hydra-based micromorphic linear elasticity (:pull:`3`). By `Nathan Miller`_.
+
+Internal Changes
+================
+- Enabled github actions (:pull:`1`). By `Nathan Miller`_.
+- Added tardigrade_hydra as a build requirement (:pull:`2`). By `Nathan Miller`_.
+- Minor update to documentation (:pull:`4`). By `Nathan Miller`_.
+- Updated changelog prior to release (:pull:`5`). By `Nathan Miller`_.
+
+******************
 1.3.1 (2023-07-25)
 ******************
 
