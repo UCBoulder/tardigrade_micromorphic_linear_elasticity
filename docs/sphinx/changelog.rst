@@ -9,6 +9,10 @@ Changelog
 1.3.3 (unreleased)
 ******************
 
+Internal Changes
+================
+- Removed comma causing warnings in cmake builds (:pull:`7`). By `Nathan Miller`_.
+
 ******************
 1.3.2 (2024-01-24)
 ******************

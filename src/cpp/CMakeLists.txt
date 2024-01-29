@@ -10,7 +10,7 @@ if(NOT cmake_build_type_lower STREQUAL "release")
     target_include_directories(${PROJECT_NAME} PUBLIC
                                "${tardigrade_vector_tools_SOURCE_DIR}/${CPP_SRC_PATH}"
                                "${tardigrade_error_tools_SOURCE_DIR}/${CPP_SRC_PATH}"
-                               "${tardigrade_micromorphic_tools_SOURCE_DIR}/${CPP_SRC_PATH}",
+                               "${tardigrade_micromorphic_tools_SOURCE_DIR}/${CPP_SRC_PATH}"
                                "${tardigrade_hydra_SOURCE_DIR}/${CPP_SRC_PATH}")
 endif()
 
