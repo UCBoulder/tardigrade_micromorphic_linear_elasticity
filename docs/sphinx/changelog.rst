@@ -13,6 +13,10 @@ Internal Changes
 ================
 - Removed comma causing warnings in cmake builds (:pull:`7`). By `Nathan Miller`_.
 
+Bug Fixes
+=========
+- Enabled compilation with the new tardigrade_micromorphic_tools (:pull:`8`). By `Nathan Miller`_.
+
 ******************
 1.3.2 (2024-01-24)
 ******************
