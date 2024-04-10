@@ -12,7 +12,8 @@ Changelog
 Internal Changes
 ================
 - Removed comma causing warnings in cmake builds (:pull:`7`). By `Nathan Miller`_.
-- Use new error_tools format and allow for timestep cutbacks (:pull:`9`). By `Nathan Miller`_.
+- Use new error_tools format and allow for timestep cutbacks (:pull:`10`). By `Nathan Miller`_.
+- Added flag that will allow all errors to be treated as convergence errors (:pull:`11`). By `Nathan Miller`_.
 
 Bug Fixes
 =========
