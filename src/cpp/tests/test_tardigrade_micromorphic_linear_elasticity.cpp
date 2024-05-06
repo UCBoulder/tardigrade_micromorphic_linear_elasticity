@@ -3293,6 +3293,89 @@ BOOST_AUTO_TEST_CASE( testEvaluateModel ){
     }
 }
 
+BOOST_AUTO_TEST_CASE( test_generate_input_variable_string ){
+
+    //Initialize the time
+    std::vector< double > time = { 10., 2.5 };
+
+    //Initialize the material parameters
+    std::vector< double > fparams = { 2, 2.4e2, 1.5e1,             //Macro hardening parameters
+                                      2, 1.4e2, 2.0e1,             //Micro hardening parameters
+                                      2, 2.0e0, 2.7e1,             //Micro gradient hardening parameters
+                                      2, 0.56, 0.2,                //Macro flow parameters
+                                      2, 0.15,-0.2,                //Micro flow parameters
+                                      2, 0.82, 0.1,                //Micro gradient flow parameters
+                                      2, 0.70, 0.3,                //Macro yield parameters
+                                      2, 0.40,-0.3,                //Micro yield parameters
+                                      2, 0.52, 0.4,                //Micro gradient yield parameters
+                                      2, 696.47, 65.84,            //A stiffness tensor parameters
+                                      5, -7.69, -51.92, 38.61, -27.31, 5.13,  //B stiffness tensor parameters
+                                      11, 1.85, -0.19, -1.08, -1.57, 2.29, -0.61, 5.97, -2.02, 2.38, -0.32, -3.25, //C stiffness tensor parameters
+                                      2, -51.92, 5.13,             //D stiffness tensor parameters
+                                      0.4, 0.3, 0.35, 1e-8, 1e-8   //Integration parameters
+                                    };
+
+    //Initialize the gradient of the macro displacement
+    double current_grad_u[ 3 ][ 3 ] = { {0.200, 0.100, 0.000 },
+                                        {0.100, 0.001, 0.000 },
+                                        {0.000, 0.000, 0.000 } };
+
+    double previous_grad_u[ 3 ][ 3 ] = { {0, 0, 0},
+                                         {0, 0, 0},
+                                         {0, 0, 0} };
+    //Initialize the micro displacement
+    double current_phi[ 9 ] = { 0.100, 0.000, 0.000,
+                                0.000, 0.000, 0.000,
+                                0.000, 0.000, 0.000 };
+
+    double previous_phi[ 9 ] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+
+    //Initialize the gradient of the micro displacement
+    double current_grad_phi[ 9 ][ 3 ] = { {  0.13890017, -0.3598602 , -0.08048856 },
+                                          { -0.18572739,  0.06847269,  0.22931628 },
+                                          { -0.01829735, -0.48731265, -0.25277529 },
+                                          {  0.26626212,  0.4844646 , -0.31965177 },
+                                          {  0.49197846,  0.19051656, -0.0365349  },
+                                          { -0.06607774, -0.33526875, -0.15803078 },
+                                          {  0.09738707, -0.49482218, -0.39584868 },
+                                          { -0.45599864,  0.08585038, -0.09432794 },
+                                          {  0.23055539,  0.07564162,  0.24051469 } };
+
+    double previous_grad_phi[ 9 ][ 3 ] = { {0, 0, 0},
+                                           {0, 0, 0},
+                                           {0, 0, 0},
+                                           {0, 0, 0},
+                                           {0, 0, 0},
+                                           {0, 0, 0},
+                                           {0, 0, 0},
+                                           {0, 0, 0},
+                                           {0, 0, 0} };
+
+
+    //Initialize the state variable vector
+    std::vector< double > SDVS( 55, 0 );
+
+    //Initialize the additional degree of freedom vectors
+    std::vector< double > current_ADD_DOF;
+    std::vector< std::vector< double > > current_ADD_grad_DOF;
+
+    std::vector< double > previous_ADD_DOF;
+    std::vector< std::vector< double > > previous_ADD_grad_DOF;
+
+    std::string result;
+
+    std::string answer = "time:\n 10.000000, 2.500000,\nfparams:\n 2.000000, 240.000000, 15.000000, 2.000000, 140.000000, 20.000000, 2.000000, 2.000000, 27.000000, 2.000000, 0.560000, 0.200000, 2.000000, 0.150000, -0.200000, 2.000000, 0.820000, 0.100000, 2.000000, 0.700000, 0.300000, 2.000000, 0.400000, -0.300000, 2.000000, 0.520000, 0.400000, 2.000000, 696.470000, 65.840000, 5.000000, -7.690000, -51.920000, 38.610000, -27.310000, 5.130000, 11.000000, 1.850000, -0.190000, -1.080000, -1.570000, 2.290000, -0.610000, 5.970000, -2.020000, 2.380000, -0.320000, -3.250000, 2.000000, -51.920000, 5.130000, 0.400000, 0.300000, 0.350000, 0.000000, 0.000000,\ncurrent_grad_u:\n 0.200000, 0.100000, 0.000000,\n 0.100000, 0.001000, 0.000000,\n 0.000000, 0.000000, 0.000000,\n\ncurrent_phi:\n 0.100000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000,\ncurrent_grad_phi:\n 0.138900, -0.359860, -0.080489,\n -0.185727, 0.068473, 0.229316,\n -0.018297, -0.487313, -0.252775,\n 0.266262, 0.484465, -0.319652,\n 0.491978, 0.190517, -0.036535,\n -0.066078, -0.335269, -0.158031,\n 0.097387, -0.494822, -0.395849,\n -0.455999, 0.085850, -0.094328,\n 0.230555, 0.075642, 0.240515,\n\nprevious_grad_u:\n 0.000000, 0.000000, 0.000000,\n 0.000000, 0.000000, 0.000000,\n 0.000000, 0.000000, 0.000000,\n\nprevious_phi:\n 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000,\nprevious_grad_phi:\n 0.000000, 0.000000, 0.000000,\n 0.000000, 0.000000, 0.000000,\n 0.000000, 0.000000, 0.000000,\n 0.000000, 0.000000, 0.000000,\n 0.000000, 0.000000, 0.000000,\n 0.000000, 0.000000, 0.000000,\n 0.000000, 0.000000, 0.000000,\n 0.000000, 0.000000, 0.000000,\n 0.000000, 0.000000, 0.000000,\n\nSDVS:\n 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000,\ncurrent_ADD_DOF:\n\ncurrent_ADD_grad_DOF:\n\nprevious_ADD_DOF:\n\nprevious_ADD_grad_DOF:\n";
+
+    tardigradeMicromorphicLinearElasticity::generate_input_variable_string( time, fparams, current_grad_u, current_phi, current_grad_phi,
+                                                                            previous_grad_u, previous_phi, previous_grad_phi,
+                                                                            SDVS, current_ADD_DOF, current_ADD_grad_DOF,
+                                                                            previous_ADD_DOF, previous_ADD_grad_DOF,
+                                                                            result );
+
+    BOOST_CHECK( answer.compare( result ) == 0 );
+
+}
+
 BOOST_AUTO_TEST_CASE( testEvaluateHydraModel ){
     /*!
      * Test the model evaluation interface for the stresses computed
