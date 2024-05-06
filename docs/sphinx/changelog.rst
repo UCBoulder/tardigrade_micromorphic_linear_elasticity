@@ -9,6 +9,10 @@ Changelog
 1.3.3 (unreleased)
 ******************
 
+New Features
+============
+- Added additional information to output messages in case of errors (:pull:`13`). By `Nathan Miller`_.
+
 Internal Changes
 ================
 - Removed comma causing warnings in cmake builds (:pull:`7`). By `Nathan Miller`_.

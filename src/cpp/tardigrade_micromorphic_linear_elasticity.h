@@ -248,6 +248,17 @@ namespace tardigradeMicromorphicLinearElasticity{
                         std::string &output_message
                       );
 
+    void generate_input_variable_string( const std::vector< double > &time,            const std::vector< double > ( &fparams ),
+                                         const double ( &current_grad_u )[ 3 ][ 3 ],   const double ( &current_phi )[ 9 ],
+                                         const double ( &current_grad_phi )[ 9 ][ 3 ], const double ( &previous_grad_u )[ 3 ][ 3 ],
+                                         const double ( &previous_phi )[ 9 ],          const double ( &previous_grad_phi )[ 9 ][ 3 ],
+                                         std::vector< double > &SDVS,
+                                         const std::vector< double > &current_ADD_DOF,
+                                         const std::vector< std::vector< double > > &current_ADD_grad_DOF,
+                                         const std::vector< double > &previous_ADD_DOF,
+                                         const std::vector< std::vector< double > > &previous_ADD_grad_DOF,
+                                         std::string &input_variables );
+
     int evaluate_hydra_model( const std::vector< double > &time,            const std::vector< double > ( &fparams ),
                               const double ( &current_grad_u )[ 3 ][ 3 ],   const double ( &current_phi )[ 9 ],
                               const double ( &current_grad_phi )[ 9 ][ 3 ], const double ( &previous_grad_u )[ 3 ][ 3 ],

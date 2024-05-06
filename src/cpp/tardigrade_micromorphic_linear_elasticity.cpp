@@ -2178,6 +2178,102 @@ namespace tardigradeMicromorphicLinearElasticity{
 
     };
 
+    void generate_input_variable_string( const std::vector< double > &time,            const std::vector< double > ( &fparams ),
+                                         const double ( &current_grad_u )[ 3 ][ 3 ],   const double ( &current_phi )[ 9 ],
+                                         const double ( &current_grad_phi )[ 9 ][ 3 ], const double ( &previous_grad_u )[ 3 ][ 3 ],
+                                         const double ( &previous_phi )[ 9 ],          const double ( &previous_grad_phi )[ 9 ][ 3 ],
+                                         std::vector< double > &SDVS,
+                                         const std::vector< double > &current_ADD_DOF,
+                                         const std::vector< std::vector< double > > &current_ADD_grad_DOF,
+                                         const std::vector< double > &previous_ADD_DOF,
+                                         const std::vector< std::vector< double > > &previous_ADD_grad_DOF,
+                                         std::string &input_variables ){
+        /*
+         * Summarize the input variables in string form for debugging
+         *
+         * \param &time: The current time and the timestep
+         *     [ current_t, dt ]
+         * \param &fparams: The parameters for the constitutive model
+         *     [ num_Amatrix_parameters, Amatrix_parameters, num_Bmatrix_parameters, Bmatrix_parameters,
+         *       num_Cmatrix_parameters, Cmatrix_parameters, num_Dmatrix_parameters, Dmatrix_parameters,
+         *       num_macroHardeningParameters, macroHardeningParameters,
+         *       num_microHardeningParameters, microHardeningParameters,
+         *       num_microGradientHardeningParameters, microGradientHardeningParameters,
+         *       num_macroFlowParameters, macroFlowParameters,
+         *       num_microFlowParameters, microFlowParameters,
+         *       num_microGradientFlowParameters, microGradientFlowParameters,
+         *       num_macroYieldParameters, macroYieldParameters,
+         *       num_microYieldParameters, microYieldParameters,
+         *       num_microGradientYieldParameters, microGradientYieldParameters,
+         *       alphaMacro, alphaMicro, alphaMicroGradient,
+         *       relativeTolerance, absoluteTolerance ]
+         *
+         * \param &current_grad_u: The current displacement gradient
+         *     Assumed to be of the form [ [ \f$u_{1,1}\f$, \f$u_{1,2}\f$, \f$u_{1,3}\f$ ],
+         *                                 [ \f$u_{2,1}\f$, \f$u_{2,2}\f$, \f$u_{2,3}\f$ ],
+         *                                 [ \f$u_{3,1}\f$, \f$u_{3,2}\f$, \f$u_{3,3}\f$ ] ]
+         * \param &current_phi: The current micro displacment values.
+         *     Assumed to be of the form [ \f$\phi_{11}\f$, \f$\phi_{12}\f$, \f$\phi_{13}\f$, \f$\phi_{21}\f$, \f$\phi_{22}\f$, \f$\phi_{23}\f$, \f$\phi_{31}\f$, \f$\phi_{32}\f$, \f$\phi_{33}\f$ ]
+         * \param &current_grad_phi: The current micro displacement gradient
+         *     Assumed to be of the form [ [ \f$\phi_{11,1}\f$, \f$\phi_{11,2}\f$, \f$\phi_{11,3}\f$ ],
+         *                                 [ \f$\phi_{12,1}\f$, \f$\phi_{12,2}\f$, \f$\phi_{12,3}\f$ ],
+         *                                 [ \f$\phi_{13,1}\f$, \f$\phi_{13,2}\f$, \f$\phi_{13,3}\f$ ],
+         *                                 [ \f$\phi_{21,1}\f$, \f$\phi_{21,2}\f$, \f$\phi_{21,3}\f$ ],
+         *                                 [ \f$\phi_{22,1}\f$, \f$\phi_{22,2}\f$, \f$\phi_{22,3}\f$ ],
+         *                                 [ \f$\phi_{23,1}\f$, \f$\phi_{23,2}\f$, \f$\phi_{23,3}\f$ ],
+         *                                 [ \f$\phi_{31,1}\f$, \f$\phi_{31,2}\f$, \f$\phi_{31,3}\f$ ],
+         *                                 [ \f$\phi_{32,1}\f$, \f$\phi_{32,2}\f$, \f$\phi_{32,3}\f$ ],
+         *                                 [ \f$\phi_{33,1}\f$, \f$\phi_{33,2}\f$, \f$\phi_{33,3}\f$ ] ]
+         * \param &previous_grad_u: The previous displacement gradient.
+         * \param &previous_phi: The previous micro displacement.
+         * \param &previous_grad_phi: The previous micro displacement gradient.
+         * \param &SDVS: The previously converged values of the state variables
+         *     [ previousMacroStrainISV, previousMicroStrainISV, previousMicroGradientStrainISV,
+         *       previousMacroGamma, previousMicroGamma, previousMicroGradientGamma,
+         *       previousPlasticDeformationGradient - eye, previousPlasticMicroDeformation - eye,
+         *       previousPlasticMicroGradient ]
+         * \param &current_ADD_DOF: The current values of the additional degrees of freedom ( unused )
+         * \param &current_ADD_grad_DOF: The current values of the gradients of the 
+         *     additional degrees of freedom ( unused )
+         * \param &previous_ADD_DOF: The previous values of the additional degrees of freedom ( unused )
+         * \param &previous_ADD_grad_DOF: The previous values of the gradients of the 
+         *     additional degrees of freedom ( unused )
+         * \param &input_variables: The input variables in string form
+         */
+
+        input_variables = "";
+
+        input_variables += "time:\n";
+        for ( auto t = time.begin( ); t != time.end( ); t++ ){ input_variables += " " + std::to_string( *t ) + ","; }
+        input_variables += "\nfparams:\n";
+        for ( auto f = fparams.begin( ); f != fparams.end( ); f++ ){ input_variables += " " + std::to_string( *f ) + ","; }
+        input_variables += "\ncurrent_grad_u:\n";
+        for ( unsigned int i = 0; i < 3; i++ ){ for ( unsigned int j = 0; j < 3; j++ ){ input_variables += " " + std::to_string( current_grad_u[ i ][ j ] ) + ","; } input_variables += "\n"; }
+        input_variables += "\ncurrent_phi:\n";
+        for ( unsigned int i = 0; i < 9; i++ ){ input_variables += " " + std::to_string( current_phi[ i ] ) + ","; }
+        input_variables += "\ncurrent_grad_phi:\n";
+        for ( unsigned int i = 0; i < 9; i++ ){ for ( unsigned int j = 0; j < 3; j++ ){ input_variables += " " + std::to_string( current_grad_phi[ i ][ j ] ) + ","; } input_variables += "\n"; }
+        input_variables += "\nprevious_grad_u:\n";
+        for ( unsigned int i = 0; i < 3; i++ ){ for ( unsigned int j = 0; j < 3; j++ ){ input_variables += " " + std::to_string( previous_grad_u[ i ][ j ] ) + ","; } input_variables += "\n"; }
+        input_variables += "\nprevious_phi:\n";
+        for ( unsigned int i = 0; i < 9; i++ ){ input_variables += " " + std::to_string( previous_phi[ i ] ) + ","; }
+        input_variables += "\nprevious_grad_phi:\n";
+        for ( unsigned int i = 0; i < 9; i++ ){ for ( unsigned int j = 0; j < 3; j++ ){ input_variables += " " + std::to_string( previous_grad_phi[ i ][ j ] ) + ","; } input_variables += "\n"; }
+        input_variables += "\nSDVS:\n";
+        for ( auto s = SDVS.begin( ); s != SDVS.end( ); s++ ){ input_variables += " " + std::to_string( *s ) + ","; }
+        input_variables += "\ncurrent_ADD_DOF:\n";
+        for ( auto a = current_ADD_DOF.begin( ); a != current_ADD_DOF.end( ); a++ ){ input_variables += " " + std::to_string( *a ) + ","; }
+        input_variables += "\ncurrent_ADD_grad_DOF:\n";
+        for ( auto a = current_ADD_grad_DOF.begin( ); a != current_ADD_grad_DOF.end( ); a++ ){ for ( auto g = a->begin( ); g != a->end( ); g++ ){ input_variables += " " + std::to_string( *g ) + ","; } input_variables += "\n"; }
+        input_variables += "\nprevious_ADD_DOF:\n";
+        for ( auto a = previous_ADD_DOF.begin( ); a != previous_ADD_DOF.end( ); a++ ){ input_variables += " " + std::to_string( *a ) + ","; }
+        input_variables += "\nprevious_ADD_grad_DOF:\n";
+        for ( auto a = previous_ADD_grad_DOF.begin( ); a != previous_ADD_grad_DOF.end( ); a++ ){ for ( auto g = a->begin( ); g != a->end( ); g++ ){ input_variables += " " + std::to_string( *g ) + ","; } input_variables += "\n"; }
+
+        return;
+
+    }
+
     int evaluate_hydra_model( const std::vector< double > &time,            const std::vector< double > ( &fparams ), 
                               const double ( &current_grad_u )[ 3 ][ 3 ],   const double ( &current_phi )[ 9 ],
                               const double ( &current_grad_phi )[ 9 ][ 3 ], const double ( &previous_grad_u )[ 3 ][ 3 ],
@@ -2291,15 +2387,35 @@ namespace tardigradeMicromorphicLinearElasticity{
         catch( tardigradeHydra::convergence_error &e ){
 
             //Convergence error
+            std::string input_variables;
+            generate_input_variable_string( time, fparams, current_grad_u, current_phi, current_grad_phi,
+                                            previous_grad_u, previous_phi, previous_grad_phi,
+                                            SDVS, current_ADD_DOF, current_ADD_grad_DOF, previous_ADD_DOF, previous_ADD_grad_DOF,
+                                            input_variables );
+
+            output_message = "INPUT PARAMETERS FOLLOW:\n" + input_variables;
+
             return 1;
 
         }
         catch( std::exception &e ){
 
             //Fatal error
+            std::string input_variables;
+            generate_input_variable_string( time, fparams, current_grad_u, current_phi, current_grad_phi,
+                                            previous_grad_u, previous_phi, previous_grad_phi,
+                                            SDVS, current_ADD_DOF, current_ADD_grad_DOF, previous_ADD_DOF, previous_ADD_grad_DOF,
+                                            input_variables );
+
             tardigradeErrorTools::captureNestedExceptions( e, output_message );
 
+            output_message += "INPUT PARAMETERS FOLLOW:\n" + input_variables;
+
+#ifdef TARDIGRADE_FATAL_AS_CONVERGENCE
+            return 1;
+#else
             return 2;
+#endif
 
         }
 
@@ -2549,13 +2665,29 @@ namespace tardigradeMicromorphicLinearElasticity{
         catch( tardigradeHydra::convergence_error &e ){
 
             //Convergence error
+            std::string input_variables;
+            generate_input_variable_string( time, fparams, current_grad_u, current_phi, current_grad_phi,
+                                            previous_grad_u, previous_phi, previous_grad_phi,
+                                            SDVS, current_ADD_DOF, current_ADD_grad_DOF, previous_ADD_DOF, previous_ADD_grad_DOF,
+                                            input_variables );
+
+            output_message = "INPUT PARAMETERS FOLLOW:\n" + input_variables;
+
             return 1;
 
         }
         catch( std::exception &e ){
 
             //Fatal error
+            std::string input_variables;
+            generate_input_variable_string( time, fparams, current_grad_u, current_phi, current_grad_phi,
+                                            previous_grad_u, previous_phi, previous_grad_phi,
+                                            SDVS, current_ADD_DOF, current_ADD_grad_DOF, previous_ADD_DOF, previous_ADD_grad_DOF,
+                                            input_variables );
+
             tardigradeErrorTools::captureNestedExceptions( e, output_message );
+
+            output_message += "INPUT PARAMETERS FOLLOW:\n" + input_variables;
 
 #ifdef TARDIGRADE_FATAL_AS_CONVERGENCE
             return 1;
