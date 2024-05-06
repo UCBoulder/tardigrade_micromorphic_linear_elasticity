@@ -2387,10 +2387,14 @@ namespace tardigradeMicromorphicLinearElasticity{
         catch( tardigradeHydra::convergence_error &e ){
 
             //Convergence error
+            std::string input_variables;
             generate_input_variable_string( time, fparams, current_grad_u, current_phi, current_grad_phi,
                                             previous_grad_u, previous_phi, previous_grad_phi,
                                             SDVS, current_ADD_DOF, current_ADD_grad_DOF, previous_ADD_DOF, previous_ADD_grad_DOF,
-                                            output_message );
+                                            input_variables );
+
+            output_message = "INPUT PARAMETERS FOLLOW:\n" + input_variables;
+
             return 1;
 
         }
@@ -2661,10 +2665,14 @@ namespace tardigradeMicromorphicLinearElasticity{
         catch( tardigradeHydra::convergence_error &e ){
 
             //Convergence error
+            std::string input_variables;
             generate_input_variable_string( time, fparams, current_grad_u, current_phi, current_grad_phi,
                                             previous_grad_u, previous_phi, previous_grad_phi,
                                             SDVS, current_ADD_DOF, current_ADD_grad_DOF, previous_ADD_DOF, previous_ADD_grad_DOF,
-                                            output_message );
+                                            input_variables );
+
+            output_message = "INPUT PARAMETERS FOLLOW:\n" + input_variables;
+
             return 1;
 
         }
