@@ -2369,6 +2369,7 @@ namespace tardigradeMicromorphicLinearElasticity{
                                                      currentDeformationGradient,      previousDeformationGradient,
                                                      currentMicroDeformation,         previousMicroDeformation,
                                                      currentGradientMicroDeformation, previousGradientMicroDeformation,
+                                                     { }, { },
                                                      SDVS, fparams, 1, 0, 3, 45, 1e-9, 1e-9, 20, 5, 1e-4, true, 0 );
 
             // Compute the stress
@@ -2565,6 +2566,7 @@ namespace tardigradeMicromorphicLinearElasticity{
                                                      currentDeformationGradient,      previousDeformationGradient,
                                                      currentMicroDeformation,         previousMicroDeformation,
                                                      currentGradientMicroDeformation, previousGradientMicroDeformation,
+                                                     { }, { },
                                                      SDVS, fparams, 1, 0, 3, 45, 1e-9, 1e-9, 20, 5, 1e-4, true, 0 );
 
             // Compute the stress
