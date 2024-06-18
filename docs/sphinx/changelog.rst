@@ -24,6 +24,7 @@ Internal Changes
 Bug Fixes
 =========
 - Enabled compilation with the new tardigrade_micromorphic_tools (:pull:`8`). By `Nathan Miller`_.
+- Removed trailing whitespace from add_library (:pull:`15`). By `Nathan Miller`_.
 
 ******************
 1.3.2 (2024-01-24)
