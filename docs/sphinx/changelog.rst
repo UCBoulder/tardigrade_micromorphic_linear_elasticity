@@ -20,6 +20,7 @@ Internal Changes
 - Added flag that will allow all errors to be treated as convergence errors (:pull:`11`). By `Nathan Miller`_.
 - Enabled use of tardigrade_hydra's preconditioner (:pull:`12`). By `Nathan Miller`_.
 - Allowing for changes to hydra base class inputs (:pull:`14`). By `Nathan Miller`_.
+- Allow for the package version to be specified when using FetchContent (:pull:`16`). By `Nathan Miller`_.
 
 Bug Fixes
 =========
