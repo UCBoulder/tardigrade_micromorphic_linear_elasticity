@@ -13,7 +13,7 @@
 
 namespace tardigradeMicromorphicLinearElasticity{
 
-    errorOut linearElasticityReference( const variableVector &deformationGradient, const variableVector &microDeformation,
+    void linearElasticityReference( const variableVector &deformationGradient, const variableVector &microDeformation,
                                         const variableVector &gradientMicroDeformation,
                                         const parameterVector &A, const parameterVector &B, const parameterVector &C,
                                         const parameterVector &D,
@@ -39,31 +39,17 @@ namespace tardigradeMicromorphicLinearElasticity{
 
         //Compute the required deformation measures
         variableVector RCG, Psi, Gamma;
-        errorOut error = computeDeformationMeasures( deformationGradient, microDeformation, gradientMicroDeformation,
-                                                     RCG, Psi, Gamma );
+        TARDIGRADE_ERROR_TOOLS_CATCH( computeDeformationMeasures( deformationGradient, microDeformation, gradientMicroDeformation,
+                                                                  RCG, Psi, Gamma ) );
 
-        if ( error ){
-            errorOut result = new errorNode( "linearElasticityReference",
-                                             "Error in the computation of the deformation measures" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( linearElasticityReferenceDerivedMeasures( RCG, Psi, Gamma, A, B, C, D,
+                                                                                PK2Stress, referenceMicroStress,
+                                                                                referenceHigherOrderStress ) );
 
-        error = linearElasticityReferenceDerivedMeasures( RCG, Psi, Gamma, A, B, C, D,
-                                                          PK2Stress, referenceMicroStress,
-                                                          referenceHigherOrderStress );
-
-        if ( error ){
-            errorOut result = new errorNode( "linearElasticityReference",
-                                             "Error in the computation of the reference stresses" );
-            result->addNext( error );
-            return result;
-        }
-
-        return NULL;
+        return;
     }
 
-    errorOut linearElasticityReferenceDerivedMeasures( const variableVector &rightCauchyGreenDeformation,
+    void linearElasticityReferenceDerivedMeasures( const variableVector &rightCauchyGreenDeformation,
                                                        const variableVector &Psi, const variableVector &Gamma,
                                                        const parameterVector &A, const parameterVector &B, const parameterVector &C,
                                                        const parameterVector &D,
@@ -100,79 +86,37 @@ namespace tardigradeMicromorphicLinearElasticity{
         variableVector microStrain   = Psi - eye;
 
         //Compute the higher order stress
-        errorOut error = computeReferenceHigherOrderStress( Gamma, C, referenceHigherOrderStress );
-
-        if ( error ){
-            errorOut result = new errorNode( "linearElasticityReferenceDerivedMeasures",
-                                             "Error in computation of higher-order stress" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( computeReferenceHigherOrderStress( Gamma, C, referenceHigherOrderStress ) );
 
         //Compute the first common term for the PK2 and symmetric micro-stress
         variableVector term1;
-        error = computeLinearElasticTerm1( greenLagrangeStrain, microStrain, A, D, term1 );
-
-        if ( error ){
-            errorOut result = new errorNode( "linearElasticityReferenceDerivedMeasures",
-                                             "Error in computation of term 1" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( computeLinearElasticTerm1( greenLagrangeStrain, microStrain, A, D, term1 ) );
 
         //Compute the second common term for the PK2 and symmetric micro-stress
         variableVector invRCGPsi;
-        error = computeInvRCGPsi( invRCG, Psi, invRCGPsi );
-        
-        if ( error ){
-            errorOut result = new errorNode( "linearElasticityReferenceDerivedMeasures",
-                                             "Error in computation of invRCG Psi product" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( computeInvRCGPsi( invRCG, Psi, invRCGPsi ) );
 
         variableVector term2;
-        error = computeLinearElasticTerm2( greenLagrangeStrain, microStrain, invRCGPsi, B, D, term2 );
-
-        if ( error ){
-            errorOut result = new errorNode( "linearElasticityReferenceDerivedMesures",
-                                             "Error in computation of term 2" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( computeLinearElasticTerm2( greenLagrangeStrain, microStrain, invRCGPsi, B, D, term2 ) );
 
         //Compute the third common term for the PK2 and symmetric micro-stress
         variableVector invRCGGamma;
-        error = computeInvRCGGamma( invRCG, Gamma, invRCGGamma );
-
-        if ( error ){
-            errorOut result = new errorNode( "linearElasticityReferenceDerivedMeasures",
-                                             "Error in computation of invRCG Gamma product" );
-            result->addNext(error);
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( computeInvRCGGamma( invRCG, Gamma, invRCGGamma ) );
 
         variableVector term3;
-        error = computeLinearElasticTerm3( invRCGGamma, referenceHigherOrderStress, term3 );
-
-        if ( error ){
-            errorOut result = new errorNode( "linearElasticityReferenceDerivedMeasures",
-                                             "Error in computation of term 3" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( computeLinearElasticTerm3( invRCGGamma, referenceHigherOrderStress, term3 ) );
 
         //Construct the PK2 and reference symmetric stresses
         PK2Stress            = term1 + term2 + term3;
 
         variableVector symmTerm2Term3;
-        error = tardigradeConstitutiveTools::computeSymmetricPart( term2 + term3, symmTerm2Term3 );
+        TARDIGRADE_ERROR_TOOLS_CATCH( tardigradeConstitutiveTools::computeSymmetricPart( term2 + term3, symmTerm2Term3 ) );
         referenceMicroStress = term1 + 2 * symmTerm2Term3;
 
-        return NULL;
+        return;
     }
 
-    errorOut linearElasticityReference( const variableVector &deformationGradient, const variableVector &microDeformation,
+    void linearElasticityReference( const variableVector &deformationGradient, const variableVector &microDeformation,
                                         const variableVector &gradientMicroDeformation,
                                         const parameterVector &A, const parameterVector &B, const parameterVector &C,
                                         const parameterVector &D,
@@ -218,32 +162,18 @@ namespace tardigradeMicromorphicLinearElasticity{
         //Compute the required deformation measures
         variableVector RCG, Psi, Gamma;
         variableMatrix dRCGdF, dPsidF, dPsidChi, dGammadF, dGammadGradChi;
-        errorOut error = computeDeformationMeasures( deformationGradient, microDeformation, gradientMicroDeformation,
-                                                     RCG, Psi, Gamma, dRCGdF, dPsidF, dPsidChi, dGammadF, dGammadGradChi );
-
-        if ( error ){
-            errorOut result = new errorNode( "linearElasticityReference (jacobian)",
-                                             "Error in the computation of the deformation measures" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( computeDeformationMeasures( deformationGradient, microDeformation, gradientMicroDeformation,
+                                                     RCG, Psi, Gamma, dRCGdF, dPsidF, dPsidChi, dGammadF, dGammadGradChi ) );
 
         variableMatrix dPK2StressdRCG, dPK2StressdPsi, dPK2StressdGamma;
         variableMatrix dReferenceMicroStressdRCG, dReferenceMicroStressdPsi, dReferenceMicroStressdGamma;
         variableMatrix dMdGamma;
 
-        error = linearElasticityReferenceDerivedMeasures( RCG, Psi, Gamma, A, B, C, D,
+        TARDIGRADE_ERROR_TOOLS_CATCH( linearElasticityReferenceDerivedMeasures( RCG, Psi, Gamma, A, B, C, D,
                                                           PK2Stress, referenceMicroStress, referenceHigherOrderStress,
                                                           dPK2StressdRCG, dPK2StressdPsi, dPK2StressdGamma,
                                                           dReferenceMicroStressdRCG, dReferenceMicroStressdPsi,
-                                                          dReferenceMicroStressdGamma, dMdGamma );
-
-        if ( error ){
-            errorOut result = new errorNode( "linearElasticityReference (jacobian)",
-                                             "Error in the computation of the deformation measures" );
-            result->addNext( error );
-            return result;
-        }
+                                                          dReferenceMicroStressdGamma, dMdGamma ) );
 
         dPK2StressdF = tardigradeVectorTools::dot( dPK2StressdRCG, dRCGdF )
                      + tardigradeVectorTools::dot( dPK2StressdPsi, dPsidF )
@@ -264,10 +194,10 @@ namespace tardigradeMicromorphicLinearElasticity{
         dMdF = tardigradeVectorTools::dot( dMdGamma, dGammadF );
         dMdGradChi = tardigradeVectorTools::dot( dMdGamma, dGammadGradChi );
 
-        return NULL;
+        return;
     }
 
-    errorOut linearElasticityReferenceDerivedMeasures( const variableVector &rightCauchyGreenDeformation, const variableVector &Psi,
+    void linearElasticityReferenceDerivedMeasures( const variableVector &rightCauchyGreenDeformation, const variableVector &Psi,
                                                        const variableVector &Gamma,
                                                        const parameterVector &A, const parameterVector &B, const parameterVector &C,
                                                        const parameterVector &D,
@@ -324,28 +254,14 @@ namespace tardigradeMicromorphicLinearElasticity{
         variableVector microStrain   = Psi - eye;
 
         //Compute the higher order stress
-        errorOut error = computeReferenceHigherOrderStress( Gamma, C, referenceHigherOrderStress, dMdGamma );
-
-        if ( error ){
-            errorOut result = new errorNode( "linearElasticityRefereneDerivedMetrics (jacobian)",
-                                             "Error in computation of higher-order stress" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( computeReferenceHigherOrderStress( Gamma, C, referenceHigherOrderStress, dMdGamma ) );
 
         //Compute the first common term for the PK2 and symmetric micro-stress
         variableVector term1;
 
         variableMatrix dTerm1dRCG, dTerm1dPsi;
-        error = computeLinearElasticTerm1( greenLagrangeStrain, microStrain, A, D, term1,
-                                           dTerm1dRCG, dTerm1dPsi );
-
-        if ( error ){
-            errorOut result = new errorNode( "linearElasticityReferenceDerivedMetrics (jacobian)",
-                                             "Error in computation of term 1" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH(computeLinearElasticTerm1( greenLagrangeStrain, microStrain, A, D, term1,
+                                           dTerm1dRCG, dTerm1dPsi ) );
 
         //Assemble term1 jacobians w.r.t. F and Chi
         dTerm1dRCG *= 0.5;
@@ -354,26 +270,12 @@ namespace tardigradeMicromorphicLinearElasticity{
         variableVector invRCGPsi;
         variableMatrix dInvRCGPsidRCG, dInvRCGPsidPsi;
 
-        error = computeInvRCGPsi( invRCG, Psi, invRCGPsi, dInvRCGPsidRCG, dInvRCGPsidPsi );
-
-        if ( error ){
-            errorOut result = new errorNode( "linearElasticityReferenceDerivedMetrics (jacobian)",
-                                             "Error in computation of invRCG Psi product" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( computeInvRCGPsi( invRCG, Psi, invRCGPsi, dInvRCGPsidRCG, dInvRCGPsidPsi ) );
 
         variableVector term2;
         variableMatrix dTerm2dRCG, dTerm2dPsi, dTerm2dInvRCGPsi;
-        error = computeLinearElasticTerm2( greenLagrangeStrain, microStrain, invRCGPsi, B, D, term2,
-                                           dTerm2dRCG, dTerm2dPsi, dTerm2dInvRCGPsi );
-
-        if ( error ){
-            errorOut result = new errorNode( "linearElasticityReferenceDerivedMetrics (jacobian)",
-                                             "Error in computation of term 2" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH(computeLinearElasticTerm2( greenLagrangeStrain, microStrain, invRCGPsi, B, D, term2,
+                                                                dTerm2dRCG, dTerm2dPsi, dTerm2dInvRCGPsi ) );
 
         dTerm2dRCG *= 0.5;
         dTerm2dRCG += tardigradeVectorTools::dot( dTerm2dInvRCGPsi, dInvRCGPsidRCG );
@@ -384,25 +286,11 @@ namespace tardigradeMicromorphicLinearElasticity{
         variableVector invRCGGamma;
         variableMatrix dInvRCGGammadRCG, dInvRCGGammadGamma;
 
-        error = computeInvRCGGamma( invRCG, Gamma, invRCGGamma, dInvRCGGammadRCG, dInvRCGGammadGamma );
-
-        if ( error ){
-            errorOut result = new errorNode( "linearElasticityReferenceDerivedMetrics (jacobian)",
-                                             "Error in computation of invRCG Gamma product" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( computeInvRCGGamma( invRCG, Gamma, invRCGGamma, dInvRCGGammadRCG, dInvRCGGammadGamma ) );
 
         variableVector term3;
         variableMatrix dTerm3dInvRCGGamma, dTerm3dM;
-        error = computeLinearElasticTerm3( invRCGGamma, referenceHigherOrderStress, term3, dTerm3dInvRCGGamma, dTerm3dM );
-
-        if ( error ){
-            errorOut result = new errorNode( "linearElasticityReferenceDerivedMetrics (jacobian)",
-                                             "Error in computation of term 3" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( computeLinearElasticTerm3( invRCGGamma, referenceHigherOrderStress, term3, dTerm3dInvRCGGamma, dTerm3dM ) );
 
         variableMatrix dTerm3dRCG = tardigradeVectorTools::dot( dTerm3dInvRCGGamma, dInvRCGGammadRCG );
         variableMatrix dTerm3dGamma = tardigradeVectorTools::dot( dTerm3dInvRCGGamma, dInvRCGGammadGamma )
@@ -417,7 +305,7 @@ namespace tardigradeMicromorphicLinearElasticity{
 
         variableVector symmTerm2Term3;
         variableMatrix dSymmTerm2Term3dTerm2Term3;
-        error = tardigradeConstitutiveTools::computeSymmetricPart( term2 + term3, symmTerm2Term3, dSymmTerm2Term3dTerm2Term3 );
+        tardigradeConstitutiveTools::computeSymmetricPart( term2 + term3, symmTerm2Term3, dSymmTerm2Term3dTerm2Term3 );
         referenceMicroStress = term1 + 2 * symmTerm2Term3;
 
         dReferenceMicroStressdRCG = dTerm1dRCG + 2 * ( tardigradeVectorTools::dot( dSymmTerm2Term3dTerm2Term3, dTerm2dRCG )
@@ -426,10 +314,10 @@ namespace tardigradeMicromorphicLinearElasticity{
         dReferenceMicroStressdPsi = dTerm1dPsi + 2 * tardigradeVectorTools::dot( dSymmTerm2Term3dTerm2Term3, dTerm2dPsi );
         dReferenceMicroStressdGamma = 2 * tardigradeVectorTools::dot( dSymmTerm2Term3dTerm2Term3, dTerm3dGamma );
 
-        return NULL;
+        return;
     }
 
-    errorOut computeDeformationMeasures( const variableVector &deformationGradient, const variableVector &microDeformation,
+    void computeDeformationMeasures( const variableVector &deformationGradient, const variableVector &microDeformation,
                                          const variableVector &gradientMicroDeformation,
                                          variableVector &rightCauchyGreen, variableVector &Psi, variableVector &Gamma ){
         /*!
@@ -446,38 +334,17 @@ namespace tardigradeMicromorphicLinearElasticity{
          * \param &Gamma: The gradient micro-deformation measure
          */
 
-        errorOut error = tardigradeConstitutiveTools::computeRightCauchyGreen( deformationGradient, rightCauchyGreen );
+        TARDIGRADE_ERROR_TOOLS_CATCH( tardigradeConstitutiveTools::computeRightCauchyGreen( deformationGradient, rightCauchyGreen ) );
 
-        if ( error ){
-            errorOut result = new errorNode( "computeDeformationMeasures",
-                                             "Error in the computation of the right Cauchy-Green Deformation measure" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( tardigradeMicromorphicTools::computePsi( deformationGradient, microDeformation, Psi ) );
 
-        error = tardigradeMicromorphicTools::computePsi( deformationGradient, microDeformation, Psi );
-        
-        if ( error ){
-            errorOut result = new errorNode( "computeDeformationMeasures",
-                                             "Error in the computation of Psi" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( tardigradeMicromorphicTools::computeGamma( deformationGradient, gradientMicroDeformation, Gamma ) );
 
-        error = tardigradeMicromorphicTools::computeGamma( deformationGradient, gradientMicroDeformation, Gamma );
-
-        if ( error ){
-            errorOut result = new errorNode( "computeDeformationMeasures",
-                                             "Error in the computation of Gamma" );
-            result->addNext( error );
-            return result;
-        }
-
-        return NULL;
+        return;
 
     }
 
-    errorOut computeDeformationMeasures( const variableVector &deformationGradient, const variableVector &microDeformation,
+    void computeDeformationMeasures( const variableVector &deformationGradient, const variableVector &microDeformation,
                                          const variableVector &gradientMicroDeformation,
                                          variableVector &rightCauchyGreen, variableVector &Psi, variableVector &Gamma,
                                          variableMatrix &dCdF, variableMatrix &dPsidF, variableMatrix &dPsidChi,
@@ -502,37 +369,16 @@ namespace tardigradeMicromorphicLinearElasticity{
          * \param &dGammadGradChi: The gradient of Gamma w.r.t. the spatial gradient of Chi
          */
 
-        errorOut error = tardigradeConstitutiveTools::computeRightCauchyGreen( deformationGradient, rightCauchyGreen, dCdF );
+        TARDIGRADE_ERROR_TOOLS_CATCH( tardigradeConstitutiveTools::computeRightCauchyGreen( deformationGradient, rightCauchyGreen, dCdF ) );
 
-        if ( error ){
-            errorOut result = new errorNode( "computeDeformationMeasures (jacobian)",
-                                             "Error in the computation of the right Cauchy-Green Deformation measure" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( tardigradeMicromorphicTools::computePsi( deformationGradient, microDeformation, Psi, dPsidF, dPsidChi ) );
 
-        error = tardigradeMicromorphicTools::computePsi( deformationGradient, microDeformation, Psi, dPsidF, dPsidChi );
-        
-        if ( error ){
-            errorOut result = new errorNode( "computeDeformationMeasures (jacobian)",
-                                             "Error in the computation of Psi" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( tardigradeMicromorphicTools::computeGamma( deformationGradient, gradientMicroDeformation, Gamma, dGammadF, dGammadGradChi ) );
 
-        error = tardigradeMicromorphicTools::computeGamma( deformationGradient, gradientMicroDeformation, Gamma, dGammadF, dGammadGradChi );
-
-        if ( error ){
-            errorOut result = new errorNode( "computeDeformationMeasures (jacobian)",
-                                             "Error in the computation of Gamma" );
-            result->addNext( error );
-            return result;
-        }
-
-        return NULL;
+        return;
     }
 
-    errorOut computeLinearElasticTerm1( const variableVector &greenLagrangeStrain, const variableVector &microStrain, 
+    void computeLinearElasticTerm1( const variableVector &greenLagrangeStrain, const variableVector &microStrain, 
                                         const parameterVector &A, const parameterVector &D, variableVector &term1 ){
         /*!
          * Compute the first term for the linear elastic model
@@ -548,25 +394,13 @@ namespace tardigradeMicromorphicLinearElasticity{
         //Assume 3D
         unsigned int dim = 3;
 
-        if ( greenLagrangeStrain.size() != dim * dim ){
-            return new errorNode( "computeLinearElasticTerm1",
-                                  "The green lagrange strain must have a length of 9" );
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( greenLagrangeStrain.size() == dim * dim, "The green lagrange strain must have a length of 9" );
 
-        if ( microStrain.size() != dim * dim ){
-            return new errorNode( "computeLinearElasticTerm1",
-                                  "The micro-strain must have a length of 9" );
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( microStrain.size() == dim * dim, "The micro-strain must have a length of 9" );
 
-        if ( A.size() != dim * dim * dim * dim ){
-            return new errorNode( "computeLinearElasticTerm1",
-                                  "A must have a size of 3**4" );
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( A.size() == dim * dim * dim * dim, "A must have a size of 3**4" );
 
-        if ( D.size() != dim * dim * dim * dim ){
-            return new errorNode( "computeLinearElasticTerm1",
-                                  "D must have a size of 3**4" );
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( D.size() == dim * dim * dim * dim, "D must have a size of 3**4" );
 
         //Compute the first common term for the PK2 and symmetric micro-stress
         term1 = variableVector( dim * dim, 0 );
@@ -581,10 +415,10 @@ namespace tardigradeMicromorphicLinearElasticity{
             }
         }
 
-        return NULL;
+        return;
     }
 
-    errorOut computeLinearElasticTerm1( const variableVector &greenLagrangeStrain, const variableVector &microStrain, 
+    void computeLinearElasticTerm1( const variableVector &greenLagrangeStrain, const variableVector &microStrain, 
                                         const parameterVector &A, const parameterVector &D, variableVector &term1,
                                         variableMatrix &dTerm1dGreenLagrangeStrain, variableMatrix &dTerm1dMicroStrain ){
         /*!
@@ -607,14 +441,7 @@ namespace tardigradeMicromorphicLinearElasticity{
         //Assume 3D
         unsigned int dim = 3;
 
-        errorOut error = computeLinearElasticTerm1( greenLagrangeStrain, microStrain, A, D, term1 );
-
-        if ( error ){
-            errorOut result = new errorNode( "computeLinearElasticTerm1 (jacobian)",
-                                             "Error in computation of linear elastic term1" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( computeLinearElasticTerm1( greenLagrangeStrain, microStrain, A, D, term1 ) );
 
         //Compute the first common term for the PK2 and symmetric micro-stress
         dTerm1dGreenLagrangeStrain = variableMatrix( term1.size(), variableVector( greenLagrangeStrain.size(), 0 ) );
@@ -631,10 +458,10 @@ namespace tardigradeMicromorphicLinearElasticity{
             }
         }
 
-        return NULL;
+        return;
     }
 
-    errorOut computeLinearElasticTerm2( const variableVector &greenLagrangeStrain, const variableVector &microStrain,
+    void computeLinearElasticTerm2( const variableVector &greenLagrangeStrain, const variableVector &microStrain,
                                         const variableVector &invCPsi, const parameterVector &B, const parameterVector &D,
                                         variableVector &term2 ){
         /*!
@@ -653,30 +480,15 @@ namespace tardigradeMicromorphicLinearElasticity{
         //Assume 3D
         unsigned int dim = 3;
 
-        if ( greenLagrangeStrain.size() != dim * dim ){
-            return new errorNode( "computeLinearElasticTerm2",
-                                  "The green lagrange strain must have a length of 9" );
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( greenLagrangeStrain.size() == dim * dim, "The green lagrange strain must have a length of 9" );
 
-        if ( microStrain.size() != dim * dim ){
-            return new errorNode( "computeLinearElasticTerm2",
-                                  "The micro-strain must have a length of 9" );
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( microStrain.size() == dim * dim, "The micro-strain must have a length of 9" );
 
-        if ( invCPsi.size() != dim * dim ){
-            return new errorNode( "computeLinearElasticTerm2",
-                                  "invCPsi must have a size of 9" );
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( invCPsi.size() == dim * dim, "invCPsi must have a size of 9" );
 
-        if ( B.size() != dim * dim * dim * dim ){
-            return new errorNode( "computeLinearElasticTerm2",
-                                  "B must have a size of 3**4" );
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( B.size() == dim * dim * dim * dim, "B must have a size of 3**4" );
 
-        if ( D.size() != dim * dim * dim * dim ){
-            return new errorNode( "computeLinearElasticTerm2",
-                                  "D must have a size of 3**4" );
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( D.size() == dim * dim * dim * dim, "D must have a size of 3**4" );
 
         term2 = variableVector( greenLagrangeStrain.size(), 0 );
 
@@ -694,10 +506,10 @@ namespace tardigradeMicromorphicLinearElasticity{
             }
         }
 
-        return NULL;
+        return;
     }
 
-    errorOut computeLinearElasticTerm2( const variableVector &greenLagrangeStrain, const variableVector &microStrain,
+    void computeLinearElasticTerm2( const variableVector &greenLagrangeStrain, const variableVector &microStrain,
                                         const variableVector &invCPsi, const parameterVector &B, const parameterVector &D,
                                         variableVector &term2, variableMatrix &dTerm2dGreenLagrangeStrain,
                                         variableMatrix &dTerm2dMicroStrain, variableMatrix &dTerm2dInvCPsi ){
@@ -725,14 +537,7 @@ namespace tardigradeMicromorphicLinearElasticity{
         //Assume 3D
         unsigned int dim = 3;
 
-        errorOut error = computeLinearElasticTerm2( greenLagrangeStrain, microStrain, invCPsi, B, D, term2 );
-
-        if ( error ){
-            errorOut result = new errorNode("computeLinearElasticTerm2 (jacobian)",
-                                            "Error in computation of term 2" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( computeLinearElasticTerm2( greenLagrangeStrain, microStrain, invCPsi, B, D, term2 ) );
 
         //Compute the Jacobians
         constantVector eye( dim * dim );
@@ -757,10 +562,10 @@ namespace tardigradeMicromorphicLinearElasticity{
             }
         }
 
-        return NULL;
+        return;
     }
 
-    errorOut computeReferenceHigherOrderStress( const variableVector &Gamma, const parameterVector &C, 
+    void computeReferenceHigherOrderStress( const variableVector &Gamma, const parameterVector &C, 
                                                 variableVector &referenceHigherOrderStress ){
         /*!
          * Compute the higher order stress in the reference configuration.
@@ -775,15 +580,9 @@ namespace tardigradeMicromorphicLinearElasticity{
         //Assume 3D
         unsigned int dim = 3;
 
-        if ( Gamma.size() != dim * dim * dim ){
-            return new errorNode( "computeReferenceHigherOrderStress",
-                                  "Gamma must have a length of 27" );
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( Gamma.size() == dim * dim * dim, "Gamma must have a length of 27" );
 
-        if ( C.size() != dim * dim * dim * dim * dim * dim ){
-            return new errorNode( "computeReferenceHigherOrderStress",
-                                  "The C stiffness tensor have a length of 3**6" );
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( C.size() == dim * dim * dim * dim * dim * dim, "The C stiffness tensor have a length of 3**6" );
 
         referenceHigherOrderStress = variableVector( dim * dim * dim, 0 );
 
@@ -800,10 +599,10 @@ namespace tardigradeMicromorphicLinearElasticity{
                 }
             }
         }
-        return NULL;
+        return;
     }
 
-    errorOut computeReferenceHigherOrderStress( const variableVector &Gamma, const parameterVector &C, 
+    void computeReferenceHigherOrderStress( const variableVector &Gamma, const parameterVector &C, 
                                                 variableVector &referenceHigherOrderStress,
                                                 variableMatrix &dReferenceHigherOrderStressdGamma ){
         /*!
@@ -824,14 +623,7 @@ namespace tardigradeMicromorphicLinearElasticity{
         //Assume 3D
         unsigned int dim = 3;
 
-        errorOut error = computeReferenceHigherOrderStress( Gamma, C, referenceHigherOrderStress );
-
-        if ( error ){
-            errorOut result = new errorNode( "computeReferenceHigherOrderStress (jacobian)",
-                                             "Error in computation of higher order stress" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( computeReferenceHigherOrderStress( Gamma, C, referenceHigherOrderStress ) );
 
         //Assemble the Jacobian
         dReferenceHigherOrderStressdGamma = variableMatrix( dim * dim * dim, variableVector( dim * dim * dim, 0 ) );
@@ -851,10 +643,10 @@ namespace tardigradeMicromorphicLinearElasticity{
             }
         }
 
-        return NULL;
+        return;
     }
 
-    errorOut computeLinearElasticTerm3( const variableVector &invCGamma, 
+    void computeLinearElasticTerm3( const variableVector &invCGamma, 
                                         const variableVector &referenceHigherOrderStress, variableVector &term3 ){
         /*!
          * Compute the value of the third term in the micromorphic linear elasticity formulation.
@@ -868,15 +660,9 @@ namespace tardigradeMicromorphicLinearElasticity{
         //Assume 3D
         unsigned int dim = 3;
 
-        if ( invCGamma.size() != dim * dim * dim ){
-            return new errorNode( "computeLinearElasticTerm3",
-                                  "invCGamma must have a size of 27" );
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( invCGamma.size() == dim * dim * dim, "invCGamma must have a size of 27" );
 
-        if ( referenceHigherOrderStress.size() != dim * dim * dim ){
-            return new errorNode( "computeLinearElasticTerm3",
-                                  "The referenceHigherOrder stress must have a size of 27" );
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( referenceHigherOrderStress.size() == dim * dim * dim, "The referenceHigherOrder stress must have a size of 27" );
 
         term3 = variableVector( dim * dim, 0 );
 
@@ -890,10 +676,10 @@ namespace tardigradeMicromorphicLinearElasticity{
             }
         }
 
-        return NULL;
+        return;
     }
 
-    errorOut computeLinearElasticTerm3( const variableVector &invCGamma,
+    void computeLinearElasticTerm3( const variableVector &invCGamma,
                                         const variableVector &referenceHigherOrderStress, variableVector &term3,
                                         variableMatrix &dTerm3dInvCGamma, variableMatrix &dTerm3dReferenceHigherOrderStress ){
         /*!
@@ -914,14 +700,7 @@ namespace tardigradeMicromorphicLinearElasticity{
         //Assume 3D
         unsigned int dim = 3;
 
-        errorOut error = computeLinearElasticTerm3( invCGamma, referenceHigherOrderStress, term3 );
-
-        if ( error ){
-            errorOut result = new errorNode( "computeLinearElasticTerm3 (jacobian)",
-                                             "Error in computation of term 3" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( computeLinearElasticTerm3( invCGamma, referenceHigherOrderStress, term3 ) );
 
         constantVector eye( dim * dim );
         tardigradeVectorTools::eye( eye );
@@ -941,10 +720,10 @@ namespace tardigradeMicromorphicLinearElasticity{
                 }
             }
         }
-        return NULL;
+        return;
     }
 
-    errorOut computeInvRCGPsi( const variableVector &invRCG, const variableVector &Psi, variableVector &invRCGPsi ){
+    void computeInvRCGPsi( const variableVector &invRCG, const variableVector &Psi, variableVector &invRCGPsi ){
         /*!
          * Compute the product \f$C_{IK}^{-1} \Psi_{KJ}\f$
          *
@@ -956,20 +735,16 @@ namespace tardigradeMicromorphicLinearElasticity{
         //Assume 3d
         unsigned int dim = 3;
 
-        if ( invRCG.size() != dim * dim ){
-            return new errorNode( "computeInvRCGGamma", "invRCG has an improper dimension" );
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( invRCG.size() == dim * dim, "invRCG has an improper dimension" );
 
-        if ( Psi.size() != dim * dim ){
-            return new errorNode( "computeInvRCGGamma", "Psi has an improper dimension" );
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( Psi.size() == dim * dim, "Psi has an improper dimension" );
 
         invRCGPsi = tardigradeVectorTools::matrixMultiply( invRCG, Psi, dim, dim, dim, dim );
 
-        return NULL;
+        return;
     }
 
-    errorOut computeInvRCGPsi( const variableVector &invRCG, const variableVector &Psi, variableVector &invRCGPsi,
+    void computeInvRCGPsi( const variableVector &invRCG, const variableVector &Psi, variableVector &invRCGPsi,
                                variableMatrix &dInvRCGPsidRCG, variableMatrix &dInvRCGPsidPsi ){
         /*!
          * Compute the product \f$C_{IK}^{-1} \Psi_{KJ}\f$
@@ -989,13 +764,7 @@ namespace tardigradeMicromorphicLinearElasticity{
         //Assume 3D
         unsigned int dim = 3;
 
-        errorOut error = computeInvRCGPsi( invRCG, Psi, invRCGPsi );
-
-        if ( error ){
-            errorOut result = new errorNode( "computeInvRCGPsi (jacobian)", "Error in computation of invRCG Psi product" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( computeInvRCGPsi( invRCG, Psi, invRCGPsi ) );
 
         //Construct the jacobians
         variableVector eye( dim * dim );
@@ -1015,10 +784,10 @@ namespace tardigradeMicromorphicLinearElasticity{
             }
         }
         
-        return NULL;
+        return;
     }
 
-    errorOut computeInvRCGGamma( const variableVector &invRCG, const variableVector &Gamma, variableVector &invRCGGamma ){
+    void computeInvRCGGamma( const variableVector &invRCG, const variableVector &Gamma, variableVector &invRCGGamma ){
         /*!
          * Compute the product \f$C_{IS}^{-1} \Gamma_{SQR}\f$
          *
@@ -1030,13 +799,9 @@ namespace tardigradeMicromorphicLinearElasticity{
         //Assume 3d
         unsigned int dim = 3;
 
-        if ( invRCG.size() != dim * dim ){
-            return new errorNode( "computeInvRCGGamma", "invRCG has an improper dimension" );
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( invRCG.size() == dim * dim, "invRCG has an improper dimension" );
 
-        if ( Gamma.size() != dim * dim * dim ){
-            return new errorNode( "computeInvRCGGamma", "Gamma has an improper dimension" );
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( Gamma.size() == dim * dim * dim, "Gamma has an improper dimension" );
 
         invRCGGamma = variableVector( dim * dim * dim, 0 );
         for ( unsigned int J = 0; J < dim; J++ ){
@@ -1049,10 +814,10 @@ namespace tardigradeMicromorphicLinearElasticity{
             }
         }
 
-        return NULL;
+        return;
     }
 
-    errorOut computeInvRCGGamma( const variableVector &invRCG, const variableVector &Gamma, variableVector &invRCGGamma,
+    void computeInvRCGGamma( const variableVector &invRCG, const variableVector &Gamma, variableVector &invRCGGamma,
                                  variableMatrix &dInvRCGGammadRCG, variableMatrix &dInvRCGGammadGamma ){
         /*!
          * Compute the product \f$C_{IS}^{-1} \Gamma_{SQR}\f$
@@ -1071,13 +836,7 @@ namespace tardigradeMicromorphicLinearElasticity{
         //Assume 3d
         unsigned int dim = 3;
 
-        errorOut error = computeInvRCGGamma( invRCG, Gamma, invRCGGamma );
-
-        if ( error ){
-            errorOut result = new errorNode( "computeInvRCGGamma (jacobian)", "Error in computation of invRCG Gamma product" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( computeInvRCGGamma( invRCG, Gamma, invRCGGamma ) );
 
         //Assemble jacobians of invCGamma w.r.t. C and Gamma
         variableVector eye( dim * dim );
@@ -1103,10 +862,10 @@ namespace tardigradeMicromorphicLinearElasticity{
             }
         }
 
-        return NULL;
+        return;
     }
 
-    errorOut mapStressMeasuresToCurrent( const variableVector &deformationGradient, const variableVector &microDeformation,
+    void mapStressMeasuresToCurrent( const variableVector &deformationGradient, const variableVector &microDeformation,
                                          const variableVector &PK2Stress, const variableVector &referenceMicroStress,
                                          const variableVector &referenceHigherOrderStress,
                                          variableVector &cauchyStress, variableVector &microStress,
@@ -1129,40 +888,19 @@ namespace tardigradeMicromorphicLinearElasticity{
          */
 
         //Map the PK2 stress to the Cauchy stress
-        errorOut error = tardigradeMicromorphicTools::pushForwardPK2Stress( PK2Stress, deformationGradient, cauchyStress );
-
-        if ( error ){
-            errorOut result = new errorNode( "mapStressMeasuresToCurrent",
-                                             "Error in the map of the PK2 stress to the Cauchy stress" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( tardigradeMicromorphicTools::pushForwardPK2Stress( PK2Stress, deformationGradient, cauchyStress ) );
 
         //Map the symmetric micro stress to the current configuration
-        error = tardigradeMicromorphicTools::pushForwardReferenceMicroStress( referenceMicroStress, deformationGradient, microStress );
-
-        if ( error ){
-            errorOut result = new errorNode( "mapStressMeasuresToCurrent",
-                                             "Error in the map of the micro-stress to the current configuation" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( tardigradeMicromorphicTools::pushForwardReferenceMicroStress( referenceMicroStress, deformationGradient, microStress ) );
 
         //Map the higher order stress to the current configuration
-        error = tardigradeMicromorphicTools::pushForwardHigherOrderStress( referenceHigherOrderStress, deformationGradient,
-                                                                 microDeformation, higherOrderStress );
+        TARDIGRADE_ERROR_TOOLS_CATCH( tardigradeMicromorphicTools::pushForwardHigherOrderStress( referenceHigherOrderStress, deformationGradient,
+                                                                                                 microDeformation, higherOrderStress ) );
 
-        if ( error ){
-            errorOut result = new errorNode( "mapStressMeasuresToCurrent",
-                                             "Error in the map of the higher-order stress to the current configuation" );
-            result->addNext( error );
-            return result;
-        }
-
-        return NULL;
+        return;
     }
 
-    errorOut mapStressMeasuresToCurrent( const variableVector &deformationGradient, const variableVector &microDeformation,
+    void mapStressMeasuresToCurrent( const variableVector &deformationGradient, const variableVector &microDeformation,
                                          const variableVector &PK2Stress, const variableVector &referenceMicroStress,
                                          const variableVector &referenceHigherOrderStress,
                                          variableVector &cauchyStress, variableVector &microStress,
@@ -1205,45 +943,24 @@ namespace tardigradeMicromorphicLinearElasticity{
          */
 
         //Map the PK2 stress to the Cauchy stress
-        errorOut error = tardigradeMicromorphicTools::pushForwardPK2Stress( PK2Stress, deformationGradient, cauchyStress,
-                                                                  dCauchyStressdPK2Stress, dCauchyStressdF );
-
-        if ( error ){
-            errorOut result = new errorNode( "mapStressMeasuresToCurrent",
-                                             "Error in the map of the PK2 stress to the Cauchy stress" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( tardigradeMicromorphicTools::pushForwardPK2Stress( PK2Stress, deformationGradient, cauchyStress,
+                                                                                         dCauchyStressdPK2Stress, dCauchyStressdF ) );
 
         //Map the symmetric micro stress to the current configuration
-        error = tardigradeMicromorphicTools::pushForwardReferenceMicroStress( referenceMicroStress, deformationGradient, microStress,
-                                                                    dMicroStressdReferenceMicroStress, dMicroStressdF );
-
-        if ( error ){
-            errorOut result = new errorNode( "mapStressMeasuresToCurrent",
-                                             "Error in the map of the micro-stress to the current configuation" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( tardigradeMicromorphicTools::pushForwardReferenceMicroStress( referenceMicroStress, deformationGradient, microStress,
+                                                                                                    dMicroStressdReferenceMicroStress, dMicroStressdF ) );
 
         //Map the higher order stress to the current configuration
-        error = tardigradeMicromorphicTools::pushForwardHigherOrderStress( referenceHigherOrderStress, deformationGradient,
-                                                                 microDeformation, higherOrderStress,
-                                                                 dHigherOrderStressdReferenceHigherOrderStress,
-                                                                 dHigherOrderStressdF,
-                                                                 dHigherOrderStressdChi );
+        TARDIGRADE_ERROR_TOOLS_CATCH( tardigradeMicromorphicTools::pushForwardHigherOrderStress( referenceHigherOrderStress, deformationGradient,
+                                                                                                 microDeformation, higherOrderStress,
+                                                                                                 dHigherOrderStressdReferenceHigherOrderStress,
+                                                                                                 dHigherOrderStressdF,
+                                                                                                 dHigherOrderStressdChi ) );
 
-        if ( error ){
-            errorOut result = new errorNode( "mapStressMeasuresToCurrent",
-                                             "Error in the map of the higher-order stress to the current configuation" );
-            result->addNext( error );
-            return result;
-        }
-
-        return NULL;
+        return;
     }
 
-    errorOut linearElasticity( const variableVector &deformationGradient, const variableVector &microDeformation,
+    void linearElasticity( const variableVector &deformationGradient, const variableVector &microDeformation,
                                const variableVector &gradientMicroDeformation,
                                const parameterVector &A, const parameterVector &B, const parameterVector &C,
                                const parameterVector &D,
@@ -1266,32 +983,18 @@ namespace tardigradeMicromorphicLinearElasticity{
          */
 
         variableVector PK2Stress, referenceMicroStress, referenceHigherOrderStress;
-        errorOut error = linearElasticityReference( deformationGradient, microDeformation, gradientMicroDeformation,
-                                                    A, B, C, D,
-                                                    PK2Stress, referenceMicroStress, referenceHigherOrderStress );
+        TARDIGRADE_ERROR_TOOLS_CATCH( linearElasticityReference( deformationGradient, microDeformation, gradientMicroDeformation,
+                                                                 A, B, C, D,
+                                                                 PK2Stress, referenceMicroStress, referenceHigherOrderStress ) );
 
-        if ( error ){
-            errorOut result = new errorNode( "linearElasticity",
-                                             "Error in the computation of the stresses in the reference configuration" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( mapStressMeasuresToCurrent( deformationGradient, microDeformation, PK2Stress,
+                                                                  referenceMicroStress, referenceHigherOrderStress,
+                                                                  cauchyStress, microStress, higherOrderStress ) );
 
-        error = mapStressMeasuresToCurrent( deformationGradient, microDeformation, PK2Stress,
-                                            referenceMicroStress, referenceHigherOrderStress,
-                                            cauchyStress, microStress, higherOrderStress );
-
-        if ( error ){
-            errorOut result = new errorNode( "linearElasticity",
-                                             "Error in mapping the reference stresses to the current configuration" );
-            result->addNext( error );
-            return result;
-        }
-
-        return NULL;
+        return;
     }
     
-    errorOut linearElasticity(  const variableVector &deformationGradient, const variableVector &microDeformation,
+    void linearElasticity(  const variableVector &deformationGradient, const variableVector &microDeformation,
                                 const variableVector &gradientMicroDeformation,
                                 const parameterVector &A, const parameterVector &B, const parameterVector &C,
                                 const parameterVector &D,
@@ -1337,36 +1040,22 @@ namespace tardigradeMicromorphicLinearElasticity{
         variableMatrix dReferenceMicroStressdF, dReferenceMicroStressdChi, dReferenceMicroStressdGradChi;
         variableMatrix dReferenceHigherOrderStressdF, dReferenceHigherOrderStressdGradChi;
 
-        errorOut error = linearElasticityReference( deformationGradient, microDeformation, gradientMicroDeformation,
-                                                    A, B, C, D,
-                                                    PK2Stress, referenceMicroStress, referenceHigherOrderStress,
-                                                    dPK2StressdF, dPK2StressdChi, dPK2StressdGradChi,
-                                                    dReferenceMicroStressdF, dReferenceMicroStressdChi, dReferenceMicroStressdGradChi,
-                                                    dReferenceHigherOrderStressdF, dReferenceHigherOrderStressdGradChi );
-
-        if ( error ){
-            errorOut result = new errorNode( "linearElasticity",
-                                             "Error in the computation of the stresses in the reference configuration" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( linearElasticityReference( deformationGradient, microDeformation, gradientMicroDeformation,
+                                                                 A, B, C, D,
+                                                                 PK2Stress, referenceMicroStress, referenceHigherOrderStress,
+                                                                 dPK2StressdF, dPK2StressdChi, dPK2StressdGradChi,
+                                                                 dReferenceMicroStressdF, dReferenceMicroStressdChi, dReferenceMicroStressdGradChi,
+                                                                 dReferenceHigherOrderStressdF, dReferenceHigherOrderStressdGradChi ) );
 
         variableMatrix dCauchyStressdPK2Stress, dMicroStressdReferenceMicroStress, dHigherOrderStressdReferenceHigherOrderStress;
 
-        error = mapStressMeasuresToCurrent( deformationGradient, microDeformation, PK2Stress,
-                                            referenceMicroStress, referenceHigherOrderStress,
-                                            cauchyStress, microStress, higherOrderStress,
-                                            dCauchyStressdF, dCauchyStressdPK2Stress,
-                                            dMicroStressdF, dMicroStressdReferenceMicroStress,
-                                            dHigherOrderStressdF, dHigherOrderStressdChi,
-                                            dHigherOrderStressdReferenceHigherOrderStress );
-
-        if ( error ){
-            errorOut result = new errorNode( "linearElasticity",
-                                             "Error in mapping the reference stresses to the current configuration" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( mapStressMeasuresToCurrent( deformationGradient, microDeformation, PK2Stress,
+                                                                  referenceMicroStress, referenceHigherOrderStress,
+                                                                  cauchyStress, microStress, higherOrderStress,
+                                                                  dCauchyStressdF, dCauchyStressdPK2Stress,
+                                                                  dMicroStressdF, dMicroStressdReferenceMicroStress,
+                                                                  dHigherOrderStressdF, dHigherOrderStressdChi,
+                                                                  dHigherOrderStressdReferenceHigherOrderStress ) );
 
         //Assemble the jacobians of the Cauchy stress
         dCauchyStressdF += tardigradeVectorTools::dot( dCauchyStressdPK2Stress, dPK2StressdF );
@@ -1384,10 +1073,10 @@ namespace tardigradeMicromorphicLinearElasticity{
         dHigherOrderStressdGradChi = tardigradeVectorTools::dot( dHigherOrderStressdReferenceHigherOrderStress,
                                                       dReferenceHigherOrderStressdGradChi );
 
-        return NULL;
+        return;
     }
 
-    errorOut formIsotropicA( const parameterType &lambda, const parameterType &mu, parameterVector &A ){
+    void formIsotropicA( const parameterType &lambda, const parameterType &mu, parameterVector &A ){
         /*!
          * Form the isotropic A stiffness tensor.
          * \f$A_{KLMN} = \lambda \delta_{KL} \delta_{MN} + \mu \left( \delta_{KM} \delta_{LN} + \delta_{KN} \delta_{LM} )\f$
@@ -1417,10 +1106,10 @@ namespace tardigradeMicromorphicLinearElasticity{
             }
         }
 
-        return NULL;
+        return;
     }
 
-    errorOut formIsotropicB( const parameterType &eta, const parameterType &tau,   const parameterType &kappa,
+    void formIsotropicB( const parameterType &eta, const parameterType &tau,   const parameterType &kappa,
                              const parameterType &nu,  const parameterType &sigma, parameterVector &B ){
         /*!
          * Form the isotropic B stiffness tensor.
@@ -1457,10 +1146,10 @@ namespace tardigradeMicromorphicLinearElasticity{
             }
         }
 
-        return NULL;
+        return;
     }
 
-    errorOut formIsotropicC( const parameterVector &taus, parameterVector &C ){
+    void formIsotropicC( const parameterVector &taus, parameterVector &C ){
         /*!
          * Form the isotropic C stiffness tensor.
          * \f$\begin{align}
@@ -1484,9 +1173,7 @@ namespace tardigradeMicromorphicLinearElasticity{
         //Assume 3D
         unsigned int dim = 3;
 
-        if ( taus.size() != 11 ){
-            return new errorNode( "formIsotropicC", "11 moduli required to form C" );
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( taus.size() == 11, "11 moduli required to form C" );
 
         constantVector eye( dim * dim );
         tardigradeVectorTools::eye( eye );
@@ -1522,10 +1209,10 @@ namespace tardigradeMicromorphicLinearElasticity{
             }
         }
 
-        return NULL;
+        return;
     }
 
-    errorOut formIsotropicD( const parameterType &tau, const parameterType &sigma, parameterVector &D ) {
+    void formIsotropicD( const parameterType &tau, const parameterType &sigma, parameterVector &D ) {
         /*!
          * Form the isotropic tensor D.
          * \f$D_{KLMN} = \tau \delta_{KL} \delta_{MN} + \sigma \left( \delta_{KM} \delta_{LN} + \delta_{KN} \delta_{LM} )\f$
@@ -1553,10 +1240,10 @@ namespace tardigradeMicromorphicLinearElasticity{
             }
         }
 
-        return NULL;
+        return;
     }
 
-    errorOut assembleFundamentalDeformationMeasures( const double ( &grad_u )[ 3 ][ 3 ], const double ( &phi )[ 9 ],
+    void assembleFundamentalDeformationMeasures( const double ( &grad_u )[ 3 ][ 3 ], const double ( &phi )[ 9 ],
                                                      const double ( &grad_phi )[ 9 ][ 3 ],
                                                      variableVector &deformationGradient, variableVector &microDeformation,
                                                      variableVector &gradientMicroDeformation ){
@@ -1591,37 +1278,16 @@ namespace tardigradeMicromorphicLinearElasticity{
                                                      grad_phi[ 7 ][ 0 ], grad_phi[ 7 ][ 1 ], grad_phi[ 7 ][ 2 ],
                                                      grad_phi[ 8 ][ 0 ], grad_phi[ 8 ][ 1 ], grad_phi[ 8 ][ 2 ] };
 
-        errorOut error = tardigradeMicromorphicTools::assembleDeformationGradient( displacementGradient, deformationGradient );
+        TARDIGRADE_ERROR_TOOLS_CATCH( tardigradeMicromorphicTools::assembleDeformationGradient( displacementGradient, deformationGradient ) );
 
-        if ( error ){
-            errorOut result = new errorNode( "assembleFundamentalDeformationMeasures",
-                                             "Error in assembly of the deformation gradient" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( tardigradeMicromorphicTools::assembleMicroDeformation( microDisplacement, microDeformation ) );
 
-        error = tardigradeMicromorphicTools::assembleMicroDeformation( microDisplacement, microDeformation );
+        TARDIGRADE_ERROR_TOOLS_CATCH( tardigradeMicromorphicTools::assembleGradientMicroDeformation( gradientMicroDisplacement, gradientMicroDeformation ) );
 
-        if ( error ){
-            errorOut result = new errorNode( "assembleFundamentalDeformationMeasures",
-                                             "Error in assembly of the micro deformation" );
-            result->addNext( error );
-            return result;
-        }
-
-        error = tardigradeMicromorphicTools::assembleGradientMicroDeformation( gradientMicroDisplacement, gradientMicroDeformation );
-
-        if ( error ){
-            errorOut result = new errorNode( "assembleFundamentalDeformationMeasures",
-                                             "Error in assembly of the gradient of the micro deformation" );
-            result->addNext( error );
-            return result;
-        }
-
-        return NULL;
+        return;
     }
 
-    errorOut assembleFundamentalDeformationMeasures( const double ( &grad_u )[ 3 ][ 3 ], const double ( &phi )[ 9 ],
+    void assembleFundamentalDeformationMeasures( const double ( &grad_u )[ 3 ][ 3 ], const double ( &phi )[ 9 ],
                                                      const double ( &grad_phi )[ 9 ][ 3 ],
                                                      variableVector &deformationGradient, variableVector &microDeformation,
                                                      variableVector &gradientMicroDeformation, variableMatrix &dFdGradU,
@@ -1666,42 +1332,21 @@ namespace tardigradeMicromorphicLinearElasticity{
 
         variableVector _dFdGradU, _dChidPhi, _dGradChidGradPhi;
 
-        errorOut error = tardigradeMicromorphicTools::assembleDeformationGradient( displacementGradient, deformationGradient, _dFdGradU );
+        TARDIGRADE_ERROR_TOOLS_CATCH( tardigradeMicromorphicTools::assembleDeformationGradient( displacementGradient, deformationGradient, _dFdGradU ) );
 
-        if ( error ){
-            errorOut result = new errorNode( "assembleFundamentalDeformationMeasures (jacobian)",
-                                             "Error in assembly of the deformation gradient" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( tardigradeMicromorphicTools::assembleMicroDeformation( microDisplacement, microDeformation, _dChidPhi ) );
 
-        error = tardigradeMicromorphicTools::assembleMicroDeformation( microDisplacement, microDeformation, _dChidPhi );
-
-        if ( error ){
-            errorOut result = new errorNode( "assembleFundamentalDeformationMeasures (jacobian)",
-                                             "Error in assembly of the micro deformation" );
-            result->addNext( error );
-            return result;
-        }
-
-        error = tardigradeMicromorphicTools::assembleGradientMicroDeformation( gradientMicroDisplacement, gradientMicroDeformation,
-                                                                     _dGradChidGradPhi );
-
-        if ( error ){
-            errorOut result = new errorNode( "assembleFundamentalDeformationMeasures (jacobian)",
-                                             "Error in assembly of the gradient of the micro deformation" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( tardigradeMicromorphicTools::assembleGradientMicroDeformation( gradientMicroDisplacement, gradientMicroDeformation,
+                                                                                                     _dGradChidGradPhi ) );
 
         dFdGradU         = tardigradeVectorTools::inflate( _dFdGradU,         sot_dim, sot_dim );
         dChidPhi         = tardigradeVectorTools::inflate( _dChidPhi,         sot_dim, sot_dim );
         dGradChidGradPhi = tardigradeVectorTools::inflate( _dGradChidGradPhi, tot_dim, tot_dim );
 
-        return NULL;
+        return;
     }
 
-    errorOut extractMaterialParameters( const std::vector< double > &fparams,
+    void extractMaterialParameters( const std::vector< double > &fparams,
                                         parameterVector &Amatrix, parameterVector &Bmatrix,
                                         parameterVector &Cmatrix, parameterVector &Dmatrix ){
         /*!
@@ -1714,10 +1359,7 @@ namespace tardigradeMicromorphicLinearElasticity{
          * \param &Dmatrix: The D stiffness matrix.
          */
 
-        if ( fparams.size() == 0 ){
-            return new errorNode( "extractMaterialParameters",
-                                  "The material parameters vector has a length of 0" );
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( fparams.size() != 0, "The material parameters vector has a length of 0" );
 
         unsigned int start = 0;
         unsigned int span;
@@ -1728,15 +1370,9 @@ namespace tardigradeMicromorphicLinearElasticity{
         for ( unsigned int i = 0; i < outputs.size(); i++ ){
             span = ( unsigned int )std::floor( fparams[ start ]  + 0.5 ); //Extract the span of the parameter set
 
-            if ( fparams.size() < start + 1 + span ){
-                std::string outstr = "fparams is not long enough to contain all of the required parameters:\n";
-                outstr +=            "    filling variable " + std::to_string( i ) + "\n";
-                outstr +=            "    size =          "  + std::to_string( fparams.size() ) + "\n";
-                outstr +=            "    required size = "  + std::to_string( start + 1 + span );
-
-                return new errorNode( "extractMaterialParameters",
-                                      outstr.c_str() );
-            }
+            TARDIGRADE_ERROR_TOOLS_CHECK( fparams.size() >= start + 1 + span, "fparams is not long enough to contain all of the required parameters:\n    filling variable " + std::to_string( i )
+                                                                            + "\n    size =          "  + std::to_string( fparams.size() )
+                                                                            + "\n    required size = "  + std::to_string( start + 1 + span ) );
 
             outputs[ i ] = parameterVector( fparams.begin() + start + 1, fparams.begin() + start + 1 + span );
 
@@ -1744,69 +1380,20 @@ namespace tardigradeMicromorphicLinearElasticity{
         }
 
         //Form the stiffness tensors
-        errorOut error;
-        if ( outputs[ 0 ].size() == 2 ){
-            error = tardigradeMicromorphicLinearElasticity::formIsotropicA( outputs[ 0 ][ 0 ], outputs[ 0 ][ 1 ], Amatrix );
-        }
-        else{
-            std::string outstr = "Unrecognized number of parameters ( " + std::to_string( outputs[ 0 ].size() ) + " ) for the A stiffness tensor";
-            return new errorNode( "extractMaterialParameters",
-                                  outstr.c_str() );
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( outputs[ 0 ].size( ) == 2, "Unrecognized number of parameters ( " + std::to_string( outputs[ 0 ].size() ) + " ) for the A stiffness tensor" );
+        TARDIGRADE_ERROR_TOOLS_CATCH( tardigradeMicromorphicLinearElasticity::formIsotropicA( outputs[ 0 ][ 0 ], outputs[ 0 ][ 1 ], Amatrix ) );
 
-        if ( error ){
-            errorOut result = new errorNode( "extractMaterialParameters", "Error in computation of the A stiffness tensor" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( outputs[ 1 ].size() == 5, "Unrecognized number of parameters ( " + std::to_string( outputs[ 1 ].size() ) + " ) for the B stiffness tensor" );
+        TARDIGRADE_ERROR_TOOLS_CATCH( tardigradeMicromorphicLinearElasticity::formIsotropicB( outputs[ 1 ][ 0 ], outputs[ 1 ][ 1 ], outputs[ 1 ][ 2 ],
+                                                                                              outputs[ 1 ][ 3 ], outputs[ 1 ][ 4 ], Bmatrix ) );
 
-        if ( outputs[ 1 ].size() == 5 ){
-            error = tardigradeMicromorphicLinearElasticity::formIsotropicB( outputs[ 1 ][ 0 ], outputs[ 1 ][ 1 ], outputs[ 1 ][ 2 ],
-                                                                  outputs[ 1 ][ 3 ], outputs[ 1 ][ 4 ], Bmatrix );
-        }
-        else{
-            std::string outstr = "Unrecognized number of parameters ( " + std::to_string( outputs[ 1 ].size() ) + " ) for the B stiffness tensor";
-            return new errorNode( "extractMaterialParameters",
-                                  outstr.c_str() );
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( outputs[ 2 ].size() == 11, "Unrecognized number of parameters ( " + std::to_string( outputs[ 1 ].size() ) + " ) for the B stiffness tensor" );
+        TARDIGRADE_ERROR_TOOLS_CATCH( tardigradeMicromorphicLinearElasticity::formIsotropicC( outputs[ 2 ], Cmatrix ) );
 
-        if ( error ){
-            errorOut result = new errorNode( "extractMaterialParameters", "Error in computation of the B stiffness tensor" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( outputs[ 3 ].size() == 2, "Unrecognized number of parameters ( " + std::to_string( outputs[ 3 ].size() ) + " ) for the D stiffness tensor" );
+        TARDIGRADE_ERROR_TOOLS_CATCH( tardigradeMicromorphicLinearElasticity::formIsotropicD( outputs[ 3 ][ 0 ], outputs[ 3 ][ 1 ], Dmatrix ) );
 
-        if ( outputs[ 2 ].size() == 11 ){
-            error = tardigradeMicromorphicLinearElasticity::formIsotropicC( outputs[ 2 ], Cmatrix );
-        }
-        else{
-            std::string outstr = "Unrecognized number of parameters ( " + std::to_string( outputs[ 2 ].size() ) + " ) for the C stiffness tensor";
-            return new errorNode( "extractMaterialParameters",
-                                  outstr.c_str() );
-        }
-
-        if ( error ){
-            errorOut result = new errorNode( "extractMaterialParameters", "Error in computation of the C stiffness tensor" );
-            result->addNext( error );
-            return result;
-        }
-
-        if ( outputs[ 3 ].size() == 2 ){
-            error = tardigradeMicromorphicLinearElasticity::formIsotropicD( outputs[ 3 ][ 0 ], outputs[ 3 ][ 1 ], Dmatrix );
-        }
-        else{
-            std::string outstr = "Unrecognized number of parameters ( " + std::to_string( outputs[ 3 ].size() ) + " ) for the D stiffness tensor";
-            return new errorNode( "extractMaterialParameters",
-                                  outstr.c_str() );
-        }
-
-        if ( error ){
-            errorOut result = new errorNode( "extractMaterialParameters", "Error in computation of the D stiffness tensor" );
-            result->addNext( error );
-            return result;
-        }
-
-        return NULL;
+        return;
     }
 
 
@@ -1886,14 +1473,11 @@ namespace tardigradeMicromorphicLinearElasticity{
         //Extract the parameters
         parameterVector Amatrix, Bmatrix, Cmatrix, Dmatrix;
 
-        errorOut error = extractMaterialParameters( fparams, Amatrix, Bmatrix, Cmatrix, Dmatrix );
-
-        if ( error ){
-            errorOut result = new errorNode( "evaluate_model",
-                                             "Error in the extraction of the material parameters" );
-            result->addNext( error );
-            result->print();           //Print the error message
-            output_message = buffer.str(); //Save the output to enable message printing
+        try{
+            extractMaterialParameters( fparams, Amatrix, Bmatrix, Cmatrix, Dmatrix );
+        }
+        catch( std::exception &e ){
+            tardigradeErrorTools::captureNestedExceptions( e, output_message );
             return 2;
         }
 
@@ -1905,16 +1489,15 @@ namespace tardigradeMicromorphicLinearElasticity{
 
         variableVector currentDeformationGradient, currentMicroDeformation, currentGradientMicroDeformation;
 
-        error = assembleFundamentalDeformationMeasures( current_grad_u, current_phi, current_grad_phi,
-                                                        currentDeformationGradient, currentMicroDeformation,
-                                                        currentGradientMicroDeformation );
+        try{
+            assembleFundamentalDeformationMeasures( current_grad_u, current_phi, current_grad_phi,
+                                                    currentDeformationGradient, currentMicroDeformation,
+                                                    currentGradientMicroDeformation );
+        }
+        catch( std::exception &e ){
 
-        if ( error ){
-            errorOut result = new errorNode( "evaluate_model",
-                                             "Error in the computation of the current deformation measures" );
-            result->addNext( error );
-            result->print();           //Print the error message
-            output_message = buffer.str(); //Save the output to enable message printing
+            tardigradeErrorTools::captureNestedExceptions( e, output_message );
+
             return 2;
         }
 
@@ -1925,19 +1508,21 @@ namespace tardigradeMicromorphicLinearElasticity{
         //Compute the new stress values
         variableVector currentPK2Stress, currentReferenceMicroStress, currentReferenceHigherOrderStress;
 
-        error = tardigradeMicromorphicLinearElasticity::linearElasticityReference( currentDeformationGradient,
-                                                                         currentMicroDeformation,
-                                                                         currentGradientMicroDeformation,
-                                                                         Amatrix, Bmatrix, Cmatrix, Dmatrix,
-                                                                         PK2, SIGMA, M );
+        try{
 
-        if ( error ){
-            errorOut result = new errorNode( "evaluate_model",
-                                             "Error in the computation of the current stress measures" );
-            result->addNext( error );
-            result->print();           //Print the error message
-            output_message = buffer.str(); //Save the output to enable message passing
+            tardigradeMicromorphicLinearElasticity::linearElasticityReference( currentDeformationGradient,
+                                                                               currentMicroDeformation,
+                                                                               currentGradientMicroDeformation,
+                                                                               Amatrix, Bmatrix, Cmatrix, Dmatrix,
+                                                                               PK2, SIGMA, M );
+
+        }
+        catch( std::exception &e ){
+
+            tardigradeErrorTools::captureNestedExceptions( e, output_message );
+
             return 2;
+
         }
 
         //No errors in calculation.
@@ -2062,14 +1647,11 @@ namespace tardigradeMicromorphicLinearElasticity{
         //Extract the parameters
         parameterVector Amatrix, Bmatrix, Cmatrix, Dmatrix;
 
-        errorOut error = extractMaterialParameters( fparams, Amatrix, Bmatrix, Cmatrix, Dmatrix );
-
-        if ( error ){
-            errorOut result = new errorNode( "evaluate_model",
-                                             "Error in the extraction of the material parameters" );
-            result->addNext( error );
-            result->print();           //Print the error message
-            output_message = buffer.str(); //Save the output to enable message printing
+        try{
+            extractMaterialParameters( fparams, Amatrix, Bmatrix, Cmatrix, Dmatrix );
+        }
+        catch( std::exception &e ){
+            tardigradeErrorTools::captureNestedExceptions( e, output_message );
             return 2;
         }
 
@@ -2082,17 +1664,14 @@ namespace tardigradeMicromorphicLinearElasticity{
         variableVector currentDeformationGradient, currentMicroDeformation, currentGradientMicroDeformation;
         variableMatrix dDeformationGradientdGradU, dMicroDeformationdPhi, dGradientMicroDeformationdGradPhi;
 
-        error = assembleFundamentalDeformationMeasures( current_grad_u, current_phi, current_grad_phi,
-                                                        currentDeformationGradient, currentMicroDeformation,
-                                                        currentGradientMicroDeformation, dDeformationGradientdGradU,
-                                                        dMicroDeformationdPhi, dGradientMicroDeformationdGradPhi );
-
-        if ( error ){
-            errorOut result = new errorNode( "evaluate_model",
-                                             "Error in the computation of the current deformation measures" );
-            result->addNext( error );
-            result->print();           //Print the error message
-            output_message = buffer.str(); //Save the output to enable message printing
+        try{
+            assembleFundamentalDeformationMeasures( current_grad_u, current_phi, current_grad_phi,
+                                                    currentDeformationGradient, currentMicroDeformation,
+                                                    currentGradientMicroDeformation, dDeformationGradientdGradU,
+                                                    dMicroDeformationdPhi, dGradientMicroDeformationdGradPhi );
+        }
+        catch( std::exception &e ){
+            tardigradeErrorTools::captureNestedExceptions( e, output_message );
             return 2;
         }
 
@@ -2107,23 +1686,20 @@ namespace tardigradeMicromorphicLinearElasticity{
                        dSIGMAdDeformationGradient, dSIGMAdMicroDeformation, dSIGMAdGradientMicroDeformation,
                        dMdDeformationGradient, dMdGradientMicroDeformation;
 
-        error = tardigradeMicromorphicLinearElasticity::linearElasticityReference( currentDeformationGradient,
-                                                                         currentMicroDeformation,
-                                                                         currentGradientMicroDeformation,
-                                                                         Amatrix, Bmatrix, Cmatrix, Dmatrix,
-                                                                         PK2, SIGMA, M,
-                                                                         dPK2dDeformationGradient, dPK2dMicroDeformation,
-                                                                         dPK2dGradientMicroDeformation,
-                                                                         dSIGMAdDeformationGradient, dSIGMAdMicroDeformation,
-                                                                         dSIGMAdGradientMicroDeformation,
-                                                                         dMdDeformationGradient, dMdGradientMicroDeformation );
-
-        if ( error ){
-            errorOut result = new errorNode( "evaluate_model",
-                                             "Error in the computation of the current stress measures" );
-            result->addNext( error );
-            result->print();           //Print the error message
-            output_message = buffer.str(); //Save the output to enable message passing
+        try{
+            tardigradeMicromorphicLinearElasticity::linearElasticityReference( currentDeformationGradient,
+                                                                     currentMicroDeformation,
+                                                                     currentGradientMicroDeformation,
+                                                                     Amatrix, Bmatrix, Cmatrix, Dmatrix,
+                                                                     PK2, SIGMA, M,
+                                                                     dPK2dDeformationGradient, dPK2dMicroDeformation,
+                                                                     dPK2dGradientMicroDeformation,
+                                                                     dSIGMAdDeformationGradient, dSIGMAdMicroDeformation,
+                                                                     dSIGMAdGradientMicroDeformation,
+                                                                     dMdDeformationGradient, dMdGradientMicroDeformation );
+        }
+        catch( std::exception &e ){
+            tardigradeErrorTools::captureNestedExceptions( e, output_message );
             return 2;
         }
 
@@ -2352,13 +1928,13 @@ namespace tardigradeMicromorphicLinearElasticity{
             | Assemble the fundamental deformation measures |
             ================================================*/
 
-            TARDIGRADE_ERROR_TOOLS_CATCH_NODE_POINTER(
+            TARDIGRADE_ERROR_TOOLS_CATCH(
                 assembleFundamentalDeformationMeasures( current_grad_u, current_phi, current_grad_phi,
                                                         currentDeformationGradient, currentMicroDeformation,
                                                         currentGradientMicroDeformation )
             )
 
-            TARDIGRADE_ERROR_TOOLS_CATCH_NODE_POINTER(
+            TARDIGRADE_ERROR_TOOLS_CATCH(
                 assembleFundamentalDeformationMeasures( previous_grad_u, previous_phi, previous_grad_phi,
                                                         previousDeformationGradient, previousMicroDeformation,
                                                         previousGradientMicroDeformation )
@@ -2547,14 +2123,14 @@ namespace tardigradeMicromorphicLinearElasticity{
             | Assemble the fundamental deformation measures |
             ================================================*/
 
-            TARDIGRADE_ERROR_TOOLS_CATCH_NODE_POINTER(
+            TARDIGRADE_ERROR_TOOLS_CATCH(
                 assembleFundamentalDeformationMeasures( current_grad_u, current_phi, current_grad_phi,
                                                         currentDeformationGradient, currentMicroDeformation,
                                                         currentGradientMicroDeformation,
                                                         dFdGradU, dChidPhi, dGradChidGradPhi )
             )
 
-            TARDIGRADE_ERROR_TOOLS_CATCH_NODE_POINTER(
+            TARDIGRADE_ERROR_TOOLS_CATCH(
                 assembleFundamentalDeformationMeasures( previous_grad_u, previous_phi, previous_grad_phi,
                                                         previousDeformationGradient, previousMicroDeformation,
                                                         previousGradientMicroDeformation,
