@@ -6,8 +6,12 @@ Changelog
 #########
 
 ******************
-1.3.3 (unreleased)
+1.4.0 (2024-11-26)
 ******************
+
+Release
+=======
+- Released version (:pull:`20`). By `Nathan Miller`_.
 
 New Features
 ============
@@ -26,6 +30,10 @@ Bug Fixes
 =========
 - Enabled compilation with the new tardigrade_micromorphic_tools (:pull:`8`). By `Nathan Miller`_.
 - Removed trailing whitespace from add_library (:pull:`15`). By `Nathan Miller`_.
+
+Breaking Changes
+================
+- Removed the old subroutines since hydra is the preferred method of use (:pull:`19`). By `Nathan Miller`_.
 
 ******************
 1.3.2 (2024-01-24)
