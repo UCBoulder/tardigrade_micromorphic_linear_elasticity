@@ -6,8 +6,32 @@ Changelog
 #########
 
 ******************
-1.3.3 (unreleased)
+1.5.1 (unreleased)
 ******************
+
+******************
+1.5.0 (2024-11-26)
+******************
+
+Release
+=======
+- Released version (:pull:`22`). By `Nathan Miller`_.
+
+Breaking Changes
+================
+- Removed the old subroutines since hydra is the preferred method of use (:pull:`20`). By `Nathan Miller`_.
+
+Documentation
+=============
+- Updated changelog to reflect changes to version (:pull:`21`). By `Nathan Miller`_.
+
+******************
+1.4.0 (2024-11-25)
+******************
+
+Release
+=======
+- Released version (:pull:`19`). By `Nathan Miller`_.
 
 New Features
 ============
