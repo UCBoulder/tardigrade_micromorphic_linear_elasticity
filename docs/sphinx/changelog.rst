@@ -9,6 +9,24 @@ Changelog
 1.3.3 (unreleased)
 ******************
 
+New Features
+============
+- Added additional information to output messages in case of errors (:pull:`13`). By `Nathan Miller`_.
+
+Internal Changes
+================
+- Removed comma causing warnings in cmake builds (:pull:`7`). By `Nathan Miller`_.
+- Use new error_tools format and allow for timestep cutbacks (:pull:`10`). By `Nathan Miller`_.
+- Added flag that will allow all errors to be treated as convergence errors (:pull:`11`). By `Nathan Miller`_.
+- Enabled use of tardigrade_hydra's preconditioner (:pull:`12`). By `Nathan Miller`_.
+- Allowing for changes to hydra base class inputs (:pull:`14`). By `Nathan Miller`_.
+- Allow for the package version to be specified when using FetchContent (:pull:`16`). By `Nathan Miller`_.
+
+Bug Fixes
+=========
+- Enabled compilation with the new tardigrade_micromorphic_tools (:pull:`8`). By `Nathan Miller`_.
+- Removed trailing whitespace from add_library (:pull:`15`). By `Nathan Miller`_.
+
 ******************
 1.3.2 (2024-01-24)
 ******************

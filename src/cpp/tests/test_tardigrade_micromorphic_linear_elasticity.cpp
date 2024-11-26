@@ -20,9 +20,6 @@ typedef tardigradeMicromorphicTools::variableType variableType;
 typedef tardigradeMicromorphicTools::variableVector variableVector;
 typedef tardigradeMicromorphicTools::variableMatrix variableMatrix;
 
-typedef tardigradeMicromorphicTools::errorNode errorNode;
-typedef tardigradeMicromorphicTools::errorOut errorOut;
-
 struct cout_redirect{
     cout_redirect( std::streambuf * new_buffer)
         : old( std::cout.rdbuf( new_buffer ) )
@@ -86,10 +83,10 @@ BOOST_AUTO_TEST_CASE( testComputeDeformationMeasures ){
                                     0.1274431 , -0.47648617 };
 
     variableVector resultC, resultPsi, resultGamma;
-    errorOut error = tardigradeMicromorphicLinearElasticity::computeDeformationMeasures( deformationGradient, microDeformation, gradientMicroDeformation,
+    tardigradeMicromorphicLinearElasticity::computeDeformationMeasures( deformationGradient, microDeformation, gradientMicroDeformation,
                                                                                resultC, resultPsi, resultGamma );
 
-    BOOST_CHECK( !error );
+    
 
     BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( resultC, answerC ) );
 
@@ -102,11 +99,11 @@ BOOST_AUTO_TEST_CASE( testComputeDeformationMeasures ){
     variableVector resultCJ, resultPsiJ, resultGammaJ;
     variableMatrix dCdF, dPsidF, dPsidXi, dGammadF, dGammadGradXi;
 
-    error =  tardigradeMicromorphicLinearElasticity::computeDeformationMeasures( deformationGradient, microDeformation, gradientMicroDeformation,
+    tardigradeMicromorphicLinearElasticity::computeDeformationMeasures( deformationGradient, microDeformation, gradientMicroDeformation,
                                                                        resultCJ, resultPsiJ, resultGammaJ, dCdF, dPsidF, dPsidXi,
                                                                        dGammadF, dGammadGradXi );
 
-    BOOST_CHECK( !error );
+    
 
     BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( resultCJ, answerC ) );
 
@@ -124,16 +121,16 @@ BOOST_AUTO_TEST_CASE( testComputeDeformationMeasures ){
         variableVector resultPsi_P, resultPsi_M;
         variableVector resultGamma_P, resultGamma_M;
 
-        error =  tardigradeMicromorphicLinearElasticity::computeDeformationMeasures( deformationGradient + delta, microDeformation, 
+        tardigradeMicromorphicLinearElasticity::computeDeformationMeasures( deformationGradient + delta, microDeformation, 
                                                                            gradientMicroDeformation,
                                                                            resultC_P, resultPsi_P, resultGamma_P );
-        BOOST_CHECK( !error );
+        
 
-        error =  tardigradeMicromorphicLinearElasticity::computeDeformationMeasures( deformationGradient - delta, microDeformation, 
+        tardigradeMicromorphicLinearElasticity::computeDeformationMeasures( deformationGradient - delta, microDeformation, 
                                                                            gradientMicroDeformation,
                                                                            resultC_M, resultPsi_M, resultGamma_M );
 
-        BOOST_CHECK( !error );
+        
 
         variableVector gradCol = ( resultC_P - resultC_M ) / ( 2 * delta[i] );
 
@@ -163,17 +160,17 @@ BOOST_AUTO_TEST_CASE( testComputeDeformationMeasures ){
         variableVector resultPsi_P, resultPsi_M;
         variableVector resultGamma_P, resultGamma_M;
 
-        error =  tardigradeMicromorphicLinearElasticity::computeDeformationMeasures( deformationGradient, microDeformation + delta, 
+        tardigradeMicromorphicLinearElasticity::computeDeformationMeasures( deformationGradient, microDeformation + delta, 
                                                                            gradientMicroDeformation,
                                                                            resultC_P, resultPsi_P, resultGamma_P );
 
-        BOOST_CHECK( !error );
+        
 
-        error =  tardigradeMicromorphicLinearElasticity::computeDeformationMeasures( deformationGradient, microDeformation - delta, 
+        tardigradeMicromorphicLinearElasticity::computeDeformationMeasures( deformationGradient, microDeformation - delta, 
                                                                            gradientMicroDeformation,
                                                                            resultC_M, resultPsi_M, resultGamma_M );
 
-        BOOST_CHECK( !error );
+        
 
         variableVector gradCol = ( resultC_P - resultC_M ) / ( 2 * delta[ i ] );
 
@@ -202,17 +199,17 @@ BOOST_AUTO_TEST_CASE( testComputeDeformationMeasures ){
         variableVector resultPsi_P, resultPsi_M;
         variableVector resultGamma_P, resultGamma_M;
 
-        error =  tardigradeMicromorphicLinearElasticity::computeDeformationMeasures( deformationGradient, microDeformation,
+        tardigradeMicromorphicLinearElasticity::computeDeformationMeasures( deformationGradient, microDeformation,
                                                                            gradientMicroDeformation + delta,
                                                                            resultC_P, resultPsi_P, resultGamma_P );
 
-        BOOST_CHECK( !error );
+        
 
-        error =  tardigradeMicromorphicLinearElasticity::computeDeformationMeasures( deformationGradient, microDeformation,
+        tardigradeMicromorphicLinearElasticity::computeDeformationMeasures( deformationGradient, microDeformation,
                                                                            gradientMicroDeformation - delta,
                                                                            resultC_M, resultPsi_M, resultGamma_M );
 
-        BOOST_CHECK( !error );
+        
 
         variableVector gradCol = ( resultC_P - resultC_M ) / ( 2 * delta[ i ] );
 
@@ -289,10 +286,10 @@ BOOST_AUTO_TEST_CASE( testComputeLinearElasticTerm1 ){
                               -0.26626611, -1.49288592, -0.08960274 };
 
     variableVector result;
-    errorOut error = tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm1( greenLagrangeStrain, microStrain, 
+    tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm1( greenLagrangeStrain, microStrain, 
                                                                               A, D, result );
 
-    BOOST_CHECK( !error );
+    
 
     BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( result, answer ) );
 
@@ -300,12 +297,12 @@ BOOST_AUTO_TEST_CASE( testComputeLinearElasticTerm1 ){
     variableVector resultJ;
     variableMatrix dTerm1dGreenLagrangeStrain, dTerm1dMicroStrain;
 
-    error = tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm1( greenLagrangeStrain, microStrain, 
+    tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm1( greenLagrangeStrain, microStrain, 
                                                                      A, D, resultJ,
                                                                      dTerm1dGreenLagrangeStrain,
                                                                      dTerm1dMicroStrain );
 
-    BOOST_CHECK( !error );
+    
 
     BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( resultJ, answer ) );
 
@@ -317,15 +314,15 @@ BOOST_AUTO_TEST_CASE( testComputeLinearElasticTerm1 ){
 
         variableVector result_P, result_M;
 
-        error =  tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm1( greenLagrangeStrain + delta, microStrain, 
+        tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm1( greenLagrangeStrain + delta, microStrain, 
                                                                               A, D, result_P );
 
-        BOOST_CHECK( !error );
+        
 
-        error =  tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm1( greenLagrangeStrain - delta, microStrain, 
+        tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm1( greenLagrangeStrain - delta, microStrain, 
                                                                               A, D, result_M );
 
-        BOOST_CHECK( !error );
+        
 
         constantVector gradCol = ( result_P - result_M ) / ( 2 * delta[ i ] );
 
@@ -340,15 +337,15 @@ BOOST_AUTO_TEST_CASE( testComputeLinearElasticTerm1 ){
 
         variableVector result_P, result_M;
 
-        error =  tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm1( greenLagrangeStrain, microStrain + delta, 
+        tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm1( greenLagrangeStrain, microStrain + delta, 
                                                                               A, D, result_P );
 
-        BOOST_CHECK( !error );
+        
 
-        error =  tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm1( greenLagrangeStrain, microStrain - delta, 
+        tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm1( greenLagrangeStrain, microStrain - delta, 
                                                                               A, D, result_M );
 
-        BOOST_CHECK( !error );
+        
 
         constantVector gradCol = ( result_P - result_M ) / ( 2 * delta[ i ] );
 
@@ -418,10 +415,10 @@ BOOST_AUTO_TEST_CASE( testComputeLinearElasticTerm2 ){
 
     variableVector result;
 
-    errorOut error = tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm2( greenLagrangeStrain, microStrain, invCPsi, 
+    tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm2( greenLagrangeStrain, microStrain, invCPsi, 
                                                                               B, D, result );
 
-    BOOST_CHECK( !error );
+    
 
     BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( result, answer) );
 
@@ -430,10 +427,10 @@ BOOST_AUTO_TEST_CASE( testComputeLinearElasticTerm2 ){
     variableVector resultJ;
     variableMatrix dTerm2dE, dTerm2dMicroE, dTerm2dInvCPsi;
 
-    error = tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm2( greenLagrangeStrain, microStrain, invCPsi,
+    tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm2( greenLagrangeStrain, microStrain, invCPsi,
                                                                      B, D, resultJ, dTerm2dE, dTerm2dMicroE, dTerm2dInvCPsi );
 
-    BOOST_CHECK( !error );
+    
 
     BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( resultJ, answer) );
 
@@ -445,15 +442,15 @@ BOOST_AUTO_TEST_CASE( testComputeLinearElasticTerm2 ){
 
         variableVector result_P, result_M;
 
-        error = tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm2( greenLagrangeStrain + delta, microStrain, invCPsi,
+        tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm2( greenLagrangeStrain + delta, microStrain, invCPsi,
                                                                               B, D, result_P );
 
-        BOOST_CHECK( !error );
+        
 
-        error = tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm2( greenLagrangeStrain - delta, microStrain, invCPsi,
+        tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm2( greenLagrangeStrain - delta, microStrain, invCPsi,
                                                                               B, D, result_M );
 
-        BOOST_CHECK( !error );
+        
 
         constantVector gradCol = ( result_P - result_M ) / ( 2 * delta[i] );
 
@@ -469,15 +466,15 @@ BOOST_AUTO_TEST_CASE( testComputeLinearElasticTerm2 ){
 
         variableVector result_P, result_M;
 
-        error = tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm2( greenLagrangeStrain, microStrain + delta, invCPsi,
+        tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm2( greenLagrangeStrain, microStrain + delta, invCPsi,
                                                                               B, D, result_P );
 
-        BOOST_CHECK( !error );
+        
 
-        error = tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm2( greenLagrangeStrain, microStrain - delta, invCPsi,
+        tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm2( greenLagrangeStrain, microStrain - delta, invCPsi,
                                                                               B, D, result_M );
 
-        BOOST_CHECK( !error );
+        
 
         constantVector gradCol = ( result_P - result_M ) / ( 2 * delta[i] );
 
@@ -493,15 +490,15 @@ BOOST_AUTO_TEST_CASE( testComputeLinearElasticTerm2 ){
 
         variableVector result_P, result_M;
 
-        error = tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm2( greenLagrangeStrain, microStrain, invCPsi + delta,
+        tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm2( greenLagrangeStrain, microStrain, invCPsi + delta,
                                                                               B, D, result_P );
 
-        BOOST_CHECK( !error );
+        
 
-        error = tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm2( greenLagrangeStrain, microStrain, invCPsi - delta,
+        tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm2( greenLagrangeStrain, microStrain, invCPsi - delta,
                                                                               B, D, result_M );
 
-        BOOST_CHECK( !error );
+        
 
         constantVector gradCol = ( result_P - result_M ) / ( 2 * delta[i] );
 
@@ -680,9 +677,9 @@ BOOST_AUTO_TEST_CASE( testComputeReferenceHigherOrderStress ){
 
     variableVector result;
 
-    errorOut error = tardigradeMicromorphicLinearElasticity::computeReferenceHigherOrderStress( Gamma, C, result );
+    tardigradeMicromorphicLinearElasticity::computeReferenceHigherOrderStress( Gamma, C, result );
 
-    BOOST_CHECK( !error );
+    
 
     BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( result, answer ) );
 
@@ -690,9 +687,9 @@ BOOST_AUTO_TEST_CASE( testComputeReferenceHigherOrderStress ){
 
     variableVector resultJ;
     variableMatrix dMdGamma;
-    error = tardigradeMicromorphicLinearElasticity::computeReferenceHigherOrderStress( Gamma, C, resultJ, dMdGamma );
+    tardigradeMicromorphicLinearElasticity::computeReferenceHigherOrderStress( Gamma, C, resultJ, dMdGamma );
 
-    BOOST_CHECK( !error );
+    
 
     BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( resultJ, answer ) );
 
@@ -704,13 +701,13 @@ BOOST_AUTO_TEST_CASE( testComputeReferenceHigherOrderStress ){
 
         variableVector result_P, result_M;
 
-        error = tardigradeMicromorphicLinearElasticity::computeReferenceHigherOrderStress( Gamma + delta, C, result_P );
+        tardigradeMicromorphicLinearElasticity::computeReferenceHigherOrderStress( Gamma + delta, C, result_P );
 
-        BOOST_CHECK( !error );
+        
 
-        error = tardigradeMicromorphicLinearElasticity::computeReferenceHigherOrderStress( Gamma - delta, C, result_M );
+        tardigradeMicromorphicLinearElasticity::computeReferenceHigherOrderStress( Gamma - delta, C, result_M );
 
-        BOOST_CHECK( !error );
+        
 
         constantVector gradCol = ( result_P - result_M ) / ( 2 * delta[i] );
 
@@ -746,10 +743,10 @@ BOOST_AUTO_TEST_CASE( testComputeLinearElasticTerm3 ){
 
     variableVector result;
 
-    errorOut error = tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm3( invCGamma, referenceHigherOrderStress, 
+    tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm3( invCGamma, referenceHigherOrderStress, 
                                                                               result );
 
-    BOOST_CHECK( !error );
+    
 
     BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( result, answer ) );
 
@@ -758,10 +755,10 @@ BOOST_AUTO_TEST_CASE( testComputeLinearElasticTerm3 ){
     variableVector resultJ;
     variableMatrix dTerm3dInvCGamma, dTerm3dM;
 
-    error = tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm3( invCGamma, referenceHigherOrderStress,
+    tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm3( invCGamma, referenceHigherOrderStress,
                                                                      resultJ, dTerm3dInvCGamma, dTerm3dM );
 
-    BOOST_CHECK( !error );
+    
 
     BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( resultJ, answer ) );
 
@@ -773,15 +770,15 @@ BOOST_AUTO_TEST_CASE( testComputeLinearElasticTerm3 ){
 
         variableVector result_P, result_M;
 
-        error = tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm3( invCGamma + delta, referenceHigherOrderStress,
+        tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm3( invCGamma + delta, referenceHigherOrderStress,
                                                                          result_P );
 
-        BOOST_CHECK( !error );
+        
 
-        error = tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm3( invCGamma - delta, referenceHigherOrderStress,
+        tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm3( invCGamma - delta, referenceHigherOrderStress,
                                                                          result_M );
 
-        BOOST_CHECK( !error );
+        
 
         constantVector gradCol = ( result_P - result_M ) / ( 2 * delta[i] );
 
@@ -797,15 +794,15 @@ BOOST_AUTO_TEST_CASE( testComputeLinearElasticTerm3 ){
 
         variableVector result_P, result_M;
 
-        error = tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm3( invCGamma, referenceHigherOrderStress + delta,
+        tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm3( invCGamma, referenceHigherOrderStress + delta,
                                                                          result_P );
 
-        BOOST_CHECK( !error );
+        
 
-        error = tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm3( invCGamma, referenceHigherOrderStress - delta,
+        tardigradeMicromorphicLinearElasticity::computeLinearElasticTerm3( invCGamma, referenceHigherOrderStress - delta,
                                                                          result_M );
 
-        BOOST_CHECK( !error );
+        
 
         constantVector gradCol = ( result_P - result_M ) / ( 2 * delta[i] );
 
@@ -1055,12 +1052,12 @@ BOOST_AUTO_TEST_CASE( testLinearElasticityReferenceDerivedMeasures ){
 
     variableVector resultPK2Stress, resultMicroStress, resultHigherOrderStress;
 
-    errorOut error = tardigradeMicromorphicLinearElasticity::linearElasticityReferenceDerivedMeasures( rightCauchyGreen, Psi, Gamma,
+    tardigradeMicromorphicLinearElasticity::linearElasticityReferenceDerivedMeasures( rightCauchyGreen, Psi, Gamma,
                                                                                              A, B, C, D,
                                                                                              resultPK2Stress, resultMicroStress,
                                                                                              resultHigherOrderStress );
 
-    BOOST_CHECK( !error );
+    
 
     BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( resultPK2Stress, answerPK2Stress ) );
 
@@ -1072,14 +1069,14 @@ BOOST_AUTO_TEST_CASE( testLinearElasticityReferenceDerivedMeasures ){
     variableMatrix dPK2dRCG, dPK2dPsi, dPK2dGamma, dSigmadRCG, dSigmadPsi, dSigmadGamma, dMdGamma;
 
     //Test the Jacobians
-    error = tardigradeMicromorphicLinearElasticity::linearElasticityReferenceDerivedMeasures( rightCauchyGreen, Psi, Gamma,
+    tardigradeMicromorphicLinearElasticity::linearElasticityReferenceDerivedMeasures( rightCauchyGreen, Psi, Gamma,
                                                                                     A, B, C, D,
                                                                                     resultPK2StressJ, resultMicroStressJ,
                                                                                     resultHigherOrderStressJ, dPK2dRCG,
                                                                                     dPK2dPsi, dPK2dGamma, dSigmadRCG,
                                                                                     dSigmadPsi, dSigmadGamma, dMdGamma );
 
-    BOOST_CHECK( !error );
+    
 
     BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( resultPK2StressJ, answerPK2Stress ) );
 
@@ -1096,17 +1093,17 @@ BOOST_AUTO_TEST_CASE( testLinearElasticityReferenceDerivedMeasures ){
         variableVector PK2P, SigmaP, MP;
         variableVector PK2M, SigmaM, MM;
 
-        error = tardigradeMicromorphicLinearElasticity::linearElasticityReferenceDerivedMeasures( rightCauchyGreen + delta, Psi, Gamma,
+        tardigradeMicromorphicLinearElasticity::linearElasticityReferenceDerivedMeasures( rightCauchyGreen + delta, Psi, Gamma,
                                                                                         A, B, C, D,
                                                                                         PK2P, SigmaP, MP );
 
-        BOOST_CHECK( !error );
+        
 
-        error = tardigradeMicromorphicLinearElasticity::linearElasticityReferenceDerivedMeasures( rightCauchyGreen - delta, Psi, Gamma,
+        tardigradeMicromorphicLinearElasticity::linearElasticityReferenceDerivedMeasures( rightCauchyGreen - delta, Psi, Gamma,
                                                                                         A, B, C, D,
                                                                                         PK2M, SigmaM, MM );
 
-        BOOST_CHECK( !error );
+        
 
         variableVector gradCol = ( PK2P - PK2M ) / ( 2 * delta[i] );
 
@@ -1133,17 +1130,17 @@ BOOST_AUTO_TEST_CASE( testLinearElasticityReferenceDerivedMeasures ){
         variableVector PK2P, SigmaP, MP;
         variableVector PK2M, SigmaM, MM;
 
-        error = tardigradeMicromorphicLinearElasticity::linearElasticityReferenceDerivedMeasures( rightCauchyGreen, Psi + delta, Gamma,
+        tardigradeMicromorphicLinearElasticity::linearElasticityReferenceDerivedMeasures( rightCauchyGreen, Psi + delta, Gamma,
                                                                                         A, B, C, D,
                                                                                         PK2P, SigmaP, MP );
 
-        BOOST_CHECK( !error );
+        
 
-        error = tardigradeMicromorphicLinearElasticity::linearElasticityReferenceDerivedMeasures( rightCauchyGreen, Psi - delta, Gamma,
+        tardigradeMicromorphicLinearElasticity::linearElasticityReferenceDerivedMeasures( rightCauchyGreen, Psi - delta, Gamma,
                                                                                         A, B, C, D,
                                                                                         PK2M, SigmaM, MM );
 
-        BOOST_CHECK( !error );
+        
 
         variableVector gradCol = ( PK2P - PK2M ) / ( 2 * delta[i] );
 
@@ -1170,17 +1167,17 @@ BOOST_AUTO_TEST_CASE( testLinearElasticityReferenceDerivedMeasures ){
         variableVector PK2P, SigmaP, MP;
         variableVector PK2M, SigmaM, MM;
 
-        error = tardigradeMicromorphicLinearElasticity::linearElasticityReferenceDerivedMeasures( rightCauchyGreen, Psi, Gamma + delta,
+        tardigradeMicromorphicLinearElasticity::linearElasticityReferenceDerivedMeasures( rightCauchyGreen, Psi, Gamma + delta,
                                                                                         A, B, C, D,
                                                                                         PK2P, SigmaP, MP );
 
-        BOOST_CHECK( !error );
+        
 
-        error = tardigradeMicromorphicLinearElasticity::linearElasticityReferenceDerivedMeasures( rightCauchyGreen, Psi, Gamma - delta,
+        tardigradeMicromorphicLinearElasticity::linearElasticityReferenceDerivedMeasures( rightCauchyGreen, Psi, Gamma - delta,
                                                                                         A, B, C, D,
                                                                                         PK2M, SigmaM, MM );
 
-        BOOST_CHECK( !error );
+        
 
         variableVector gradCol = ( PK2P - PK2M ) / ( 2 * delta[i] );
 
@@ -1441,13 +1438,13 @@ BOOST_AUTO_TEST_CASE( testLinearElasticityReference ){
 
     variableVector resultPK2Stress, resultMicroStress, resultHigherOrderStress;
 
-    errorOut error = tardigradeMicromorphicLinearElasticity::linearElasticityReference( deformationGradient, microDeformation,
+    tardigradeMicromorphicLinearElasticity::linearElasticityReference( deformationGradient, microDeformation,
                                                                               gradientMicroDeformation,
                                                                               A, B, C, D,
                                                                               resultPK2Stress, resultMicroStress,
                                                                               resultHigherOrderStress );
 
-    BOOST_CHECK( !error );
+    
 
     BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( resultPK2Stress, answerPK2Stress ) );
 
@@ -1460,14 +1457,14 @@ BOOST_AUTO_TEST_CASE( testLinearElasticityReference ){
     variableVector resultJPK2Stress, resultJMicroStress, resultJHigherOrderStress;
     variableMatrix dPK2dF, dPK2dXi, dPK2dGradXi, dSigmadF, dSigmadXi, dSigmadGradXi, dMdF, dMdGradXi;
 
-    error = tardigradeMicromorphicLinearElasticity::linearElasticityReference( deformationGradient, microDeformation,
+    tardigradeMicromorphicLinearElasticity::linearElasticityReference( deformationGradient, microDeformation,
                                                                      gradientMicroDeformation,
                                                                      A, B, C, D,
                                                                      resultJPK2Stress, resultJMicroStress, resultJHigherOrderStress,
                                                                      dPK2dF, dPK2dXi, dPK2dGradXi, dSigmadF, dSigmadXi, dSigmadGradXi,
                                                                      dMdF, dMdGradXi );
 
-    BOOST_CHECK( !error );
+    
 
     BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( resultJPK2Stress, answerPK2Stress ) );
 
@@ -1485,19 +1482,19 @@ BOOST_AUTO_TEST_CASE( testLinearElasticityReference ){
         variableVector Sigma_P, Sigma_M;
         variableVector M_P, M_M;
 
-        error = tardigradeMicromorphicLinearElasticity::linearElasticityReference( deformationGradient + delta, microDeformation,
+        tardigradeMicromorphicLinearElasticity::linearElasticityReference( deformationGradient + delta, microDeformation,
                                                                          gradientMicroDeformation,
                                                                          A, B, C, D,
                                                                          PK2_P, Sigma_P, M_P );
 
-        BOOST_CHECK( !error );
+        
 
-        error = tardigradeMicromorphicLinearElasticity::linearElasticityReference( deformationGradient - delta, microDeformation,
+        tardigradeMicromorphicLinearElasticity::linearElasticityReference( deformationGradient - delta, microDeformation,
                                                                          gradientMicroDeformation,
                                                                          A, B, C, D,
                                                                          PK2_M, Sigma_M, M_M );
         
-        BOOST_CHECK( !error );
+        
 
         constantVector gradCol = ( PK2_P - PK2_M ) / ( 2 * delta[ i ] );
 
@@ -1527,19 +1524,19 @@ BOOST_AUTO_TEST_CASE( testLinearElasticityReference ){
         variableVector Sigma_P, Sigma_M;
         variableVector M_P, M_M;
 
-        error = tardigradeMicromorphicLinearElasticity::linearElasticityReference( deformationGradient, microDeformation + delta,
+        tardigradeMicromorphicLinearElasticity::linearElasticityReference( deformationGradient, microDeformation + delta,
                                                                          gradientMicroDeformation,
                                                                          A, B, C, D,
                                                                          PK2_P, Sigma_P, M_P );
 
-        BOOST_CHECK( !error );
+        
 
-        error = tardigradeMicromorphicLinearElasticity::linearElasticityReference( deformationGradient, microDeformation - delta,
+        tardigradeMicromorphicLinearElasticity::linearElasticityReference( deformationGradient, microDeformation - delta,
                                                                          gradientMicroDeformation,
                                                                          A, B, C, D,
                                                                          PK2_M, Sigma_M, M_M );
 
-        BOOST_CHECK( !error );
+        
 
         constantVector gradCol = ( PK2_P - PK2_M ) / ( 2 * delta[ i ] );
 
@@ -1569,19 +1566,19 @@ BOOST_AUTO_TEST_CASE( testLinearElasticityReference ){
         variableVector Sigma_P, Sigma_M;
         variableVector M_P, M_M;
 
-        error = tardigradeMicromorphicLinearElasticity::linearElasticityReference( deformationGradient, microDeformation,
+        tardigradeMicromorphicLinearElasticity::linearElasticityReference( deformationGradient, microDeformation,
                                                                          gradientMicroDeformation + delta,
                                                                          A, B, C, D,
                                                                          PK2_P, Sigma_P, M_P );
 
-        BOOST_CHECK( !error );
+        
 
-        error = tardigradeMicromorphicLinearElasticity::linearElasticityReference( deformationGradient, microDeformation,
+        tardigradeMicromorphicLinearElasticity::linearElasticityReference( deformationGradient, microDeformation,
                                                                          gradientMicroDeformation - delta,
                                                                          A, B, C, D,
                                                                          PK2_M, Sigma_M, M_M );
 
-        BOOST_CHECK( !error );
+        
 
         constantVector gradCol = ( PK2_P - PK2_M ) / ( 2 * delta[ i ] );
 
@@ -1624,9 +1621,9 @@ BOOST_AUTO_TEST_CASE( testComputeInvRCGPsi ){
                              -2.23986034,  1.55175262, -2.12436531 };
 
     variableVector result;
-    errorOut error = tardigradeMicromorphicLinearElasticity::computeInvRCGPsi( invRCG, Psi, result );
+    tardigradeMicromorphicLinearElasticity::computeInvRCGPsi( invRCG, Psi, result );
 
-    BOOST_CHECK( !error );
+    
 
     BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( result, answer ) );
 
@@ -1635,9 +1632,9 @@ BOOST_AUTO_TEST_CASE( testComputeInvRCGPsi ){
     variableVector resultJ;
     variableMatrix dInvRCGPsidRCG, dInvRCGPsidPsi;
 
-    error = tardigradeMicromorphicLinearElasticity::computeInvRCGPsi( invRCG, Psi, resultJ, dInvRCGPsidRCG, dInvRCGPsidPsi );
+    tardigradeMicromorphicLinearElasticity::computeInvRCGPsi( invRCG, Psi, resultJ, dInvRCGPsidRCG, dInvRCGPsidPsi );
 
-    BOOST_CHECK( !error );
+    
 
     BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( resultJ, answer ) );
 
@@ -1651,15 +1648,15 @@ BOOST_AUTO_TEST_CASE( testComputeInvRCGPsi ){
 
         variableVector invRCG_P = tardigradeVectorTools::inverse( RCG + delta, 3, 3 );
 
-        error = tardigradeMicromorphicLinearElasticity::computeInvRCGPsi( invRCG_P, Psi, result_P );
+        tardigradeMicromorphicLinearElasticity::computeInvRCGPsi( invRCG_P, Psi, result_P );
 
-        BOOST_CHECK( !error );
+        
 
         variableVector invRCG_M = tardigradeVectorTools::inverse( RCG - delta, 3, 3 );
 
-        error = tardigradeMicromorphicLinearElasticity::computeInvRCGPsi( invRCG_M, Psi, result_M );
+        tardigradeMicromorphicLinearElasticity::computeInvRCGPsi( invRCG_M, Psi, result_M );
 
-        BOOST_CHECK( !error );
+        
 
         constantVector gradCol = ( result_P - result_M ) / ( 2 * delta[ i ] );
 
@@ -1675,13 +1672,13 @@ BOOST_AUTO_TEST_CASE( testComputeInvRCGPsi ){
 
         variableVector result_P, result_M;
 
-        error = tardigradeMicromorphicLinearElasticity::computeInvRCGPsi( invRCG, Psi + delta, result_P );
+        tardigradeMicromorphicLinearElasticity::computeInvRCGPsi( invRCG, Psi + delta, result_P );
 
-        BOOST_CHECK( !error );
+        
 
-        error = tardigradeMicromorphicLinearElasticity::computeInvRCGPsi( invRCG, Psi - delta, result_M );
+        tardigradeMicromorphicLinearElasticity::computeInvRCGPsi( invRCG, Psi - delta, result_M );
 
-        BOOST_CHECK( !error );
+        
 
         constantVector gradCol = ( result_P - result_M ) / ( 2 * delta[ i ] );
 
@@ -1719,9 +1716,9 @@ BOOST_AUTO_TEST_CASE( testComputeInvRCGGamma ){
                                1.53893867,  0.77392204 };
 
     variableVector result;
-    errorOut error = tardigradeMicromorphicLinearElasticity::computeInvRCGGamma( invRCG, Gamma, result );
+    tardigradeMicromorphicLinearElasticity::computeInvRCGGamma( invRCG, Gamma, result );
 
-    BOOST_CHECK( !error );
+    
 
     BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( result, answer ) );
 
@@ -1730,9 +1727,9 @@ BOOST_AUTO_TEST_CASE( testComputeInvRCGGamma ){
     variableVector resultJ;
     variableMatrix dInvRCGGammadRCG, dInvRCGGammadGamma;
 
-    error = tardigradeMicromorphicLinearElasticity::computeInvRCGGamma( invRCG, Gamma, resultJ, dInvRCGGammadRCG, dInvRCGGammadGamma );
+    tardigradeMicromorphicLinearElasticity::computeInvRCGGamma( invRCG, Gamma, resultJ, dInvRCGGammadRCG, dInvRCGGammadGamma );
 
-    BOOST_CHECK( !error );
+    
 
     BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( resultJ, answer ) );
 
@@ -1746,15 +1743,15 @@ BOOST_AUTO_TEST_CASE( testComputeInvRCGGamma ){
 
         variableVector invRCG_P = tardigradeVectorTools::inverse( RCG + delta, 3, 3 );
 
-        error = tardigradeMicromorphicLinearElasticity::computeInvRCGGamma( invRCG_P, Gamma, result_P );
+        tardigradeMicromorphicLinearElasticity::computeInvRCGGamma( invRCG_P, Gamma, result_P );
 
-        BOOST_CHECK( !error );
+        
 
         variableVector invRCG_M = tardigradeVectorTools::inverse( RCG - delta, 3, 3 );
 
-        error = tardigradeMicromorphicLinearElasticity::computeInvRCGGamma( invRCG_M, Gamma, result_M );
+        tardigradeMicromorphicLinearElasticity::computeInvRCGGamma( invRCG_M, Gamma, result_M );
 
-        BOOST_CHECK( !error );
+        
 
         constantVector gradCol = ( result_P - result_M ) / ( 2 * delta[i] );
 
@@ -1770,13 +1767,13 @@ BOOST_AUTO_TEST_CASE( testComputeInvRCGGamma ){
 
         variableVector result_P, result_M;
 
-        error = tardigradeMicromorphicLinearElasticity::computeInvRCGGamma( invRCG, Gamma + delta, result_P );
+        tardigradeMicromorphicLinearElasticity::computeInvRCGGamma( invRCG, Gamma + delta, result_P );
 
-        BOOST_CHECK( !error );
+        
 
-        error = tardigradeMicromorphicLinearElasticity::computeInvRCGGamma( invRCG, Gamma - delta, result_M );
+        tardigradeMicromorphicLinearElasticity::computeInvRCGGamma( invRCG, Gamma - delta, result_M );
 
-        BOOST_CHECK( !error );
+        
 
         constantVector gradCol = ( result_P - result_M ) / ( 2 * delta[i] );
 
@@ -1834,12 +1831,12 @@ BOOST_AUTO_TEST_CASE( testMapStressesToCurrent ){
 
     variableVector resultCauchyStress, resultMicroStress, resultHigherOrderStress;
 
-    errorOut error = tardigradeMicromorphicLinearElasticity::mapStressMeasuresToCurrent( deformationGradient, microDeformation,
+    tardigradeMicromorphicLinearElasticity::mapStressMeasuresToCurrent( deformationGradient, microDeformation,
                                                                                PK2Stress, referenceMicroStress,
                                                                                referenceHigherOrderStress, resultCauchyStress,
                                                                                resultMicroStress, resultHigherOrderStress );
 
-    BOOST_CHECK( !error );
+    
 
     BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( resultCauchyStress, answerCauchyStress, 1e-5 ) );
 
@@ -1855,7 +1852,7 @@ BOOST_AUTO_TEST_CASE( testMapStressesToCurrent ){
     variableMatrix dMicroStressdF, dMicroStressdReferenceMicroStress;
     variableMatrix dHigherOrderStressdF, dHigherOrderStressdXi, dHigherOrderStressdReferenceHigherOrderStress;
 
-    error = tardigradeMicromorphicLinearElasticity::mapStressMeasuresToCurrent( deformationGradient, microDeformation,
+    tardigradeMicromorphicLinearElasticity::mapStressMeasuresToCurrent( deformationGradient, microDeformation,
                                                                       PK2Stress, referenceMicroStress,
                                                                       referenceHigherOrderStress, resultJCauchyStress,
                                                                       resultJMicroStress, resultJHigherOrderStress,
@@ -1864,7 +1861,7 @@ BOOST_AUTO_TEST_CASE( testMapStressesToCurrent ){
                                                                       dHigherOrderStressdF, dHigherOrderStressdXi,
                                                                       dHigherOrderStressdReferenceHigherOrderStress );
 
-    BOOST_CHECK( !error );
+    
 
     BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( resultJCauchyStress, answerCauchyStress, 1e-5 ) );
 
@@ -1881,17 +1878,17 @@ BOOST_AUTO_TEST_CASE( testMapStressesToCurrent ){
         variableVector result_sigma_P, result_s_P, result_m_P;
         variableVector result_sigma_M, result_s_M, result_m_M;
 
-        error = tardigradeMicromorphicLinearElasticity::mapStressMeasuresToCurrent( deformationGradient + delta, microDeformation,
+        tardigradeMicromorphicLinearElasticity::mapStressMeasuresToCurrent( deformationGradient + delta, microDeformation,
                                                                           PK2Stress, referenceMicroStress, referenceHigherOrderStress,
                                                                           result_sigma_P, result_s_P, result_m_P );
 
-        BOOST_CHECK( !error );
+        
 
-        error = tardigradeMicromorphicLinearElasticity::mapStressMeasuresToCurrent( deformationGradient - delta, microDeformation,
+        tardigradeMicromorphicLinearElasticity::mapStressMeasuresToCurrent( deformationGradient - delta, microDeformation,
                                                                           PK2Stress, referenceMicroStress, referenceHigherOrderStress,
                                                                           result_sigma_M, result_s_M, result_m_M );
 
-        BOOST_CHECK( !error );
+        
 
         //Test Cauchy Stress
         constantVector gradCol = ( result_sigma_P - result_sigma_M ) / ( 2 * delta[i] );
@@ -1923,17 +1920,17 @@ BOOST_AUTO_TEST_CASE( testMapStressesToCurrent ){
         variableVector result_sigma_P, result_s_P, result_m_P;
         variableVector result_sigma_M, result_s_M, result_m_M;
 
-        error = tardigradeMicromorphicLinearElasticity::mapStressMeasuresToCurrent( deformationGradient, microDeformation + delta,
+        tardigradeMicromorphicLinearElasticity::mapStressMeasuresToCurrent( deformationGradient, microDeformation + delta,
                                                                           PK2Stress, referenceMicroStress, referenceHigherOrderStress,
                                                                           result_sigma_P, result_s_P, result_m_P );
 
-        BOOST_CHECK( !error );
+        
 
-        error = tardigradeMicromorphicLinearElasticity::mapStressMeasuresToCurrent( deformationGradient, microDeformation - delta,
+        tardigradeMicromorphicLinearElasticity::mapStressMeasuresToCurrent( deformationGradient, microDeformation - delta,
                                                                           PK2Stress, referenceMicroStress, referenceHigherOrderStress,
                                                                           result_sigma_M, result_s_M, result_m_M );
 
-        BOOST_CHECK( !error );
+        
 
         //Test Cauchy Stress
         constantVector gradCol = ( result_sigma_P - result_sigma_M ) / ( 2 * delta[ i ] );
@@ -1965,19 +1962,19 @@ BOOST_AUTO_TEST_CASE( testMapStressesToCurrent ){
         variableVector result_sigma_P, result_s_P, result_m_P;
         variableVector result_sigma_M, result_s_M, result_m_M;
 
-        error = tardigradeMicromorphicLinearElasticity::mapStressMeasuresToCurrent( deformationGradient, microDeformation,
+        tardigradeMicromorphicLinearElasticity::mapStressMeasuresToCurrent( deformationGradient, microDeformation,
                                                                           PK2Stress + delta, referenceMicroStress,
                                                                           referenceHigherOrderStress,
                                                                           result_sigma_P, result_s_P, result_m_P );
 
-        BOOST_CHECK( !error );
+        
 
-        error = tardigradeMicromorphicLinearElasticity::mapStressMeasuresToCurrent( deformationGradient, microDeformation,
+        tardigradeMicromorphicLinearElasticity::mapStressMeasuresToCurrent( deformationGradient, microDeformation,
                                                                           PK2Stress - delta, referenceMicroStress,
                                                                           referenceHigherOrderStress,
                                                                           result_sigma_M, result_s_M, result_m_M );
 
-        BOOST_CHECK( !error );
+        
 
         //Test Cauchy Stress
         constantVector gradCol = ( result_sigma_P - result_sigma_M ) / ( 2 * delta[ i ] );
@@ -2009,19 +2006,19 @@ BOOST_AUTO_TEST_CASE( testMapStressesToCurrent ){
         variableVector result_sigma_P, result_s_P, result_m_P;
         variableVector result_sigma_M, result_s_M, result_m_M;
 
-        error = tardigradeMicromorphicLinearElasticity::mapStressMeasuresToCurrent( deformationGradient, microDeformation,
+        tardigradeMicromorphicLinearElasticity::mapStressMeasuresToCurrent( deformationGradient, microDeformation,
                                                                           PK2Stress, referenceMicroStress + delta,
                                                                           referenceHigherOrderStress,
                                                                           result_sigma_P, result_s_P, result_m_P );
 
-        BOOST_CHECK( !error );
+        
 
-        error = tardigradeMicromorphicLinearElasticity::mapStressMeasuresToCurrent( deformationGradient, microDeformation,
+        tardigradeMicromorphicLinearElasticity::mapStressMeasuresToCurrent( deformationGradient, microDeformation,
                                                                           PK2Stress, referenceMicroStress - delta,
                                                                           referenceHigherOrderStress,
                                                                           result_sigma_M, result_s_M, result_m_M );
 
-        BOOST_CHECK( !error );
+        
 
         //Test Cauchy Stress
         constantVector gradCol = ( result_sigma_P - result_sigma_M ) / ( 2 * delta[ i ] );
@@ -2053,19 +2050,19 @@ BOOST_AUTO_TEST_CASE( testMapStressesToCurrent ){
         variableVector result_sigma_P, result_s_P, result_m_P;
         variableVector result_sigma_M, result_s_M, result_m_M;
 
-        error = tardigradeMicromorphicLinearElasticity::mapStressMeasuresToCurrent( deformationGradient, microDeformation,
+        tardigradeMicromorphicLinearElasticity::mapStressMeasuresToCurrent( deformationGradient, microDeformation,
                                                                           PK2Stress, referenceMicroStress,
                                                                           referenceHigherOrderStress + delta,
                                                                           result_sigma_P, result_s_P, result_m_P );
 
-        BOOST_CHECK( !error );
+        
 
-        error = tardigradeMicromorphicLinearElasticity::mapStressMeasuresToCurrent( deformationGradient, microDeformation,
+        tardigradeMicromorphicLinearElasticity::mapStressMeasuresToCurrent( deformationGradient, microDeformation,
                                                                           PK2Stress, referenceMicroStress,
                                                                           referenceHigherOrderStress - delta,
                                                                           result_sigma_M, result_s_M, result_m_M );
 
-        BOOST_CHECK( !error );
+        
 
         //Test Cauchy Stress
         constantVector gradCol = ( result_sigma_P - result_sigma_M ) / ( 2 * delta[ i ] );
@@ -2331,13 +2328,13 @@ BOOST_AUTO_TEST_CASE( testLinearElasticity ){
 
     variableVector resultCauchyStress, resultMicroStress, resultHigherOrderStress;
 
-    errorOut error = tardigradeMicromorphicLinearElasticity::linearElasticity( deformationGradient, microDeformation,
+    tardigradeMicromorphicLinearElasticity::linearElasticity( deformationGradient, microDeformation,
                                                                      gradientMicroDeformation,
                                                                      A, B, C, D,
                                                                      resultCauchyStress, resultMicroStress,
                                                                      resultHigherOrderStress );
 
-    BOOST_CHECK( !error );
+    
 
     BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( resultCauchyStress, answerCauchyStress, 1e-5 ) );
 
@@ -2353,7 +2350,7 @@ BOOST_AUTO_TEST_CASE( testLinearElasticity ){
     variableMatrix dMicroStressdF, dMicroStressdXi, dMicroStressdGradXi;
     variableMatrix dHigherOrderStressdF, dHigherOrderStressdXi, dHigherOrderStressdGradXi;
 
-    error = tardigradeMicromorphicLinearElasticity::linearElasticity( deformationGradient, microDeformation,
+    tardigradeMicromorphicLinearElasticity::linearElasticity( deformationGradient, microDeformation,
                                                             gradientMicroDeformation,
                                                             A, B, C, D,
                                                             resultJCauchyStress, resultJMicroStress, resultJHigherOrderStress,
@@ -2361,7 +2358,7 @@ BOOST_AUTO_TEST_CASE( testLinearElasticity ){
                                                             dMicroStressdF, dMicroStressdXi, dMicroStressdGradXi,
                                                             dHigherOrderStressdF, dHigherOrderStressdXi, dHigherOrderStressdGradXi );
 
-    BOOST_CHECK( !error );
+    
 
     BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( resultJCauchyStress, answerCauchyStress, 1e-5 ) );
 
@@ -2378,19 +2375,19 @@ BOOST_AUTO_TEST_CASE( testLinearElasticity ){
         variableVector sigma_P, s_P, m_P;
         variableVector sigma_M, s_M, m_M;
 
-        error = tardigradeMicromorphicLinearElasticity::linearElasticity( deformationGradient + delta, microDeformation,
+        tardigradeMicromorphicLinearElasticity::linearElasticity( deformationGradient + delta, microDeformation,
                                                                 gradientMicroDeformation,
                                                                 A, B, C, D,
                                                                 sigma_P, s_P, m_P );
 
-        BOOST_CHECK( !error );
+        
 
-        error = tardigradeMicromorphicLinearElasticity::linearElasticity( deformationGradient - delta, microDeformation,
+        tardigradeMicromorphicLinearElasticity::linearElasticity( deformationGradient - delta, microDeformation,
                                                                 gradientMicroDeformation,
                                                                 A, B, C, D,
                                                                 sigma_M, s_M, m_M );
 
-        BOOST_CHECK( !error );
+        
 
         //Test Cauchy Stress
         constantVector gradCol = ( sigma_P - sigma_M ) / ( 2 * delta[ i ] );
@@ -2422,19 +2419,19 @@ BOOST_AUTO_TEST_CASE( testLinearElasticity ){
         variableVector sigma_P, s_P, m_P;
         variableVector sigma_M, s_M, m_M;
 
-        error = tardigradeMicromorphicLinearElasticity::linearElasticity( deformationGradient, microDeformation + delta,
+        tardigradeMicromorphicLinearElasticity::linearElasticity( deformationGradient, microDeformation + delta,
                                                                 gradientMicroDeformation,
                                                                 A, B, C, D,
                                                                 sigma_P, s_P, m_P );
 
-        BOOST_CHECK( !error );
+        
 
-        error = tardigradeMicromorphicLinearElasticity::linearElasticity( deformationGradient, microDeformation - delta,
+        tardigradeMicromorphicLinearElasticity::linearElasticity( deformationGradient, microDeformation - delta,
                                                                 gradientMicroDeformation,
                                                                 A, B, C, D,
                                                                 sigma_M, s_M, m_M );
 
-        BOOST_CHECK( !error );
+        
 
         //Test Cauchy Stress
         constantVector gradCol = ( sigma_P - sigma_M ) / ( 2 * delta[ i ] );
@@ -2466,19 +2463,19 @@ BOOST_AUTO_TEST_CASE( testLinearElasticity ){
         variableVector sigma_P, s_P, m_P;
         variableVector sigma_M, s_M, m_M;
 
-        error = tardigradeMicromorphicLinearElasticity::linearElasticity( deformationGradient, microDeformation,
+        tardigradeMicromorphicLinearElasticity::linearElasticity( deformationGradient, microDeformation,
                                                                 gradientMicroDeformation + delta,
                                                                 A, B, C, D,
                                                                 sigma_P, s_P, m_P );
 
-        BOOST_CHECK( !error );
+        
 
-        error = tardigradeMicromorphicLinearElasticity::linearElasticity( deformationGradient, microDeformation,
+        tardigradeMicromorphicLinearElasticity::linearElasticity( deformationGradient, microDeformation,
                                                                 gradientMicroDeformation - delta,
                                                                 A, B, C, D,
                                                                 sigma_M, s_M, m_M );
 
-        BOOST_CHECK( !error );
+        
 
         //Test Cauchy Stress
         constantVector gradCol = ( sigma_P - sigma_M ) / ( 2 * delta[ i ] );
@@ -2522,9 +2519,9 @@ BOOST_AUTO_TEST_CASE( testFormIsotropicA ){
 
     parameterVector result;
 
-    errorOut error = tardigradeMicromorphicLinearElasticity::formIsotropicA( lambda, mu, result );
+    tardigradeMicromorphicLinearElasticity::formIsotropicA( lambda, mu, result );
 
-    BOOST_CHECK( !error );
+    
 
     BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( answer, result ) );
 }
@@ -2551,9 +2548,9 @@ BOOST_AUTO_TEST_CASE( testFormIsotropicB ){
 
     parameterVector result;
 
-    errorOut error = tardigradeMicromorphicLinearElasticity::formIsotropicB( eta, tau, kappa, nu, sigma, result );
+    tardigradeMicromorphicLinearElasticity::formIsotropicB( eta, tau, kappa, nu, sigma, result );
 
-    BOOST_CHECK( !error );
+    
 
     BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( answer, result ) );
 }
@@ -2628,9 +2625,9 @@ BOOST_AUTO_TEST_CASE( testFormIsotropicC ){
 
     parameterVector result;
 
-    errorOut error = tardigradeMicromorphicLinearElasticity::formIsotropicC( taus, result );
+    tardigradeMicromorphicLinearElasticity::formIsotropicC( taus, result );
 
-    BOOST_CHECK( !error );
+    
 
     BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( answer, result ) );
 }
@@ -2654,9 +2651,9 @@ BOOST_AUTO_TEST_CASE( testFormIsotropicD ){
 
     parameterVector result;
 
-    errorOut error = tardigradeMicromorphicLinearElasticity::formIsotropicD( tau, sigma, result );
+    tardigradeMicromorphicLinearElasticity::formIsotropicD( tau, sigma, result );
 
-    BOOST_CHECK( !error );
+    
 
     BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( answer, result ) );
 }
@@ -2693,10 +2690,10 @@ BOOST_AUTO_TEST_CASE( testAssembleFundamentalDeformationMeasures ){
 
     variableVector resultF, resultChi, resultGradChi;
 
-    errorOut error = tardigradeMicromorphicLinearElasticity::assembleFundamentalDeformationMeasures( grad_u, phi, grad_phi,
+    tardigradeMicromorphicLinearElasticity::assembleFundamentalDeformationMeasures( grad_u, phi, grad_phi,
                                                                                            resultF, resultChi, resultGradChi );
 
-    BOOST_CHECK( !error );
+    
 
     BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( resultF, answerDeformationGradient ) );
 
@@ -2708,11 +2705,11 @@ BOOST_AUTO_TEST_CASE( testAssembleFundamentalDeformationMeasures ){
     variableVector resultFJ, resultChiJ, resultGradChiJ;
     variableMatrix dFdGradU, dChidPhi, dGradChidGradPhi;
 
-    error = tardigradeMicromorphicLinearElasticity::assembleFundamentalDeformationMeasures( grad_u, phi, grad_phi,
+    tardigradeMicromorphicLinearElasticity::assembleFundamentalDeformationMeasures( grad_u, phi, grad_phi,
                                                                                   resultFJ, resultChiJ, resultGradChiJ,
                                                                                   dFdGradU, dChidPhi, dGradChidGradPhi );
 
-    BOOST_CHECK( !error );
+    
 
     BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( resultFJ, answerDeformationGradient ) );
 
@@ -2746,15 +2743,15 @@ BOOST_AUTO_TEST_CASE( testAssembleFundamentalDeformationMeasures ){
                 { grad_u[ 2 ][ 0 ] - delta[ 2 ][ 0 ], grad_u[ 2 ][ 1 ] - delta[ 2 ][ 1 ], grad_u[ 2 ][ 2 ] - delta[ 2 ][ 2 ] }
         };
 
-        error = tardigradeMicromorphicLinearElasticity::assembleFundamentalDeformationMeasures( positive_perturb, phi, grad_phi,
+        tardigradeMicromorphicLinearElasticity::assembleFundamentalDeformationMeasures( positive_perturb, phi, grad_phi,
                                                                                       FP, chiP, gradChiP );
 
-        BOOST_CHECK( !error );
+        
 
-        error = tardigradeMicromorphicLinearElasticity::assembleFundamentalDeformationMeasures( negative_perturb, phi, grad_phi,
+        tardigradeMicromorphicLinearElasticity::assembleFundamentalDeformationMeasures( negative_perturb, phi, grad_phi,
                                                                                       FM, chiM, gradChiM );
 
-        BOOST_CHECK( !error );
+        
 
         variableVector gradCol = ( FP - FM ) / ( 2 * delta[ ii ][ ij ] );
 
@@ -2791,15 +2788,15 @@ BOOST_AUTO_TEST_CASE( testAssembleFundamentalDeformationMeasures ){
                                          phi[ 3 ] - delta[ 3 ], phi[ 4 ] - delta[ 4 ], phi[ 5 ] - delta[ 5 ],
                                          phi[ 6 ] - delta[ 6 ], phi[ 7 ] - delta[ 7 ], phi[ 8 ] - delta[ 8 ] };
 
-        error = tardigradeMicromorphicLinearElasticity::assembleFundamentalDeformationMeasures( grad_u, positive_perturb, grad_phi,
+        tardigradeMicromorphicLinearElasticity::assembleFundamentalDeformationMeasures( grad_u, positive_perturb, grad_phi,
                                                                                       FP, chiP, gradChiP );
 
-        BOOST_CHECK( !error );
+        
 
-        error = tardigradeMicromorphicLinearElasticity::assembleFundamentalDeformationMeasures( grad_u, negative_perturb, grad_phi,
+        tardigradeMicromorphicLinearElasticity::assembleFundamentalDeformationMeasures( grad_u, negative_perturb, grad_phi,
                                                                                       FM, chiM, gradChiM );
 
-        BOOST_CHECK( !error );
+        
 
         variableVector gradCol = ( FP - FM ) / ( 2 * delta[ i ] );
 
@@ -2856,15 +2853,15 @@ BOOST_AUTO_TEST_CASE( testAssembleFundamentalDeformationMeasures ){
                 { grad_phi[ 8 ][ 0 ] - delta[ 8 ][ 0 ], grad_phi[ 8 ][ 1 ] - delta[ 8 ][ 1 ], grad_phi[ 8 ][ 2 ] - delta[ 8 ][ 2 ] }
         };
 
-        error = tardigradeMicromorphicLinearElasticity::assembleFundamentalDeformationMeasures( grad_u, phi, positive_perturb,
+        tardigradeMicromorphicLinearElasticity::assembleFundamentalDeformationMeasures( grad_u, phi, positive_perturb,
                                                                                       FP, chiP, gradChiP );
 
-        BOOST_CHECK( !error );
+        
 
-        error = tardigradeMicromorphicLinearElasticity::assembleFundamentalDeformationMeasures( grad_u, phi, negative_perturb,
+        tardigradeMicromorphicLinearElasticity::assembleFundamentalDeformationMeasures( grad_u, phi, negative_perturb,
                                                                                       FM, chiM, gradChiM );
 
-        BOOST_CHECK( !error );
+        
 
         variableVector gradCol = ( FP - FM ) / ( 2 * delta[ ii ][ ij ] );
 
@@ -2939,21 +2936,21 @@ BOOST_AUTO_TEST_CASE( testExtractMaterialParameters ){
     parameterVector answerCmatrix;
     parameterVector answerDmatrix;
 
-    errorOut error = tardigradeMicromorphicLinearElasticity::formIsotropicA( 1.7, 1.8, answerAmatrix );
-    BOOST_CHECK( !error );
+    tardigradeMicromorphicLinearElasticity::formIsotropicA( 1.7, 1.8, answerAmatrix );
+    
 
-    error = tardigradeMicromorphicLinearElasticity::formIsotropicB( 2.8, 0.76, 0.15, 9.8, 5.4, answerBmatrix );
-    BOOST_CHECK( !error );
+    tardigradeMicromorphicLinearElasticity::formIsotropicB( 2.8, 0.76, 0.15, 9.8, 5.4, answerBmatrix );
+    
 
-    error = tardigradeMicromorphicLinearElasticity::formIsotropicC( { 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.}, answerCmatrix );
-    BOOST_CHECK( !error );
+    tardigradeMicromorphicLinearElasticity::formIsotropicC( { 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.}, answerCmatrix );
+    
 
-    error = tardigradeMicromorphicLinearElasticity::formIsotropicD( 0.76, 5.4, answerDmatrix );
-    BOOST_CHECK( !error );
+    tardigradeMicromorphicLinearElasticity::formIsotropicD( 0.76, 5.4, answerDmatrix );
+    
 
-    error = tardigradeMicromorphicLinearElasticity::extractMaterialParameters( fparams, Amatrix, Bmatrix, Cmatrix, Dmatrix );
+    tardigradeMicromorphicLinearElasticity::extractMaterialParameters( fparams, Amatrix, Bmatrix, Cmatrix, Dmatrix );
 
-    BOOST_CHECK( !error );
+    
 
     BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( Amatrix, answerAmatrix ) );
 
@@ -3291,6 +3288,89 @@ BOOST_AUTO_TEST_CASE( testEvaluateModel ){
                                                    1e-6, 1e-9 ) );
         }
     }
+}
+
+BOOST_AUTO_TEST_CASE( test_generate_input_variable_string ){
+
+    //Initialize the time
+    std::vector< double > time = { 10., 2.5 };
+
+    //Initialize the material parameters
+    std::vector< double > fparams = { 2, 2.4e2, 1.5e1,             //Macro hardening parameters
+                                      2, 1.4e2, 2.0e1,             //Micro hardening parameters
+                                      2, 2.0e0, 2.7e1,             //Micro gradient hardening parameters
+                                      2, 0.56, 0.2,                //Macro flow parameters
+                                      2, 0.15,-0.2,                //Micro flow parameters
+                                      2, 0.82, 0.1,                //Micro gradient flow parameters
+                                      2, 0.70, 0.3,                //Macro yield parameters
+                                      2, 0.40,-0.3,                //Micro yield parameters
+                                      2, 0.52, 0.4,                //Micro gradient yield parameters
+                                      2, 696.47, 65.84,            //A stiffness tensor parameters
+                                      5, -7.69, -51.92, 38.61, -27.31, 5.13,  //B stiffness tensor parameters
+                                      11, 1.85, -0.19, -1.08, -1.57, 2.29, -0.61, 5.97, -2.02, 2.38, -0.32, -3.25, //C stiffness tensor parameters
+                                      2, -51.92, 5.13,             //D stiffness tensor parameters
+                                      0.4, 0.3, 0.35, 1e-8, 1e-8   //Integration parameters
+                                    };
+
+    //Initialize the gradient of the macro displacement
+    double current_grad_u[ 3 ][ 3 ] = { {0.200, 0.100, 0.000 },
+                                        {0.100, 0.001, 0.000 },
+                                        {0.000, 0.000, 0.000 } };
+
+    double previous_grad_u[ 3 ][ 3 ] = { {0, 0, 0},
+                                         {0, 0, 0},
+                                         {0, 0, 0} };
+    //Initialize the micro displacement
+    double current_phi[ 9 ] = { 0.100, 0.000, 0.000,
+                                0.000, 0.000, 0.000,
+                                0.000, 0.000, 0.000 };
+
+    double previous_phi[ 9 ] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+
+    //Initialize the gradient of the micro displacement
+    double current_grad_phi[ 9 ][ 3 ] = { {  0.13890017, -0.3598602 , -0.08048856 },
+                                          { -0.18572739,  0.06847269,  0.22931628 },
+                                          { -0.01829735, -0.48731265, -0.25277529 },
+                                          {  0.26626212,  0.4844646 , -0.31965177 },
+                                          {  0.49197846,  0.19051656, -0.0365349  },
+                                          { -0.06607774, -0.33526875, -0.15803078 },
+                                          {  0.09738707, -0.49482218, -0.39584868 },
+                                          { -0.45599864,  0.08585038, -0.09432794 },
+                                          {  0.23055539,  0.07564162,  0.24051469 } };
+
+    double previous_grad_phi[ 9 ][ 3 ] = { {0, 0, 0},
+                                           {0, 0, 0},
+                                           {0, 0, 0},
+                                           {0, 0, 0},
+                                           {0, 0, 0},
+                                           {0, 0, 0},
+                                           {0, 0, 0},
+                                           {0, 0, 0},
+                                           {0, 0, 0} };
+
+
+    //Initialize the state variable vector
+    std::vector< double > SDVS( 55, 0 );
+
+    //Initialize the additional degree of freedom vectors
+    std::vector< double > current_ADD_DOF;
+    std::vector< std::vector< double > > current_ADD_grad_DOF;
+
+    std::vector< double > previous_ADD_DOF;
+    std::vector< std::vector< double > > previous_ADD_grad_DOF;
+
+    std::string result;
+
+    std::string answer = "time:\n 10.000000, 2.500000,\nfparams:\n 2.000000, 240.000000, 15.000000, 2.000000, 140.000000, 20.000000, 2.000000, 2.000000, 27.000000, 2.000000, 0.560000, 0.200000, 2.000000, 0.150000, -0.200000, 2.000000, 0.820000, 0.100000, 2.000000, 0.700000, 0.300000, 2.000000, 0.400000, -0.300000, 2.000000, 0.520000, 0.400000, 2.000000, 696.470000, 65.840000, 5.000000, -7.690000, -51.920000, 38.610000, -27.310000, 5.130000, 11.000000, 1.850000, -0.190000, -1.080000, -1.570000, 2.290000, -0.610000, 5.970000, -2.020000, 2.380000, -0.320000, -3.250000, 2.000000, -51.920000, 5.130000, 0.400000, 0.300000, 0.350000, 0.000000, 0.000000,\ncurrent_grad_u:\n 0.200000, 0.100000, 0.000000,\n 0.100000, 0.001000, 0.000000,\n 0.000000, 0.000000, 0.000000,\n\ncurrent_phi:\n 0.100000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000,\ncurrent_grad_phi:\n 0.138900, -0.359860, -0.080489,\n -0.185727, 0.068473, 0.229316,\n -0.018297, -0.487313, -0.252775,\n 0.266262, 0.484465, -0.319652,\n 0.491978, 0.190517, -0.036535,\n -0.066078, -0.335269, -0.158031,\n 0.097387, -0.494822, -0.395849,\n -0.455999, 0.085850, -0.094328,\n 0.230555, 0.075642, 0.240515,\n\nprevious_grad_u:\n 0.000000, 0.000000, 0.000000,\n 0.000000, 0.000000, 0.000000,\n 0.000000, 0.000000, 0.000000,\n\nprevious_phi:\n 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000,\nprevious_grad_phi:\n 0.000000, 0.000000, 0.000000,\n 0.000000, 0.000000, 0.000000,\n 0.000000, 0.000000, 0.000000,\n 0.000000, 0.000000, 0.000000,\n 0.000000, 0.000000, 0.000000,\n 0.000000, 0.000000, 0.000000,\n 0.000000, 0.000000, 0.000000,\n 0.000000, 0.000000, 0.000000,\n 0.000000, 0.000000, 0.000000,\n\nSDVS:\n 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000,\ncurrent_ADD_DOF:\n\ncurrent_ADD_grad_DOF:\n\nprevious_ADD_DOF:\n\nprevious_ADD_grad_DOF:\n";
+
+    tardigradeMicromorphicLinearElasticity::generate_input_variable_string( time, fparams, current_grad_u, current_phi, current_grad_phi,
+                                                                            previous_grad_u, previous_phi, previous_grad_phi,
+                                                                            SDVS, current_ADD_DOF, current_ADD_grad_DOF,
+                                                                            previous_ADD_DOF, previous_ADD_grad_DOF,
+                                                                            result );
+
+    BOOST_CHECK( answer.compare( result ) == 0 );
+
 }
 
 BOOST_AUTO_TEST_CASE( testEvaluateHydraModel ){
