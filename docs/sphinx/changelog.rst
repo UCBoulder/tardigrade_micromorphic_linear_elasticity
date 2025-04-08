@@ -9,6 +9,10 @@ Changelog
 1.5.1 (unreleased)
 ******************
 
+New Features
+============
+- Allow the user to perform a full stack build of tardigrade (:pull:`23`). By `Nathan Miller`_.
+
 ******************
 1.5.0 (2024-11-26)
 ******************
