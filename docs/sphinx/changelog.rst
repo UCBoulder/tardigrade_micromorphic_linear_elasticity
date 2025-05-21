@@ -6,12 +6,24 @@ Changelog
 #########
 
 ******************
-1.5.1 (unreleased)
+1.6.0 (unreleased)
+******************
+
+******************
+1.5.1 (2025-05-21)
 ******************
 
 New Features
 ============
 - Allow the user to perform a full stack build of tardigrade (:pull:`23`). By `Nathan Miller`_.
+
+Internal Changes
+================
+- Preparing for conda packaging (:pull:`24`). By `Nathan Miller`_.
+
+Release
+=======
+- Released version (:pull:`25`). By `Nathan Miller`_.
 
 ******************
 1.5.0 (2024-11-26)
