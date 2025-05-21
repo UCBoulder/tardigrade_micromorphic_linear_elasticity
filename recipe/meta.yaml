@@ -4,15 +4,14 @@ package:
   version: {{ VERSION }}
 
 about:
-  home: https://github.com/lanl/tardigrade-micromorphic-linear-elasticity
+  home: https://github.com/UCBoulder/tardigrade_micromorphic_linear_elasticity
   license: BSD-3-Clause
   license_file: LICENSE
   summary: 'A linear elastic consitutive model for micromorphic theory'
   description: |
     tardigrade-micromorphic-linear-elasticity (C20048 Tardigrade) A linear elastic consitutive model for micromorphic
     theory
-  doc_url: https://lanl.github.io/tardigrade-micromorphic-linear-elasticity
-  dev_url: https://github.com/lanl/tardigrade-micromorphic-linear-elasticity
+  dev_url: https://github.com/UCBoulder/tardigrade_micromorphic_linear_elasticity
 
 source:
   path: '..'
