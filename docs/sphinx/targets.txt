@@ -47,7 +47,7 @@
 .. _`Doxygen comments for Fortran`: https://www.doxygen.nl/manual/docblocks.html#fortranblocks
 
 .. Project specific links
-.. _`upstream repository`: https://re-git.lanl.gov/aea/stub-repositories/tardigrade_micromorphic_linear_elasticity 
+.. _`upstream repository`: https://github.com/UCBoulder/tardigrade_micromorphic_linear_elasticity 
 .. _`Gitlab project issues`: https://re-git.lanl.gov/aea/stub-repositories/tardigrade_micromorphic_linear_elasticity/-/issues
 
 .. Abaqus reference links
@@ -57,7 +57,7 @@
 
 .. email addresses
 .. _`Kyle Brindley`: kbrindley@lanl.gov
-.. _`Nathan Miller`: nathanm@lanl.gov
+.. _`Nathan Miller`: Nathan.A.Miller@colorado.edu
 .. _`Prabhu Khalsa`: prabhu@lanl.gov
 .. _`Sergio Cordova`: sergioc@lanl.gov
 .. _`w13dev`: w13dev@lanl.gov
