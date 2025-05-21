@@ -8,6 +8,9 @@
 #define BOOST_TEST_MODULE test_tardigrade_micromorphic_linear_elasticity
 #include <boost/test/included/unit_test.hpp>
 
+#define DEFAULT_TEST_TOLERANCE 1e-6
+#define CHECK_PER_ELEMENT boost::test_tools::per_element( )
+
 typedef tardigradeMicromorphicTools::constantType constantType;
 typedef tardigradeMicromorphicTools::constantVector constantVector;
 typedef tardigradeMicromorphicTools::constantMatrix constantMatrix;
@@ -46,7 +49,7 @@ struct cerr_redirect{
         std::streambuf * old;
 };
 
-BOOST_AUTO_TEST_CASE( testAssembleFundamentalDeformationMeasures ){
+BOOST_AUTO_TEST_CASE( testAssembleFundamentalDeformationMeasures, * boost::unit_test::tolerance( DEFAULT_TEST_TOLERANCE ) ){
     /*!
      * Assemble the fundamental deformation measures from the degrees of freedom.
      *
@@ -144,19 +147,19 @@ BOOST_AUTO_TEST_CASE( testAssembleFundamentalDeformationMeasures ){
         variableVector gradCol = ( FP - FM ) / ( 2 * delta[ ii ][ ij ] );
 
         for ( unsigned int j = 0; j < gradCol.size(); j++ ){
-            BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( gradCol[ j ], dFdGradU[ j ][ i ] ) );
+            BOOST_TEST( gradCol[ j ] == dFdGradU[ j ][ i ] );
         }
 
         gradCol = ( chiP - chiM ) / ( 2 * delta[ ii ][ ij ] );
 
         for ( unsigned int j = 0; j < gradCol.size(); j++ ){
-            BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( gradCol[ j ], 0. ) );
+            BOOST_TEST( gradCol[ j ] == 0. );
         }
 
         gradCol = ( gradChiP - gradChiM ) / ( 2 * delta[ ii ][ ij ] );
 
         for ( unsigned int j = 0; j < gradCol.size(); j++ ){
-            BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( gradCol[ j ], 0. ) );
+            BOOST_TEST( gradCol[ j ] == 0. );
         }
     }
 
@@ -210,7 +213,7 @@ BOOST_AUTO_TEST_CASE( testAssembleFundamentalDeformationMeasures ){
         unsigned int ii, ij;
         ii = ( int )( i / 3 );
         ij = i % 3;
-        delta[ ii ][ ij ] = eps * fabs( grad_u[ ii ][ ij ] ) + eps;
+        delta[ ii ][ ij ] = eps * fabs( grad_phi[ ii ][ ij ] ) + eps;
 
         variableVector FP, chiP, gradChiP;
         variableVector FM, chiM, gradChiM;
@@ -254,19 +257,19 @@ BOOST_AUTO_TEST_CASE( testAssembleFundamentalDeformationMeasures ){
         variableVector gradCol = ( FP - FM ) / ( 2 * delta[ ii ][ ij ] );
 
         for ( unsigned int j = 0; j < gradCol.size(); j++ ){
-            BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( gradCol[ j ], 0. ) );
+            BOOST_TEST( gradCol[ j ] == 0. );
         }
 
         gradCol = ( chiP - chiM ) / ( 2 * delta[ ii ][ ij ] );
 
         for ( unsigned int j = 0; j < gradCol.size(); j++ ){
-            BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( gradCol[ j ], 0. ) );
+            BOOST_TEST( gradCol[ j ] == 0. );
         }
 
         gradCol = ( gradChiP - gradChiM ) / ( 2 * delta[ ii ][ ij ] );
 
         for ( unsigned int j = 0; j < gradCol.size(); j++ ){
-            BOOST_CHECK( tardigradeVectorTools::fuzzyEquals( gradCol[ j ], dGradChidGradPhi[ j ][ i ] ) );
+            BOOST_TEST( gradCol[ j ] == dGradChidGradPhi[ j ][ i ] );
         }
     }
 }
