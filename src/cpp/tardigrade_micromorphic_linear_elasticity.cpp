@@ -137,7 +137,7 @@ namespace tardigradeMicromorphicLinearElasticity{
 
                 std::vector< tardigradeHydra::residualBase* > residuals( 1 );
 
-                elasticity = tardigradeHydra::micromorphicLinearElasticity::residual( this, *getConfigurationUnknownCount( ), *getParameters( ) );
+                elasticity = tardigradeHydra::micromorphicLinearElasticity::residual( this, getConfigurationUnknownCount( ), *getParameters( ) );
 
                 residuals[ 0 ] = &elasticity;
 
@@ -554,7 +554,7 @@ namespace tardigradeMicromorphicLinearElasticity{
             hydra.computeTangents( );
             const variableVector *dXdD = hydra.getFlatdXdD( );
 
-            unsigned int numConfigurationUnknowns = *hydra.getConfigurationUnknownCount( );
+            unsigned int numConfigurationUnknowns = hydra.getConfigurationUnknownCount( );
 
             DPK2Dgrad_u     = variableMatrix(  9, variableVector( 9, 0 ) );
 
