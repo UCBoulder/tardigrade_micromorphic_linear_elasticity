@@ -135,7 +135,7 @@ namespace tardigradeMicromorphicLinearElasticity{
                  * Set the vector of residual classes (in this case, only elasticity)
                  */
 
-                std::vector< tardigradeHydra::residualBase* > residuals( 1 );
+                std::vector< tardigradeHydra::ResidualBase<>* > residuals( 1 );
 
                 elasticity = tardigradeHydra::micromorphicLinearElasticity::residual( this, getConfigurationUnknownCount( ), *getParameters( ) );
 
