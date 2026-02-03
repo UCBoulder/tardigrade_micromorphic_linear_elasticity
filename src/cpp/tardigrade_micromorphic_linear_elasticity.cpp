@@ -339,7 +339,7 @@ namespace tardigradeMicromorphicLinearElasticity{
                                                      currentMicroDeformation,         previousMicroDeformation,
                                                      currentGradientMicroDeformation, previousGradientMicroDeformation,
                                                      { }, { },
-                                                     SDVS, fparams, 1, 0, 3, 45, 1e-9, 1e-9, 20, 5, 1e-4, true, 0 );
+                                                     SDVS, fparams, 1, 0, 3, 45, 1e-9, 1e-9 );
 
             // Compute the stress
             hydra.evaluate( );
@@ -536,7 +536,7 @@ namespace tardigradeMicromorphicLinearElasticity{
                                                      currentMicroDeformation,         previousMicroDeformation,
                                                      currentGradientMicroDeformation, previousGradientMicroDeformation,
                                                      { }, { },
-                                                     SDVS, fparams, 1, 0, 3, 45, 1e-9, 1e-9, 20, 5, 1e-4, true, 0 );
+                                                     SDVS, fparams, 1, 0, 3, 45, 1e-9, 1e-9 );
 
             // Compute the stress
             hydra.evaluate( );
