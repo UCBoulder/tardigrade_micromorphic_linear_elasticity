@@ -135,9 +135,9 @@ namespace tardigradeMicromorphicLinearElasticity{
                  * Set the vector of residual classes (in this case, only elasticity)
                  */
 
-                std::vector< tardigradeHydra::residualBase* > residuals( 1 );
+                std::vector< tardigradeHydra::ResidualBase<>* > residuals( 1 );
 
-                elasticity = tardigradeHydra::micromorphicLinearElasticity::residual( this, *getConfigurationUnknownCount( ), *getParameters( ) );
+                elasticity = tardigradeHydra::micromorphicLinearElasticity::residual( this, getConfigurationUnknownCount( ), *getParameters( ) );
 
                 residuals[ 0 ] = &elasticity;
 
@@ -339,7 +339,7 @@ namespace tardigradeMicromorphicLinearElasticity{
                                                      currentMicroDeformation,         previousMicroDeformation,
                                                      currentGradientMicroDeformation, previousGradientMicroDeformation,
                                                      { }, { },
-                                                     SDVS, fparams, 1, 0, 3, 45, 1e-9, 1e-9, 20, 5, 1e-4, true, 0 );
+                                                     SDVS, fparams, 1, 0, 3, 45, 1e-9, 1e-9 );
 
             // Compute the stress
             hydra.evaluate( );
@@ -536,7 +536,7 @@ namespace tardigradeMicromorphicLinearElasticity{
                                                      currentMicroDeformation,         previousMicroDeformation,
                                                      currentGradientMicroDeformation, previousGradientMicroDeformation,
                                                      { }, { },
-                                                     SDVS, fparams, 1, 0, 3, 45, 1e-9, 1e-9, 20, 5, 1e-4, true, 0 );
+                                                     SDVS, fparams, 1, 0, 3, 45, 1e-9, 1e-9 );
 
             // Compute the stress
             hydra.evaluate( );
@@ -554,7 +554,7 @@ namespace tardigradeMicromorphicLinearElasticity{
             hydra.computeTangents( );
             const variableVector *dXdD = hydra.getFlatdXdD( );
 
-            unsigned int numConfigurationUnknowns = *hydra.getConfigurationUnknownCount( );
+            unsigned int numConfigurationUnknowns = hydra.getConfigurationUnknownCount( );
 
             DPK2Dgrad_u     = variableMatrix(  9, variableVector( 9, 0 ) );
 

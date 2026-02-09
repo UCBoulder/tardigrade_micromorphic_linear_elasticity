@@ -9,6 +9,16 @@ Changelog
 1.6.0 (unreleased)
 ******************
 
+Bug Fixes
+=========
+- Fixed errors due to changes in hydra (:pull:`26`). By `Nathan Miller`_.
+- Fixed errors due to changes in hydra api (:pull:`27`). By `Nathan Miller`_.
+- Fixed errors due to changes in hydra api (:pull:`28`). By `Nathan Miller`_.
+
+Internal Changes
+================
+- Allowed for optimized builds to be performed by bypassing tardigrade_error_tools checks (:pull:`28`). By `Nathan Miller`_.
+
 ******************
 1.5.1 (2025-05-21)
 ******************
