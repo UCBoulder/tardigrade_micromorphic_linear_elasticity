@@ -35,10 +35,14 @@ elseif(cmake_build_type_lower STREQUAL "conda-test")
     set(not_conda_test "false")
 endif()
 
+if(CMAKE_EXPORT_COMPILE_COMMANDS)
+    set(CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES})
+endif()
+
 # Get version number from Git
 if(${not_conda_test} STREQUAL "true")
     if (DEFINED ENV{PREFIX})
-        set(Python_ROOT_DIR "$ENV{PREFIX}/bin")
+        set(Python_ROOT_DIR "$ENV{BUILD_PREFIX}/bin")
     endif()
     set(Python_FIND_STRATEGY LOCATION)
     find_package(Python COMPONENTS Interpreter REQUIRED)
@@ -71,9 +75,17 @@ endif()
 enable_testing()
 
 #================================================================================================= FIND DEPENDENCIES ===
+
+#=============================================================================================== FIND PROGRAMS ===
+
+find_program(CLANG_FORMAT_EXECUTABLE NAMES clang-format REQUIRED)
+set_property(GLOBAL PROPERTY CLANG_FORMAT_SOURCE_FILES)
+
+#=============================================================================================== ADD PROJECT TARGETS ===
+
 # Find eigen
 find_package(Eigen3 3.3 REQUIRED NO_MODULE)
-include_directories(${EIGEN3_INCLUDE_DIR})
+include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
 if(EIGEN3_FOUND)
     message(STATUS "Found Eigen3: ${EIGEN3_INCLUDE_DIR}")
 endif()
@@ -155,4 +167,26 @@ if(${not_conda_test} STREQUAL "true")
                       "${PROJECT_BINARY_DIR}/${package}ConfigVersion.cmake"
                 DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${package}/cmake)
     endforeach(package)
+endif()
+
+#================================================================================== SETUP CLANG FORMATTING TARGETS ===
+
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+    get_property(CLANG_FORMAT_SOURCE_FILES_VALUE GLOBAL PROPERTY CLANG_FORMAT_SOURCE_FILES)
+
+    add_custom_target(
+        cpp-format-check
+        COMMAND ${CLANG_FORMAT_EXECUTABLE} -style=file --dry-run -Werror -i ${CLANG_FORMAT_SOURCE_FILES_VALUE}
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        COMMENT "Check the C++ code format with clang-format"
+    )
+    set_target_properties(cpp-format-check PROPERTIES EXCLUDE_FROM_ALL TRUE)
+
+    add_custom_target(
+        cpp-format
+        COMMAND ${CLANG_FORMAT_EXECUTABLE} -style=file -i ${CLANG_FORMAT_SOURCE_FILES_VALUE}
+        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+        COMMENT "Format the C++ code with clang-format"
+    )
+    set_target_properties(cpp-format PROPERTIES EXCLUDE_FROM_ALL TRUE)
 endif()
