@@ -1,0 +1,79 @@
+PKG_NAME=tardigrade_micromorphic_linear_elasticity
+echo Building test environment
+rm -rf build
+rm -rf build_test
+conda remove --name ${PKG_NAME}-test-env --all --yes
+conda create --name ${PKG_NAME}-test-env mamba --channel conda-forge --yes
+conda activate ${PKG_NAME}-test-env
+mamba install --file reduced_environment.txt --yes --channel conda-forge
+
+# Install required packages
+echo Building tardigrade_error_tools from $(pwd)
+git clone https://github.com/UCBoulder/tardigrade_error_tools.git build/tardigrade_error_tools
+cd build/tardigrade_error_tools
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_LIBDIR=lib
+cmake --build build --target tardigrade_error_tools tardigrade_error_tools_PYTHON
+cmake --install build --prefix ${CONDA_PREFIX}
+cd ../..
+
+echo Building tardigrade_vector_tools from $(pwd)
+git clone https://github.com/UCBoulder/tardigrade_vector_tools.git build/tardigrade_vector_tools
+cd build/tardigrade_vector_tools
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_LIBDIR=lib
+cmake --install build --prefix ${CONDA_PREFIX}
+cd ../..
+
+echo Building tardigrade_constitutive_tools from $(pwd)
+git clone https://github.com/UCBoulder/tardigrade_constitutive_tools.git build/tardigrade_constitutive_tools
+cd build/tardigrade_constitutive_tools
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_LIBDIR=lib
+cmake --build build --target tardigrade_constitutive_tools tardigrade_constitutive_tools_PYTHON
+cmake --install build --prefix ${CONDA_PREFIX}
+cd ../..
+
+echo Building tardigrade_stress_tools from $(pwd)
+git clone https://github.com/UCBoulder/tardigrade_stress_tools.git build/tardigrade_stress_tools
+cd build/tardigrade_stress_tools
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_LIBDIR=lib
+cmake --build build --target tardigrade_stress_tools tardigrade_stress_tools_PYTHON
+cmake --install build --prefix ${CONDA_PREFIX}
+cd ../..
+
+echo Building tardigrade_micromorphic_tools from $(pwd)
+git clone https://github.com/UCBoulder/tardigrade_micromorphic_tools.git build/tardigrade_micromorphic_tools
+cd build/tardigrade_micromorphic_tools
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_LIBDIR=lib
+cmake --build build --target tardigrade_micromorphic_tools tardigrade_micromorphic_tools_PYTHON
+cmake --install build --prefix ${CONDA_PREFIX}
+cd ../..
+
+echo Building tardigrade_abaqus_tools from $(pwd)
+git clone https://github.com/UCBoulder/tardigrade_abaqus_tools.git build/tardigrade_abaqus_tools
+cd build/tardigrade_abaqus_tools
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_LIBDIR=lib
+cmake --install build --prefix ${CONDA_PREFIX}
+cd ../..
+
+echo Building tardigrade_hydra from $(pwd)
+git clone https://github.com/UCBoulder/tardigrade_hydra.git build/tardigrade_hydra
+cd build/tardigrade_hydra
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_LIBDIR=lib
+cmake --build build --target tardigrade_hydra --parallel 8
+cmake --install build --prefix ${CONDA_PREFIX}
+cd ../..
+
+# Build tardigrade cmml
+echo Building ${PKG_NAME} from $(pwd)
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_LIBDIR=lib
+cmake --build build --target ${PKG_NAME}
+cmake --install build --prefix ${CONDA_PREFIX}
+
+# Run the conda tests
+echo Building ${PKG_NAME} tests from $(pwd)
+echo configure
+cmake -S . -B build_test -DCMAKE_BUILD_TYPE=conda-test -DCMAKE_INSTALL_LIBDIR=lib
+echo build
+cmake --build build_test --verbose --parallel 4
+echo run-tests
+ctest --test-dir build_test --verbose --parallel 4
+ctest --test-dir build_test --output-on-failure -R 'test_' --parallel 4

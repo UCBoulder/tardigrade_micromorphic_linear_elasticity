@@ -10,6 +10,7 @@
 build*/
 *_results.tex
 *results.tex
+Testing*/
 
 # Abaqus output files
 *.com
