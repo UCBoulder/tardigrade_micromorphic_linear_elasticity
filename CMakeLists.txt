@@ -11,10 +11,18 @@ set(DOXYGEN_SRC_PATH "docs/doxygen")
 set(SPHINX_SRC_PATH "docs/sphinx")
 
 # Add the ability to turn off the python bindings
-set(TARDIGRADE_MICROMORPHIC_LINEAR_ELASTICITY_BUILD_PYTHON_BINDINGS ON CACHE BOOL "Flag for whether the python bindings should be built")
+set(TARDIGRADE_MICROMORPHIC_LINEAR_ELASTICITY_BUILD_PYTHON_BINDINGS
+    ON
+    CACHE BOOL
+    "Flag for whether the python bindings should be built"
+)
 
 # Add a flag for if a full build of all tardigrade repositories should be performed
-set(TARDIGRADE_FULL_BUILD OFF CACHE BOOL "Flag for whether a full build of Tardigrade should be performed (i.e., all repos pulled from git and built)")
+set(TARDIGRADE_FULL_BUILD
+    OFF
+    CACHE BOOL
+    "Flag for whether a full build of Tardigrade should be performed (i.e., all repos pulled from git and built)"
+)
 
 if(${TARDIGRADE_ERROR_TOOLS_OPT})
     add_compile_definitions(TARDIGRADE_ERROR_TOOLS_OPT)
@@ -41,18 +49,20 @@ endif()
 
 # Get version number from Git
 if(${not_conda_test} STREQUAL "true")
-    if (DEFINED ENV{PREFIX})
+    if(DEFINED ENV{PREFIX})
         set(Python_ROOT_DIR "$ENV{BUILD_PREFIX}/bin")
     endif()
     set(Python_FIND_STRATEGY LOCATION)
     find_package(Python COMPONENTS Interpreter REQUIRED)
-    execute_process(COMMAND ${Python_EXECUTABLE} -m setuptools_scm
-		            OUTPUT_VARIABLE ${PROJECT_NAME}_VERSION_STRING_FULL
-                    OUTPUT_STRIP_TRAILING_WHITESPACE)
+    execute_process(
+        COMMAND ${Python_EXECUTABLE} -m setuptools_scm
+        OUTPUT_VARIABLE ${PROJECT_NAME}_VERSION_STRING_FULL
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
     if(${${PROJECT_NAME}_VERSION_STRING_FULL} STREQUAL "")
         set(${PROJECT_NAME}_VERSION 0.0.0)
     else()
-         string(REGEX MATCH "[0-9]+\.[0-9]+\.[0-9]+" ${PROJECT_NAME}_VERSION ${${PROJECT_NAME}_VERSION_STRING_FULL})
+        string(REGEX MATCH "[0-9]+\.[0-9]+\.[0-9]+" ${PROJECT_NAME}_VERSION ${${PROJECT_NAME}_VERSION_STRING_FULL})
     endif()
     project(${PROJECT_NAME} VERSION ${${PROJECT_NAME}_VERSION})
 endif()
@@ -67,7 +77,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic")
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lrt -O3")
 endif()
 
@@ -92,14 +102,24 @@ endif()
 
 # Find related, but external, projects in installed environment
 include(FetchContent)
-set(upstream_packages "tardigrade_error_tools" "tardigrade_vector_tools" "tardigrade_constitutive_tools" "tardigrade_micromorphic_tools" "tardigrade_hydra")
+set(upstream_packages
+    "tardigrade_error_tools"
+    "tardigrade_vector_tools"
+    "tardigrade_constitutive_tools"
+    "tardigrade_micromorphic_tools"
+    "tardigrade_hydra"
+)
 if(${not_conda_test} STREQUAL "false")
     # During conda-build testing, we must find the installed project files as if they were an external project
     set(upstream_packages ${upstream_packages} ${PROJECT_NAME})
 endif()
 foreach(package ${upstream_packages})
     string(TOUPPER "${package}" package_upper)
-    set(${package_upper}_BUILD_PYTHON_BINDINGS ${TARDIGRADE_MICROMORPHIC_LINEAR_ELASTICITY_BUILD_PYTHON_BINDINGS} CACHE INTERNAL "Setting ${package}'s python binding flag to the global value")
+    set(${package_upper}_BUILD_PYTHON_BINDINGS
+        ${TARDIGRADE_MICROMORPHIC_LINEAR_ELASTICITY_BUILD_PYTHON_BINDINGS}
+        CACHE INTERNAL
+        "Setting ${package}'s python binding flag to the global value"
+    )
     if(TARDIGRADE_FULL_BUILD)
         message("Not attempting to find ${package}")
     else()
@@ -117,7 +137,7 @@ foreach(package ${upstream_packages})
         FetchContent_Declare(
             ${package}
             GIT_REPOSITORY http://github.com/UCBoulder/${package}.git
-            GIT_TAG        ${${package_upper}_FETCHCONTENT_VERSION}
+            GIT_TAG ${${package_upper}_FETCHCONTENT_VERSION}
         )
         FetchContent_MakeAvailable(${package})
     endif()
@@ -147,25 +167,30 @@ endif()
 if(${not_conda_test} STREQUAL "true")
     foreach(package ${PROJECT_NAME} ${UMAT})
         include(CMakePackageConfigHelpers)
-        write_basic_package_version_file("${package}ConfigVersion.cmake"
-                                         VERSION ${PROJECT_VERSION}
-                                         COMPATIBILITY SameMajorVersion)
+        write_basic_package_version_file(
+            "${package}ConfigVersion.cmake"
+            VERSION ${PROJECT_VERSION}
+            COMPATIBILITY SameMajorVersion
+        )
         configure_package_config_file(
-          "${PROJECT_SOURCE_DIR}/${CMAKE_SRC_PATH}/Config.cmake.in"
-          "${PROJECT_BINARY_DIR}/${package}Config.cmake"
-          INSTALL_DESTINATION
-          ${CMAKE_INSTALL_DATAROOTDIR}/${package}/cmake)
+            "${PROJECT_SOURCE_DIR}/${CMAKE_SRC_PATH}/Config.cmake.in"
+            "${PROJECT_BINARY_DIR}/${package}Config.cmake"
+            INSTALL_DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${package}/cmake
+        )
 
         # CMake won't build the targets for local builds of upstream projects
         if(cmake_build_type_lower STREQUAL release)
-            install(EXPORT ${package}_Targets
-                    FILE ${package}Targets.cmake
-                    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${package}/cmake)
+            install(
+                EXPORT ${package}_Targets
+                FILE ${package}Targets.cmake
+                DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${package}/cmake
+            )
         endif()
 
-        install(FILES "${PROJECT_BINARY_DIR}/${package}Config.cmake"
-                      "${PROJECT_BINARY_DIR}/${package}ConfigVersion.cmake"
-                DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${package}/cmake)
+        install(
+            FILES "${PROJECT_BINARY_DIR}/${package}Config.cmake" "${PROJECT_BINARY_DIR}/${package}ConfigVersion.cmake"
+            DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${package}/cmake
+        )
     endforeach(package)
 endif()
 
