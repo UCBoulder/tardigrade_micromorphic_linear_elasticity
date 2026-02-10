@@ -6,8 +6,12 @@ Changelog
 #########
 
 ******************
-1.6.0 (unreleased)
+1.5.3 (unreleased)
 ******************
+
+Internal Changes
+================
+- Updated to be in line with upstream conda formatting (:pull:`30`). By `Nathan Miller`_.
 
 ******************
 1.5.2 (2025-02-09)
