@@ -9,11 +9,21 @@ Changelog
 1.5.3 (unreleased)
 ******************
 
+******************
+1.5.3 (2025-02-17)
+******************
+
 Internal Changes
 ================
 - Updated to be in line with upstream conda formatting (:pull:`30`). By `Nathan Miller`_.
 - Use the conda-forge version of tardigrade_hydra for the tests (:pull:`31`). By `Nathan Miller`_.
-- Updated to reflect upcoming changes for tardigrade_hydra 0.8.0 (:pull:`32`). By `Nathan Miller`_.
+- Use the minor version for the pin (:pull:`32`). By `Nathan Miller`_.
+- Updated to reflect upcoming changes for tardigrade_hydra 0.8.0 (:pull:`33`). By `Nathan Miller`_.
+- Added README (:pull:`34`). By `Nathan Miller`_.
+
+Release
+=======
+- Released version (:pull:`35`). By `Nathan Miller`_.
 
 ******************
 1.5.2 (2025-02-09)
