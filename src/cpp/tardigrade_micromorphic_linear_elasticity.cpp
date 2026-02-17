@@ -365,7 +365,11 @@ namespace tardigradeMicromorphicLinearElasticity {
                 previous_grad_u, previous_phi, previous_grad_phi, previousDeformationGradient, previousMicroDeformation,
                 previousGradientMicroDeformation))
 
-            tardigradeHydra::MicromorphicDOFStorage DOFStorage(time[0], time[1], temperature, previousTemperature, currentDeformationGradient, previousDeformationGradient, currentMicroDeformation, previousMicroDeformation, currentGradientMicroDeformation, previousGradientMicroDeformation, {}, {});
+            tardigradeHydra::MicromorphicDOFStorage DOFStorage(time[0], time[1], temperature, previousTemperature,
+                                                               currentDeformationGradient, previousDeformationGradient,
+                                                               currentMicroDeformation, previousMicroDeformation,
+                                                               currentGradientMicroDeformation,
+                                                               previousGradientMicroDeformation, {}, {});
 
             tardigradeHydra::ModelConfigurationBase model_configuration(SDVS, fparams, 1, 0);
 
@@ -545,7 +549,11 @@ namespace tardigradeMicromorphicLinearElasticity {
                 previous_grad_u, previous_phi, previous_grad_phi, previousDeformationGradient, previousMicroDeformation,
                 previousGradientMicroDeformation, previousdFdGradU, previousdChidPhi, previousdGradChidGradPhi))
 
-            tardigradeHydra::MicromorphicDOFStorage DOFStorage(time[0], time[1], temperature, previousTemperature, currentDeformationGradient, previousDeformationGradient, currentMicroDeformation, previousMicroDeformation, currentGradientMicroDeformation, previousGradientMicroDeformation, {}, {});
+            tardigradeHydra::MicromorphicDOFStorage DOFStorage(time[0], time[1], temperature, previousTemperature,
+                                                               currentDeformationGradient, previousDeformationGradient,
+                                                               currentMicroDeformation, previousMicroDeformation,
+                                                               currentGradientMicroDeformation,
+                                                               previousGradientMicroDeformation, {}, {});
 
             tardigradeHydra::ModelConfigurationBase model_configuration(SDVS, fparams, 1, 0);
 
