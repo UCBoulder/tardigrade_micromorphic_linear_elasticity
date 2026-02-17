@@ -365,11 +365,11 @@ namespace tardigradeMicromorphicLinearElasticity {
                 previous_grad_u, previous_phi, previous_grad_phi, previousDeformationGradient, previousMicroDeformation,
                 previousGradientMicroDeformation))
 
-            hydraMicromorphicLinearElasticity hydra(time[0], time[1], temperature, previousTemperature,
-                                                    currentDeformationGradient, previousDeformationGradient,
-                                                    currentMicroDeformation, previousMicroDeformation,
-                                                    currentGradientMicroDeformation, previousGradientMicroDeformation,
-                                                    {}, {}, SDVS, fparams, 1, 0, 3, 45, 1e-9, 1e-9);
+            tardigradeHydra::MicromorphicDOFStorage DOFStorage(time[0], time[1], temperature, previousTemperature, currentDeformationGradient, previousDeformationGradient, currentMicroDeformation, previousMicroDeformation, currentGradientMicroDeformation, previousGradientMicroDeformation, {}, {});
+
+            tardigradeHydra::ModelConfigurationBase model_configuration(SDVS, fparams, 1, 0);
+
+            hydraMicromorphicLinearElasticity hydra(DOFStorage, model_configuration);
 
             // Compute the stress
             hydra.evaluate();
@@ -545,11 +545,11 @@ namespace tardigradeMicromorphicLinearElasticity {
                 previous_grad_u, previous_phi, previous_grad_phi, previousDeformationGradient, previousMicroDeformation,
                 previousGradientMicroDeformation, previousdFdGradU, previousdChidPhi, previousdGradChidGradPhi))
 
-            hydraMicromorphicLinearElasticity hydra(time[0], time[1], temperature, previousTemperature,
-                                                    currentDeformationGradient, previousDeformationGradient,
-                                                    currentMicroDeformation, previousMicroDeformation,
-                                                    currentGradientMicroDeformation, previousGradientMicroDeformation,
-                                                    {}, {}, SDVS, fparams, 1, 0, 3, 45, 1e-9, 1e-9);
+            tardigradeHydra::MicromorphicDOFStorage DOFStorage(time[0], time[1], temperature, previousTemperature, currentDeformationGradient, previousDeformationGradient, currentMicroDeformation, previousMicroDeformation, currentGradientMicroDeformation, previousGradientMicroDeformation, {}, {});
+
+            tardigradeHydra::ModelConfigurationBase model_configuration(SDVS, fparams, 1, 0);
+
+            hydraMicromorphicLinearElasticity hydra(DOFStorage, model_configuration);
 
             // Compute the stress
             hydra.evaluate();
