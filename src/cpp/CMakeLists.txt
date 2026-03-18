@@ -1,7 +1,13 @@
 # Project
 add_library(${PROJECT_NAME} SHARED "${PROJECT_NAME}.cpp" "${PROJECT_NAME}.h")
 set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER ${PROJECT_NAME}.h)
-target_link_libraries(${PROJECT_NAME} tardigrade_error_tools tardigrade_micromorphic_tools tardigrade_hydra, Eigen3::Eigen)
+target_link_libraries(
+    ${PROJECT_NAME}
+    tardigrade_error_tools
+    tardigrade_micromorphic_tools
+    tardigrade_hydra,
+    Eigen3::Eigen
+)
 target_compile_options(${PROJECT_NAME} PUBLIC)
 
 # Local builds of upstream projects require local include paths
