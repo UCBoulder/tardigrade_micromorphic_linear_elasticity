@@ -6,8 +6,17 @@ Changelog
 #########
 
 ******************
-1.5.3 (unreleased)
+1.5.4 (unreleased)
 ******************
+
+Internal Changes
+================
+- Removed pinned runtime dependencies (:pull:`36`). By `Nathan Miller`_.
+- Accommodate changes in eigen packaging allowing for compilation with versions >= 3.5 (:pull:`37`). By `Nathan Miller`_.
+
+Release
+=======
+- Released version (:pull:`38`). By `Nathan Miller`_.
 
 ******************
 1.5.3 (2025-02-17)
