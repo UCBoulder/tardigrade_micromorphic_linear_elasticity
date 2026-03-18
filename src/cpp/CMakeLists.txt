@@ -5,7 +5,7 @@ target_link_libraries(
     ${PROJECT_NAME}
     tardigrade_error_tools
     tardigrade_micromorphic_tools
-    tardigrade_hydra,
+    tardigrade_hydra
     Eigen3::Eigen
 )
 target_compile_options(${PROJECT_NAME} PUBLIC)

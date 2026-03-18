@@ -50,7 +50,7 @@ requirements:
     - tardigrade_constitutive_tools >=0.8.5
     - tardigrade_stress_tools >=0.6.3
     - tardigrade_micromorphic_tools >=1.4.3
-    - tardigrade_hydra >=0.8.2
+    - tardigrade_hydra >=0.8.0
   run:
     - eigen >=3.3.7
 
