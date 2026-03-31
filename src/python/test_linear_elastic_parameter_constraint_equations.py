@@ -159,7 +159,7 @@ def test_evaluate_g6():
     m  = rand()
     s  = rand()
 
-    answerR = ( k + n + 2 * e - 3 * t - 2 * si ) * ( 3 * l + 2 * m ) - ( 3 * t + 2 * si )**2 - s**2
+    answerR = ( k + n + 3 * e - 3 * t - 2 * si ) * ( 3 * l + 2 * m ) - ( 3 * t + 2 * si )**2 - s**2
     answerJ = finiteDifferenceConstraint( evaluate_g6, [ k, n, e, t, si, l, m, s ],\
                   [ 'kappa', 'nu', 'eta', 'tau', 'sigma', 'lambda', 'mu', 's6' ] )
 
