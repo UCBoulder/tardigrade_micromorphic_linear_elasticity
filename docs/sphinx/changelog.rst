@@ -6,7 +6,23 @@ Changelog
 #########
 
 ******************
-1.5.4 (unreleased)
+1.5.6 (unreleased)
+******************
+
+******************
+1.5.5 (2026-05-31)
+******************
+
+Bug Fixes
+=========
+- Corrected bug in the g6 constraint (:pull:`40`). By `Nathan Miller`_.
+
+Release
+=======
+- Released version (:pull:`41`). By `Nathan Miller`_.
+
+******************
+1.5.4 (2026-05-18)
 ******************
 
 Internal Changes
@@ -19,7 +35,7 @@ Release
 - Released version (:pull:`38`). By `Nathan Miller`_.
 
 ******************
-1.5.3 (2025-02-17)
+1.5.3 (2026-02-17)
 ******************
 
 Internal Changes
@@ -35,7 +51,7 @@ Release
 - Released version (:pull:`35`). By `Nathan Miller`_.
 
 ******************
-1.5.2 (2025-02-09)
+1.5.2 (2026-02-09)
 ******************
 
 Bug Fixes
