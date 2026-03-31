@@ -81,12 +81,12 @@ def evaluate_g6( kappa, nu, eta, tau, sigma, l, mu, s6, **kwargs ):
     :param float s6: The value of the constraint
     """
 
-    return ( kappa + nu + 2 * eta - 3 * tau - 2 * sigma ) * ( 3 * l + 2 * mu ) - ( 3 * tau + 2 * sigma )**2 - s6**2,\
-           { 'kappa':( 3 * l + 2 * mu ), 'nu':( 3 * l + 2 * mu ), 'eta':2 * ( 3 * l + 2 * mu ),\
+    return ( kappa + nu + 3 * eta - 3 * tau - 2 * sigma ) * ( 3 * l + 2 * mu ) - ( 3 * tau + 2 * sigma )**2 - s6**2,\
+           { 'kappa':( 3 * l + 2 * mu ), 'nu':( 3 * l + 2 * mu ), 'eta':3 * ( 3 * l + 2 * mu ),\
              'tau':-3 * ( 3 * l + 2 * mu) - 6 * ( 3 * tau + 2 * sigma ),\
              'sigma':-2 * ( 3 * l + 2 * mu ) - 4 * ( 3 * tau + 2 * sigma ),\
-             'lambda':3 * ( kappa + nu + 2 * eta - 3 * tau - 2 * sigma ),\
-             'mu':2 * ( kappa + nu + 2 * eta - 3 * tau - 2 * sigma ),\
+             'lambda':3 * ( kappa + nu + 3 * eta - 3 * tau - 2 * sigma ),\
+             'mu':2 * ( kappa + nu + 3 * eta - 3 * tau - 2 * sigma ),\
              's6':-2 * s6 }
 
 def evaluate_g7( kappa, nu, s7, **kwargs ):
